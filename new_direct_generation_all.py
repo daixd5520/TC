@@ -78,9 +78,9 @@ def plot_confusion_matrix(y_true, y_pred, output_dir):
     cm = confusion_matrix(y_true, y_pred)
     plt.figure(figsize=(15, 15))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
-    plt.title('混淆矩阵')
-    plt.xlabel('预测类别')
-    plt.ylabel('真实类别')
+    plt.title('Confusion Matrix')
+    plt.xlabel('Predicted Class')
+    plt.ylabel('True Class')
     plt.savefig(os.path.join(output_dir, 'confusion_matrix.png'))
     plt.close()
 
@@ -105,7 +105,7 @@ def analyze_errors(texts, labels, preds, outputs, output_dir):
 
 def main():
     base_model_path = "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
-    # adapter_path = "outputs/ohsumed_causal_lm_classification_cot/checkpoint-1956"
+    adapter_path = "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed_direct_lora"
     data_path = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Test_alpaca_noCoT.json"
     output_dir = "./outputs/ohsumed_new_direct_generation_all"
 
@@ -117,10 +117,8 @@ def main():
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.pad_token_id = tokenizer.eos_token_id
     
-    # 设置LLaMA-3.1-Instruct的chat template
-    if tokenizer.chat_template is None:
-        # LLaMA-3.1-Instruct的chat template格式
-        tokenizer.chat_template = "{% for message in messages %}{{'<|begin_of_text|><|start_header_id|>' + message['role'] + '<|end_header_id|>\n\n' + message['content'] + '<|eot_id|>'}}{% endfor %}{% if add_generation_prompt %}{{ '<|start_header_id|>assistant<|end_header_id|>\n\n' }}{% endif %}"
+    # 不需要手动设置chat template，LLaMA-3.1-Instruct已经有内置的chat template
+    print(f"Chat template: {tokenizer.chat_template}")
 
     print("加载模型...")
     # 直接使用float16加载模型，禁用量化
@@ -132,13 +130,13 @@ def main():
         low_cpu_mem_usage=True
     )
     
-    # print("加载PEFT适配器...")
-    # model = PeftModel.from_pretrained(
-    #     model,
-    #     adapter_path,
-    #     device_map="auto",
-    #     torch_dtype=torch.float16  # 确保PEFT模型也使用float16
-    # )
+    print("加载PEFT适配器...")
+    model = PeftModel.from_pretrained(
+        model,
+        adapter_path,
+        device_map="auto",
+        torch_dtype=torch.float16  # 确保PEFT模型也使用float16
+    )
     model.config.pad_token_id = tokenizer.pad_token_id
     model.eval()
 
@@ -165,7 +163,7 @@ def main():
         with torch.no_grad():
             generated_ids = model.generate(
                 **inputs,
-                max_new_tokens=256,
+                max_new_tokens=5,
                 temperature=0.4,
                 # top_p=0.9,
                 do_sample=False,
@@ -211,8 +209,8 @@ def main():
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
 def test_show_outputs():
-    base_model_path = "/mnt/data1/TC/TextClassDemo/llama3-8b"
-    # adapter_path = "outputs/ohsumed_causal_lm_classification_cot/checkpoint-1956"
+    base_model_path = "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
+    adapter_path = "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed_direct_lora"
     data_path = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Test_alpaca_noCoT.json"
     output_dir = "./outputs/ohsumed_new_direct_generation_all"
 
@@ -221,10 +219,8 @@ def test_show_outputs():
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.pad_token_id = tokenizer.eos_token_id
     
-    # 设置LLaMA-3.1-Instruct的chat template
-    if tokenizer.chat_template is None:
-        # LLaMA-3.1-Instruct的chat template格式
-        tokenizer.chat_template = "{% for message in messages %}{{'<|begin_of_text|><|start_header_id|>' + message['role'] + '<|end_header_id|>\n\n' + message['content'] + '<|eot_id|>'}}{% endfor %}{% if add_generation_prompt %}{{ '<|start_header_id|>assistant<|end_header_id|>\n\n' }}{% endif %}"
+    # 不需要手动设置chat template，LLaMA-3.1-Instruct已经有内置的chat template
+    print(f"Chat template: {tokenizer.chat_template}")
 
     # 直接使用float16加载模型，禁用量化
     model = AutoModelForCausalLM.from_pretrained(
@@ -235,13 +231,13 @@ def test_show_outputs():
         low_cpu_mem_usage=True
     )
     
-    # print("加载PEFT适配器...")
-    # model = PeftModel.from_pretrained(
-    #     model,
-    #     # adapter_path,
-    #     device_map="auto",
-    #     torch_dtype=torch.float16  # 确保PEFT模型也使用float16
-    # )
+    print("加载PEFT适配器...")
+    model = PeftModel.from_pretrained(
+        model,
+        adapter_path,
+        device_map="auto",
+        torch_dtype=torch.float16  # 确保PEFT模型也使用float16
+    )
     model.config.pad_token_id = tokenizer.pad_token_id
     model.eval()
 
@@ -272,7 +268,7 @@ def test_show_outputs():
         with torch.no_grad():
             generated_ids = model.generate(
                 **inputs,
-                max_new_tokens=10,
+                max_new_tokens=5,
                 temperature=0.7,
                 top_p=0.9,
                 do_sample=True,
@@ -291,5 +287,5 @@ def test_show_outputs():
         print("-"*80)
 
 if __name__ == "__main__":
-    # main()  # 运行完整评估
-    test_show_outputs()  # 运行示例输出展示 
+    main()  # 运行完整评估
+    # test_show_outputs()  # 运行示例输出展示 
