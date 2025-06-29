@@ -21,16 +21,18 @@ def load_ohsumed_test_dataset(data_path):
     texts = [item['input'] for item in data]
     labels = [int(item['category'][1:]) - 1 for item in data]  # C1-C23 -> 0-22
     return Dataset.from_dict({"text": texts, "label": labels})
-
+# ---- 3. 准备类别Token ----
+class_labels = [f"C{str(i).zfill(2)}" for i in range(1, 24)]
 def build_prompt(text):
     return (
         "你是一个医疗文本分类专家。你的任务是将给定的医疗文本分类到23个类别（1-23）中的一个。\n\n"
         f"文本: {text}\n\n"
-        "让我们一步步分析这个文本：\n"
-        "1. 首先理解文本的主要内容\n"
-        "2. 分析文本的关键特征\n"
-        "3. 根据特征判断最合适的类别\n"
-        "4. 给出最终分类结果\n"
+        "请直接给出最终分类结果，不要解释。"
+        # "让我们一步步分析这个文本：\n"
+        # "1. 首先理解文本的主要内容\n"
+        # "2. 分析文本的关键特征\n"
+        # "3. 根据特征判断最合适的类别\n"
+        # "4. 给出最终分类结果\n"
     )
 
 def extract_category(output):

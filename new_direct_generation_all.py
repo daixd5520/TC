@@ -1,103 +1,295 @@
+import os
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
 import json
-from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, classification_report
 import numpy as np
-from tqdm import tqdm  # 加载tqdm
-import csv
-# ---- 1. 配置模型和路径 ----
-model_name_or_path = "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/ohsumed_direct_merged"
-test_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Test.json"
-n_runs = 1  # 每条样本推理次数，取平均
-device = "cuda" if torch.cuda.is_available() else "cpu"
-
-# ---- 2. 加载模型和Tokenizer ----
-print("Loading model and tokenizer...")
-tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
-model = AutoModelForCausalLM.from_pretrained(
-    model_name_or_path,
-    torch_dtype=torch.bfloat16,
-    device_map="auto"
+import re
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    BitsAndBytesConfig
 )
-model.eval()
+from peft import PeftModel
+from datasets import Dataset
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+from tqdm import tqdm
 
-if tokenizer.pad_token_id is None:
-    tokenizer.pad_token_id = tokenizer.eos_token_id
-
+def load_ohsumed_test_dataset(data_path):
+    with open(data_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    texts = [item['input'] for item in data]
+    labels = [int(item['output'][1:]) - 1 for item in data]  # C1-C23 -> 0-22
+    return Dataset.from_dict({"text": texts, "label": labels})
 # ---- 3. 准备类别Token ----
 class_labels = [f"C{str(i).zfill(2)}" for i in range(1, 24)]
-num_added_tokens = tokenizer.add_tokens(class_labels, special_tokens=True)
-if num_added_tokens > 0:
-    print(f"Warning: {num_added_tokens} class labels were not in the tokenizer and have been added now.")
-class_token_ids = tokenizer.convert_tokens_to_ids(class_labels)
+def build_prompt(text):
+    return (
+        "你是一个医疗文本分类专家。你的任务是将给定的医疗文本分类到23个类别中的一个。\n\n"
+        "类别对应关系：\n"
+        "C01 - Bacterial Infections and Mycoses (细菌感染和真菌病)\n"
+        "C02 - Virus Diseases (病毒疾病)\n"
+        "C03 - Parasitic Diseases (寄生虫疾病)\n"
+        "C04 - Neoplasms (肿瘤)\n"
+        "C05 - Musculoskeletal Diseases (肌肉骨骼疾病)\n"
+        "C06 - Digestive System Diseases (消化系统疾病)\n"
+        "C07 - Stomatognathic Diseases (口腔颌面疾病)\n"
+        "C08 - Respiratory Tract Diseases (呼吸道疾病)\n"
+        "C09 - Otorhinolaryngologic Diseases (耳鼻喉疾病)\n"
+        "C10 - Nervous System Diseases (神经系统疾病)\n"
+        "C11 - Eye Diseases (眼部疾病)\n"
+        "C12 - Urologic and Male Genital Diseases (泌尿和男性生殖系统疾病)\n"
+        "C13 - Female Genital Diseases and Pregnancy Complications (女性生殖系统疾病和妊娠并发症)\n"
+        "C14 - Cardiovascular Diseases (心血管疾病)\n"
+        "C15 - Hemic and Lymphatic Diseases (血液和淋巴系统疾病)\n"
+        "C16 - Neonatal Diseases and Abnormalities (新生儿疾病和异常)\n"
+        "C17 - Skin and Connective Tissue Diseases (皮肤和结缔组织疾病)\n"
+        "C18 - Nutritional and Metabolic Diseases (营养和代谢疾病)\n"
+        "C19 - Endocrine Diseases (内分泌疾病)\n"
+        "C20 - Immunologic Diseases (免疫系统疾病)\n"
+        "C21 - Disorders of Environmental Origin (环境源性疾病)\n"
+        "C22 - Animal Diseases (动物疾病)\n"
+        "C23 - Pathological Conditions, Signs and Symptoms (病理状况、体征和症状)\n\n"
+        f"文本: {text}\n\n"
+        "请直接给出最终分类结果。例如，如果文本和肿瘤相关，则输出C04。"
+    )
 
-# ---- 4. 读取测试集 ----
-with open(test_file, "r", encoding="utf-8") as f:
-    test_data = json.load(f)
+def extract_category(output):
+    """从推理过程中提取类别编号"""
+    # 首先尝试匹配最终分类结果
+    match = re.search(r"最终分类结果：C(\d{2})", output)
+    if match:
+        return int(match.group(1)) - 1
+    
+    # 如果没有找到最终结果，尝试匹配推理过程中的类别号
+    match = re.search(r"类别(\d+)", output)
+    if match:
+        return int(match.group(1)) - 1
+    
+    # 最后尝试匹配任何两位数字
+    match = re.search(r"(\d{2})", output)
+    if match:
+        return int(match.group(1)) - 1
+    
+    return -1
 
-# ---- 5. 批量预测 ----
-instruction = f"你是一位顶尖的医学信息学家，专长于 OHSUMED 数据集分类。请仔细阅读以下文本摘要。你的任务是进行精准分类，并仅返回唯一的类别ID作为结果。例如，如果文本属于心血管疾病，你的输出就应该是 'C14'。类别ID列表为：{', '.join(class_labels)}。现在，请处理以下文本："
-y_true = []
-y_pred = []
+def plot_confusion_matrix(y_true, y_pred, output_dir):
+    """绘制并保存混淆矩阵"""
+    cm = confusion_matrix(y_true, y_pred)
+    plt.figure(figsize=(15, 15))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+    plt.title('混淆矩阵')
+    plt.xlabel('预测类别')
+    plt.ylabel('真实类别')
+    plt.savefig(os.path.join(output_dir, 'confusion_matrix.png'))
+    plt.close()
 
-# 新增：打开csv文件并写入表头
-csv_path = "ohsumed_test_pred_detail.csv"
-with open(csv_path, "w", encoding="utf-8", newline='') as csvfile:
-    writer = csv.writer(csvfile)
-    # 表头
-    header = ["text", "true_label", "pred_label"] + [f"{label}_prob" for label in class_labels]
-    writer.writerow(header)
+def analyze_errors(texts, labels, preds, outputs, output_dir):
+    """分析错误样本"""
+    errors = []
+    for i, (text, label, pred, output) in enumerate(zip(texts, labels, preds, outputs)):
+        if label != pred:
+            errors.append({
+                "index": i,
+                "text": text,
+                "true_label": f"C{label+1:02d}",
+                "predicted_label": f"C{pred+1:02d}" if pred != -1 else "未分类",
+                "model_output": output
+            })
+    
+    # 保存错误分析结果
+    with open(os.path.join(output_dir, "error_analysis.json"), "w", encoding="utf-8") as f:
+        json.dump(errors, f, ensure_ascii=False, indent=2)
+    
+    return errors
 
-    for item in tqdm(test_data, desc="Predicting"):
-        text_to_classify = item["text"]
-        label = item["label"]
-        prompt = f"<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\n{instruction}\n{text_to_classify}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
-        inputs = tokenizer(prompt, return_tensors="pt").to(device)
+def main():
+    base_model_path = "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
+    # adapter_path = "outputs/ohsumed_causal_lm_classification_cot/checkpoint-1956"
+    data_path = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Test_alpaca_noCoT.json"
+    output_dir = "./outputs/ohsumed_new_direct_generation_all"
 
-        n_runs = 10  # 采样次数
-        temperature = 0.7  # 可根据需要调整
-        all_probs = []
+    # 创建输出目录
+    os.makedirs(output_dir, exist_ok=True)
+
+    print("加载tokenizer...")
+    tokenizer = AutoTokenizer.from_pretrained(base_model_path, trust_remote_code=True)
+    tokenizer.pad_token = tokenizer.eos_token
+    tokenizer.pad_token_id = tokenizer.eos_token_id
+    
+    # 设置LLaMA-3.1-Instruct的chat template
+    if tokenizer.chat_template is None:
+        # LLaMA-3.1-Instruct的chat template格式
+        tokenizer.chat_template = "{% for message in messages %}{{'<|begin_of_text|><|start_header_id|>' + message['role'] + '<|end_header_id|>\n\n' + message['content'] + '<|eot_id|>'}}{% endfor %}{% if add_generation_prompt %}{{ '<|start_header_id|>assistant<|end_header_id|>\n\n' }}{% endif %}"
+
+    print("加载模型...")
+    # 直接使用float16加载模型，禁用量化
+    model = AutoModelForCausalLM.from_pretrained(
+        base_model_path,
+        device_map="auto",
+        trust_remote_code=True,
+        torch_dtype=torch.float16,  # 使用float16来减少显存使用
+        low_cpu_mem_usage=True
+    )
+    
+    # print("加载PEFT适配器...")
+    # model = PeftModel.from_pretrained(
+    #     model,
+    #     adapter_path,
+    #     device_map="auto",
+    #     torch_dtype=torch.float16  # 确保PEFT模型也使用float16
+    # )
+    model.config.pad_token_id = tokenizer.pad_token_id
+    model.eval()
+
+    # 加载和预处理测试集
+    print("加载测试数据...")
+    test_dataset = load_ohsumed_test_dataset(data_path)
+    texts = test_dataset["text"]
+    labels = test_dataset["label"]
+
+    print("开始推理...")
+    preds = []
+    outputs = []
+    for text in tqdm(texts, desc="处理样本"):
+        prompt = build_prompt(text)
+        # 构建对话格式
+        messages = [{"role": "user", "content": prompt}]
+        chat_input = tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True
+        )
+        inputs = tokenizer(chat_input, return_tensors="pt", max_length=512, truncation=True).to(model.device)
+        
         with torch.no_grad():
-            for _ in range(n_runs):
-                model.eval()  # 推理时应为eval
-                gen_ids = model.generate(
-                    **inputs,
-                    max_new_tokens=1,
-                    do_sample=True,
-                    temperature=temperature,
-                    pad_token_id=tokenizer.pad_token_id,
-                    eos_token_id=tokenizer.eos_token_id,
-                )
-                # 取生成的最后一个token
-                gen_token_id = gen_ids[0, -1].item()
-                class_probs = torch.zeros(len(class_labels))
-                if gen_token_id in class_token_ids:
-                    idx = class_token_ids.index(gen_token_id)
-                    class_probs[idx] = 1.0
-                all_probs.append(class_probs)
-        probs_tensor = torch.stack(all_probs)
-        avg_probs = probs_tensor.mean(dim=0)
-        final_class_index = torch.argmax(avg_probs)
-        final_class_label = class_labels[final_class_index]
+            generated_ids = model.generate(
+                **inputs,
+                max_new_tokens=256,
+                temperature=0.4,
+                # top_p=0.9,
+                do_sample=False,
+                pad_token_id=tokenizer.pad_token_id,
+                eos_token_id=tokenizer.eos_token_id
+            )
+        output = tokenizer.decode(generated_ids[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+        outputs.append(output)
+        pred = extract_category(output)
+        preds.append(pred)
 
-        y_true.append(label)
-        y_pred.append(final_class_label)
+    # 计算评估指标
+    print("计算评估指标...")
+    acc = accuracy_score(labels, preds)
+    report = classification_report(labels, preds, output_dict=True)
+    
+    # 绘制混淆矩阵
+    print("绘制混淆矩阵...")
+    plot_confusion_matrix(labels, preds, output_dir)
+    
+    # 分析错误样本
+    print("分析错误样本...")
+    errors = analyze_errors(texts, labels, preds, outputs, output_dir)
+    
+    # 保存评估结果
+    results = {
+        "accuracy": acc,
+        "report": report,
+        "error_count": len(errors),
+        "total_samples": len(texts),
+        "outputs": outputs
+    }
+    
+    with open(os.path.join(output_dir, "eval_results.json"), "w", encoding="utf-8") as f:
+        json.dump(results, f, ensure_ascii=False, indent=2)
+    
+    # 打印主要结果
+    print("\n评估结果：")
+    print(f"准确率：{acc:.4f}")
+    print(f"错误样本数：{len(errors)}")
+    print(f"总样本数：{len(texts)}")
+    print("\n分类报告：")
+    print(json.dumps(report, ensure_ascii=False, indent=2))
 
-        # 写入一行到csv
-        row = [text_to_classify, label, final_class_label] + [float(p) for p in avg_probs]
-        writer.writerow(row)
+def test_show_outputs():
+    base_model_path = "/mnt/data1/TC/TextClassDemo/llama3-8b"
+    # adapter_path = "outputs/ohsumed_causal_lm_classification_cot/checkpoint-1956"
+    data_path = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Test_alpaca_noCoT.json"
+    output_dir = "./outputs/ohsumed_new_direct_generation_all"
 
-# ---- 6. 评估 ----
-print("\n评估结果：")
-acc = accuracy_score(y_true, y_pred)
-f1 = f1_score(y_true, y_pred, average="macro")
-print(f"准确率: {acc:.4f}")
-print(f"宏平均F1: {f1:.4f}")
+    print("加载模型和tokenizer...")
+    tokenizer = AutoTokenizer.from_pretrained(base_model_path, trust_remote_code=True)
+    tokenizer.pad_token = tokenizer.eos_token
+    tokenizer.pad_token_id = tokenizer.eos_token_id
+    
+    # 设置LLaMA-3.1-Instruct的chat template
+    if tokenizer.chat_template is None:
+        # LLaMA-3.1-Instruct的chat template格式
+        tokenizer.chat_template = "{% for message in messages %}{{'<|begin_of_text|><|start_header_id|>' + message['role'] + '<|end_header_id|>\n\n' + message['content'] + '<|eot_id|>'}}{% endfor %}{% if add_generation_prompt %}{{ '<|start_header_id|>assistant<|end_header_id|>\n\n' }}{% endif %}"
 
-print("\n分类报告：")
-print(classification_report(y_true, y_pred, labels=class_labels, digits=4))
+    # 直接使用float16加载模型，禁用量化
+    model = AutoModelForCausalLM.from_pretrained(
+        base_model_path,
+        device_map="auto",
+        trust_remote_code=True,
+        torch_dtype=torch.float16,  # 使用float16来减少显存使用
+        low_cpu_mem_usage=True
+    )
+    
+    # print("加载PEFT适配器...")
+    # model = PeftModel.from_pretrained(
+    #     model,
+    #     # adapter_path,
+    #     device_map="auto",
+    #     torch_dtype=torch.float16  # 确保PEFT模型也使用float16
+    # )
+    model.config.pad_token_id = tokenizer.pad_token_id
+    model.eval()
 
-print("\n混淆矩阵：")
-cm = confusion_matrix(y_true, y_pred, labels=class_labels)
-np.set_printoptions(linewidth=200)
-print(cm)
+    # 加载测试集
+    print("加载测试数据...")
+    test_dataset = load_ohsumed_test_dataset(data_path)
+    texts = test_dataset["text"]
+    labels = test_dataset["label"]
+    
+    # 随机选择一些样本进行展示
+    indices = np.random.choice(len(texts), min(5, len(texts)), replace=False)
+    
+    print("\n示例输出：")
+    for i, idx in enumerate(indices):
+        text = texts[idx]
+        label = f"C{labels[idx]+1:02d}"
+        prompt = build_prompt(text)
+        
+        # 构建对话格式
+        messages = [{"role": "user", "content": prompt}]
+        chat_input = tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True
+        )
+        inputs = tokenizer(chat_input, return_tensors="pt", max_length=2048, truncation=True).to(model.device)
+        
+        with torch.no_grad():
+            generated_ids = model.generate(
+                **inputs,
+                max_new_tokens=10,
+                temperature=0.7,
+                top_p=0.9,
+                do_sample=True,
+                pad_token_id=tokenizer.pad_token_id,
+                eos_token_id=tokenizer.eos_token_id
+            )
+        output = tokenizer.decode(generated_ids[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+        pred = extract_category(output)
+        pred_label = f"C{pred+1:02d}" if pred != -1 else "未分类"
+        
+        print(f"\n样本{i+1}：")
+        print(f"文本: {text[:200]}...")  # 只显示前200个字符
+        print(f"真实类别: {label}")
+        print(f"预测类别: {pred_label}")
+        print(f"模型推理过程:\n{output}")
+        print("-"*80)
+
+if __name__ == "__main__":
+    # main()  # 运行完整评估
+    test_show_outputs()  # 运行示例输出展示 
