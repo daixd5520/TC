@@ -20,7 +20,7 @@ MAX_NEW_TOKENS = 256  # 统一设置最大生成token数
 TEMPERATURE = 0.4    # 统一设置温度参数
 TOP_P = 0.9          # 统一设置top_p参数
 DO_SAMPLE = False    # 统一设置是否采样
-BATCH_SIZE = 32       # 批处理大小，根据显存调整
+BATCH_SIZE = 512      # 批处理大小，根据显存调整
 
 def load_ohsumed_test_dataset(data_path):
     with open(data_path, 'r', encoding='utf-8') as f:
@@ -32,33 +32,33 @@ def load_ohsumed_test_dataset(data_path):
 class_labels = [f"C{str(i).zfill(2)}" for i in range(1, 24)]
 def build_prompt(text):
     return (
-        "你是一个医疗文本分类专家。你的任务是将给定的医疗文本分类到23个类别中的一个。\n\n"
-        "类别对应关系：\n"
-        "C01 - Bacterial Infections and Mycoses (细菌感染和真菌病)\n"
-        "C02 - Virus Diseases (病毒疾病)\n"
-        "C03 - Parasitic Diseases (寄生虫疾病)\n"
-        "C04 - Neoplasms (肿瘤)\n"
-        "C05 - Musculoskeletal Diseases (肌肉骨骼疾病)\n"
-        "C06 - Digestive System Diseases (消化系统疾病)\n"
-        "C07 - Stomatognathic Diseases (口腔颌面疾病)\n"
-        "C08 - Respiratory Tract Diseases (呼吸道疾病)\n"
-        "C09 - Otorhinolaryngologic Diseases (耳鼻喉疾病)\n"
-        "C10 - Nervous System Diseases (神经系统疾病)\n"
-        "C11 - Eye Diseases (眼部疾病)\n"
-        "C12 - Urologic and Male Genital Diseases (泌尿和男性生殖系统疾病)\n"
-        "C13 - Female Genital Diseases and Pregnancy Complications (女性生殖系统疾病和妊娠并发症)\n"
-        "C14 - Cardiovascular Diseases (心血管疾病)\n"
-        "C15 - Hemic and Lymphatic Diseases (血液和淋巴系统疾病)\n"
-        "C16 - Neonatal Diseases and Abnormalities (新生儿疾病和异常)\n"
-        "C17 - Skin and Connective Tissue Diseases (皮肤和结缔组织疾病)\n"
-        "C18 - Nutritional and Metabolic Diseases (营养和代谢疾病)\n"
-        "C19 - Endocrine Diseases (内分泌疾病)\n"
-        "C20 - Immunologic Diseases (免疫系统疾病)\n"
-        "C21 - Disorders of Environmental Origin (环境源性疾病)\n"
-        "C22 - Animal Diseases (动物疾病)\n"
-        "C23 - Pathological Conditions, Signs and Symptoms (病理状况、体征和症状)\n\n"
-        f"文本: {text}\n\n"
-        "请直接给出最终分类结果。例如，如果文本和肿瘤相关，则输出C04。让我们一步步思考分类过程："
+        "You are a medical text classification expert. Your task is to classify the given medical text into one of 23 categories.\n\n"
+        "Category mapping:\n"
+        "C01 - Bacterial Infections and Mycoses\n"
+        "C02 - Virus Diseases\n"
+        "C03 - Parasitic Diseases\n"
+        "C04 - Neoplasms\n"
+        "C05 - Musculoskeletal Diseases\n"
+        "C06 - Digestive System Diseases\n"
+        "C07 - Stomatognathic Diseases\n"
+        "C08 - Respiratory Tract Diseases\n"
+        "C09 - Otorhinolaryngologic Diseases\n"
+        "C10 - Nervous System Diseases\n"
+        "C11 - Eye Diseases\n"
+        "C12 - Urologic and Male Genital Diseases\n"
+        "C13 - Female Genital Diseases and Pregnancy Complications\n"
+        "C14 - Cardiovascular Diseases\n"
+        "C15 - Hemic and Lymphatic Diseases\n"
+        "C16 - Neonatal Diseases and Abnormalities\n"
+        "C17 - Skin and Connective Tissue Diseases\n"
+        "C18 - Nutritional and Metabolic Diseases\n"
+        "C19 - Endocrine Diseases\n"
+        "C20 - Immunologic Diseases\n"
+        "C21 - Disorders of Environmental Origin\n"
+        "C22 - Animal Diseases\n"
+        "C23 - Pathological Conditions, Signs and Symptoms\n\n"
+        f"Text: {text}\n\n"
+        "For example, if the text is related to neoplasms, it belongs to C04. The output must be one of C01-C23 categories. If you output a non-existent category, you will be penalized. Let's think through the classification process step by step:"
     )
 
 def extract_category(output):
