@@ -15,6 +15,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from tqdm import tqdm
 
+# ---- 统一配置参数 ----
+MAX_NEW_TOKENS = 256  # 统一设置最大生成token数
+TEMPERATURE = 0.4    # 统一设置温度参数
+TOP_P = 0.9          # 统一设置top_p参数
+DO_SAMPLE = False    # 统一设置是否采样
+BATCH_SIZE = 32       # 批处理大小，根据显存调整
+
 def load_ohsumed_test_dataset(data_path):
     with open(data_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -51,7 +58,7 @@ def build_prompt(text):
         "C22 - Animal Diseases (动物疾病)\n"
         "C23 - Pathological Conditions, Signs and Symptoms (病理状况、体征和症状)\n\n"
         f"文本: {text}\n\n"
-        "请直接给出最终分类结果。例如，如果文本和肿瘤相关，则输出C04。"
+        "请直接给出最终分类结果。例如，如果文本和肿瘤相关，则输出C04。让我们一步步思考分类过程："
     )
 
 def extract_category(output):
@@ -125,6 +132,7 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(base_model_path, trust_remote_code=True)
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.pad_token_id = tokenizer.eos_token_id
+    tokenizer.padding_side = "left"
     
     # 不需要手动设置chat template，LLaMA-3.1-Instruct已经有内置的chat template
     print(f"Chat template: {tokenizer.chat_template}")
@@ -159,34 +167,53 @@ def main():
     texts = test_dataset["text"]
     labels = test_dataset["label"]
 
-    print("开始推理...")
+    print("开始批处理推理...")
     preds = []
     outputs = []
-    for text in tqdm(texts, desc="处理样本"):
-        prompt = build_prompt(text)
-        # 构建对话格式
-        messages = [{"role": "user", "content": prompt}]
-        chat_input = tokenizer.apply_chat_template(
-            messages,
-            tokenize=False,
-            add_generation_prompt=True
-        )
-        inputs = tokenizer(chat_input, return_tensors="pt", max_length=512, truncation=True).to(model.device)
+    
+    # 批处理推理
+    for i in tqdm(range(0, len(texts), BATCH_SIZE), desc="处理批次"):
+        batch_texts = texts[i:i+BATCH_SIZE]
+        batch_prompts = [build_prompt(text) for text in batch_texts]
+        
+        # 构建批处理的对话格式
+        batch_messages = [[{"role": "user", "content": prompt}] for prompt in batch_prompts]
+        batch_chat_inputs = [
+            tokenizer.apply_chat_template(
+                messages,
+                tokenize=False,
+                add_generation_prompt=True
+            ) for messages in batch_messages
+        ]
+        
+        # 批处理tokenization
+        batch_inputs = tokenizer(
+            batch_chat_inputs, 
+            return_tensors="pt", 
+            max_length=512, 
+            truncation=True,
+            padding=True  # 启用padding以支持批处理
+        ).to(model.device)
         
         with torch.no_grad():
-            generated_ids = model.generate(
-                **inputs,
-                max_new_tokens=5,
-                temperature=0.4,
-                # top_p=0.9,
-                do_sample=False,
+            batch_generated_ids = model.generate(
+                **batch_inputs,
+                max_new_tokens=MAX_NEW_TOKENS,  # 使用统一配置
+                temperature=TEMPERATURE,         # 使用统一配置
+                top_p=TOP_P,                    # 使用统一配置
+                do_sample=DO_SAMPLE,            # 使用统一配置
                 pad_token_id=tokenizer.pad_token_id,
                 eos_token_id=tokenizer.eos_token_id
             )
-        output = tokenizer.decode(generated_ids[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
-        outputs.append(output)
-        pred = extract_category(output)
-        preds.append(pred)
+        
+        # 解码每个样本的输出
+        for j, (input_ids, generated_ids_sample) in enumerate(zip(batch_inputs["input_ids"], batch_generated_ids)):
+            # 提取新生成的部分
+            new_tokens = generated_ids_sample[input_ids.shape[0]:]
+            output = tokenizer.decode(new_tokens, skip_special_tokens=True)
+            outputs.append(output)
+            pred = extract_category(output)
+            preds.append(pred)
 
     # 计算评估指标
     print("计算评估指标...")
@@ -298,10 +325,10 @@ def test_show_outputs():
         with torch.no_grad():
             generated_ids = model.generate(
                 **inputs,
-                max_new_tokens=5,
-                temperature=0.7,
-                top_p=0.9,
-                do_sample=True,
+                max_new_tokens=MAX_NEW_TOKENS,  # 使用统一配置
+                temperature=TEMPERATURE,         # 使用统一配置
+                top_p=TOP_P,                    # 使用统一配置
+                do_sample=DO_SAMPLE,            # 使用统一配置
                 pad_token_id=tokenizer.pad_token_id,
                 eos_token_id=tokenizer.eos_token_id
             )
@@ -317,5 +344,5 @@ def test_show_outputs():
         print("-"*80)
 
 if __name__ == "__main__":
-    # main()  # 运行完整评估
-    test_show_outputs()  # 运行示例输出展示 
+    main()  # 运行完整评估
+    # test_show_outputs()  # 运行示例输出展示 
