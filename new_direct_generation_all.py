@@ -104,10 +104,19 @@ def analyze_errors(texts, labels, preds, outputs, output_dir):
     return errors
 
 def main():
+    # JUMP HERE
     base_model_path = "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
     adapter_path = "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed_direct_lora"
     data_path = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Test_alpaca_noCoT.json"
-    output_dir = "./outputs/ohsumed_new_direct_generation_all"
+    
+    # 控制是否使用LoRA适配器
+    use_lora = False  # 设置为False则不使用LoRA，直接使用base model
+    
+    # 根据use_lora设置不同的输出目录
+    if use_lora:
+        output_dir = "./outputs/ohsumed_lora_model"
+    else:
+        output_dir = "./outputs/ohsumed_base_model"
 
     # 创建输出目录
     os.makedirs(output_dir, exist_ok=True)
@@ -130,13 +139,17 @@ def main():
         low_cpu_mem_usage=True
     )
     
-    print("加载PEFT适配器...")
-    model = PeftModel.from_pretrained(
-        model,
-        adapter_path,
-        device_map="auto",
-        torch_dtype=torch.float16  # 确保PEFT模型也使用float16
-    )
+    if use_lora:
+        print("加载PEFT适配器...")
+        model = PeftModel.from_pretrained(
+            model,
+            adapter_path,
+            device_map="auto",
+            torch_dtype=torch.float16  # 确保PEFT模型也使用float16
+        )
+    else:
+        print("使用基础模型，不加载LoRA适配器")
+    
     model.config.pad_token_id = tokenizer.pad_token_id
     model.eval()
 
@@ -194,7 +207,9 @@ def main():
         "report": report,
         "error_count": len(errors),
         "total_samples": len(texts),
-        "outputs": outputs
+        "outputs": outputs,
+        "use_lora": use_lora,  # 记录是否使用了LoRA
+        "model_type": "LoRA" if use_lora else "Base Model"  # 记录模型类型
     }
     
     with open(os.path.join(output_dir, "eval_results.json"), "w", encoding="utf-8") as f:
@@ -202,9 +217,11 @@ def main():
     
     # 打印主要结果
     print("\n评估结果：")
+    print(f"模型类型: {'LoRA' if use_lora else 'Base Model'}")
     print(f"准确率：{acc:.4f}")
     print(f"错误样本数：{len(errors)}")
     print(f"总样本数：{len(texts)}")
+    print(f"结果保存到: {output_dir}")
     print("\n分类报告：")
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
@@ -212,7 +229,15 @@ def test_show_outputs():
     base_model_path = "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
     adapter_path = "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed_direct_lora"
     data_path = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Test_alpaca_noCoT.json"
-    output_dir = "./outputs/ohsumed_new_direct_generation_all"
+    
+    # 控制是否使用LoRA适配器
+    use_lora = True  # 设置为False则不使用LoRA，直接使用base model
+    
+    # 根据use_lora设置不同的输出目录
+    if use_lora:
+        output_dir = "./outputs/ohsumed_lora_model"
+    else:
+        output_dir = "./outputs/ohsumed_base_model"
 
     print("加载模型和tokenizer...")
     tokenizer = AutoTokenizer.from_pretrained(base_model_path, trust_remote_code=True)
@@ -231,13 +256,17 @@ def test_show_outputs():
         low_cpu_mem_usage=True
     )
     
-    print("加载PEFT适配器...")
-    model = PeftModel.from_pretrained(
-        model,
-        adapter_path,
-        device_map="auto",
-        torch_dtype=torch.float16  # 确保PEFT模型也使用float16
-    )
+    if use_lora:
+        print("加载PEFT适配器...")
+        model = PeftModel.from_pretrained(
+            model,
+            adapter_path,
+            device_map="auto",
+            torch_dtype=torch.float16  # 确保PEFT模型也使用float16
+        )
+    else:
+        print("使用基础模型，不加载LoRA适配器")
+    
     model.config.pad_token_id = tokenizer.pad_token_id
     model.eval()
 
@@ -250,7 +279,8 @@ def test_show_outputs():
     # 随机选择一些样本进行展示
     indices = np.random.choice(len(texts), min(5, len(texts)), replace=False)
     
-    print("\n示例输出：")
+    print(f"\n使用模型: {'LoRA' if use_lora else 'Base Model'}")
+    print("示例输出：")
     for i, idx in enumerate(indices):
         text = texts[idx]
         label = f"C{labels[idx]+1:02d}"
@@ -287,5 +317,5 @@ def test_show_outputs():
         print("-"*80)
 
 if __name__ == "__main__":
-    main()  # 运行完整评估
-    # test_show_outputs()  # 运行示例输出展示 
+    # main()  # 运行完整评估
+    test_show_outputs()  # 运行示例输出展示 
