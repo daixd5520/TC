@@ -24,8 +24,8 @@ BATCH_SIZE = 512      # 批处理大小，根据显存调整
 
 # ---- 路径和模型配置 ----
 BASE_MODEL_PATH = "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
-ADAPTER_PATH = "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed_direct_lora_english_prompt"
-DATA_PATH = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Test_alpaca_noCoT.json"
+ADAPTER_PATH = "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed_lora_english_zeroshotCoT"
+DATA_PATH = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Test_alpaca_noCoT_updated.json"
 # 控制是否使用LoRA适配器。设置为False则不使用LoRA，直接使用base model。
 USE_LORA = True
 
@@ -66,7 +66,7 @@ def build_prompt(text):
         "C23 - Pathological Conditions, Signs and Symptoms\n\n"
         f"Text: {text}\n\n"
         "For example, if the text is related to neoplasms, it belongs to C04. The output must be one of C01-C23 categories. If you output a non-existent category, you will be penalized."
-        # " Let's classify step by step:"
+        " Let's classify step by step:"
     )
 
 def extract_category(output):

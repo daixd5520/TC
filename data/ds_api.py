@@ -304,8 +304,8 @@ def main():
     checkpoint_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Train_cot_checkpoint.json"
     
     # 处理参数
-    batch_size = 5  # 每批处理10个样本
-    max_samples = 500  # 每次处理50个样本，None表示处理全部剩余样本
+    batch_size = 5  # 每批处理5个样本
+    max_samples = 1000  # 每次处理50个样本，None表示处理全部剩余样本
     
     # 创建生成器
     generator = DeepSeekCoTGenerator()
