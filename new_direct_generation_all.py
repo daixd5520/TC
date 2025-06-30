@@ -22,6 +22,13 @@ TOP_P = 0.9          # 统一设置top_p参数
 DO_SAMPLE = False    # 统一设置是否采样
 BATCH_SIZE = 512      # 批处理大小，根据显存调整
 
+# ---- 路径和模型配置 ----
+BASE_MODEL_PATH = "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
+ADAPTER_PATH = "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed_direct_lora_english_prompt"
+DATA_PATH = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Test_alpaca_noCoT.json"
+# 控制是否使用LoRA适配器。设置为False则不使用LoRA，直接使用base model。
+USE_LORA = True
+
 def load_ohsumed_test_dataset(data_path):
     with open(data_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -58,26 +65,25 @@ def build_prompt(text):
         "C22 - Animal Diseases\n"
         "C23 - Pathological Conditions, Signs and Symptoms\n\n"
         f"Text: {text}\n\n"
-        "For example, if the text is related to neoplasms, it belongs to C04. The output must be one of C01-C23 categories. If you output a non-existent category, you will be penalized. Let's classify step by step:"
+        "For example, if the text is related to neoplasms, it belongs to C04. The output must be one of C01-C23 categories. If you output a non-existent category, you will be penalized."
+        # " Let's classify step by step:"
     )
 
 def extract_category(output):
-    """从推理过程中提取类别编号 (推荐的最终版本)"""
-    # 1. 优先匹配您期望的最终格式
+    """从推理过程中提取类别编号"""
     match = re.search(r"最终分类结果：C(\d{2})", output)
     if match:
         category_num = int(match.group(1))
         if 1 <= category_num <= 23:
             return category_num - 1
 
-    # 2. 其次，匹配任何地方出现的 CXX 格式
+    # 匹配任何地方出现的 CXX 格式
     match = re.search(r"C(\d{2})", output)
     if match:
         category_num = int(match.group(1))
         if 1 <= category_num <= 23:
             return category_num - 1
 
-    # 3. 如果都找不到，则判定为无法分类
     return -1
 
 def plot_confusion_matrix(y_true, y_pred, output_dir):
@@ -112,15 +118,8 @@ def analyze_errors(texts, labels, preds, outputs, output_dir):
 
 def main():
     # JUMP HERE
-    base_model_path = "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
-    adapter_path = "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed_direct_lora"
-    data_path = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Test_alpaca_noCoT.json"
-    
-    # 控制是否使用LoRA适配器
-    use_lora = False  # 设置为False则不使用LoRA，直接使用base model
-    
     # 根据use_lora设置不同的输出目录
-    if use_lora:
+    if USE_LORA:
         output_dir = "./outputs/ohsumed_lora_model"
     else:
         output_dir = "./outputs/ohsumed_base_model"
@@ -129,7 +128,7 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
 
     print("加载tokenizer...")
-    tokenizer = AutoTokenizer.from_pretrained(base_model_path, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL_PATH, trust_remote_code=True)
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.pad_token_id = tokenizer.eos_token_id
     tokenizer.padding_side = "left"
@@ -140,18 +139,18 @@ def main():
     print("加载模型...")
     # 直接使用float16加载模型，禁用量化
     model = AutoModelForCausalLM.from_pretrained(
-        base_model_path,
+        BASE_MODEL_PATH,
         device_map="auto",
         trust_remote_code=True,
         torch_dtype=torch.float16,  # 使用float16来减少显存使用
         low_cpu_mem_usage=True
     )
     
-    if use_lora:
+    if USE_LORA:
         print("加载PEFT适配器...")
         model = PeftModel.from_pretrained(
             model,
-            adapter_path,
+            ADAPTER_PATH,
             device_map="auto",
             torch_dtype=torch.float16  # 确保PEFT模型也使用float16
         )
@@ -163,7 +162,7 @@ def main():
 
     # 加载和预处理测试集
     print("加载测试数据...")
-    test_dataset = load_ohsumed_test_dataset(data_path)
+    test_dataset = load_ohsumed_test_dataset(DATA_PATH)
     texts = test_dataset["text"]
     labels = test_dataset["label"]
 
@@ -235,8 +234,8 @@ def main():
         "error_count": len(errors),
         "total_samples": len(texts),
         "outputs": outputs,
-        "use_lora": use_lora,  # 记录是否使用了LoRA
-        "model_type": "LoRA" if use_lora else "Base Model"  # 记录模型类型
+        "use_lora": USE_LORA,  # 记录是否使用了LoRA
+        "model_type": "LoRA" if USE_LORA else "Base Model"  # 记录模型类型
     }
     
     with open(os.path.join(output_dir, "eval_results.json"), "w", encoding="utf-8") as f:
@@ -244,7 +243,7 @@ def main():
     
     # 打印主要结果
     print("\n评估结果：")
-    print(f"模型类型: {'LoRA' if use_lora else 'Base Model'}")
+    print(f"模型类型: {'LoRA' if USE_LORA else 'Base Model'}")
     print(f"准确率：{acc:.4f}")
     print(f"错误样本数：{len(errors)}")
     print(f"总样本数：{len(texts)}")
@@ -253,21 +252,8 @@ def main():
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
 def test_show_outputs():
-    base_model_path = "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
-    adapter_path = "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed_direct_lora"
-    data_path = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Test_alpaca_noCoT.json"
-    
-    # 控制是否使用LoRA适配器
-    use_lora = True  # 设置为False则不使用LoRA，直接使用base model
-    
-    # 根据use_lora设置不同的输出目录
-    if use_lora:
-        output_dir = "./outputs/ohsumed_lora_model"
-    else:
-        output_dir = "./outputs/ohsumed_base_model"
-
     print("加载模型和tokenizer...")
-    tokenizer = AutoTokenizer.from_pretrained(base_model_path, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL_PATH, trust_remote_code=True)
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.pad_token_id = tokenizer.eos_token_id
     
@@ -276,18 +262,18 @@ def test_show_outputs():
 
     # 直接使用float16加载模型，禁用量化
     model = AutoModelForCausalLM.from_pretrained(
-        base_model_path,
+        BASE_MODEL_PATH,
         device_map="auto",
         trust_remote_code=True,
         torch_dtype=torch.float16,  # 使用float16来减少显存使用
         low_cpu_mem_usage=True
     )
     
-    if use_lora:
+    if USE_LORA:
         print("加载PEFT适配器...")
         model = PeftModel.from_pretrained(
             model,
-            adapter_path,
+            ADAPTER_PATH,
             device_map="auto",
             torch_dtype=torch.float16  # 确保PEFT模型也使用float16
         )
@@ -299,14 +285,14 @@ def test_show_outputs():
 
     # 加载测试集
     print("加载测试数据...")
-    test_dataset = load_ohsumed_test_dataset(data_path)
+    test_dataset = load_ohsumed_test_dataset(DATA_PATH)
     texts = test_dataset["text"]
     labels = test_dataset["label"]
     
     # 随机选择一些样本进行展示
     indices = np.random.choice(len(texts), min(5, len(texts)), replace=False)
     
-    print(f"\n使用模型: {'LoRA' if use_lora else 'Base Model'}")
+    print(f"\n使用模型: {'LoRA' if USE_LORA else 'Base Model'}")
     print("示例输出：")
     for i, idx in enumerate(indices):
         text = texts[idx]
