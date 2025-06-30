@@ -58,26 +58,26 @@ def build_prompt(text):
         "C22 - Animal Diseases\n"
         "C23 - Pathological Conditions, Signs and Symptoms\n\n"
         f"Text: {text}\n\n"
-        "For example, if the text is related to neoplasms, it belongs to C04. The output must be one of C01-C23 categories. If you output a non-existent category, you will be penalized. Let's think through the classification process step by step:"
+        "For example, if the text is related to neoplasms, it belongs to C04. The output must be one of C01-C23 categories. If you output a non-existent category, you will be penalized. Let's classify step by step:"
     )
 
 def extract_category(output):
-    """从推理过程中提取类别编号"""
-    # 首先尝试匹配最终分类结果
+    """从推理过程中提取类别编号 (推荐的最终版本)"""
+    # 1. 优先匹配您期望的最终格式
     match = re.search(r"最终分类结果：C(\d{2})", output)
     if match:
-        return int(match.group(1)) - 1
-    
-    # 如果没有找到最终结果，尝试匹配推理过程中的类别号
-    match = re.search(r"类别(\d+)", output)
+        category_num = int(match.group(1))
+        if 1 <= category_num <= 23:
+            return category_num - 1
+
+    # 2. 其次，匹配任何地方出现的 CXX 格式
+    match = re.search(r"C(\d{2})", output)
     if match:
-        return int(match.group(1)) - 1
-    
-    # 最后尝试匹配任何两位数字
-    match = re.search(r"(\d{2})", output)
-    if match:
-        return int(match.group(1)) - 1
-    
+        category_num = int(match.group(1))
+        if 1 <= category_num <= 23:
+            return category_num - 1
+
+    # 3. 如果都找不到，则判定为无法分类
     return -1
 
 def plot_confusion_matrix(y_true, y_pred, output_dir):

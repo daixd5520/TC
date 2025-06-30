@@ -305,7 +305,7 @@ def main():
     
     # 处理参数
     batch_size = 5  # 每批处理10个样本
-    max_samples = 50  # 每次处理50个样本，None表示处理全部剩余样本
+    max_samples = 500  # 每次处理50个样本，None表示处理全部剩余样本
     
     # 创建生成器
     generator = DeepSeekCoTGenerator()
