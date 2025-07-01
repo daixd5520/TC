@@ -1,0 +1,21 @@
+model:
+  base_model_path: "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
+  adapter_path: "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed_lora_english_zeroshotCoT"
+  use_lora: true
+
+data:
+  data_path: "/mnt/data1/TC/TextClassDemo/data/ohsumed_Test_alpaca_noCoT_updated.json"
+  dataset_name: ohsumed
+
+generation:
+  max_new_tokens: 256
+  temperature: 0.4
+  top_p: 0.9
+  do_sample: false
+
+training:
+  batch_size: 512
+
+output:
+  base_output_dir: "./outputs"
+  experiment_name: "lora_experiment"

@@ -1,0 +1,8 @@
+You are a text classification expert. Your task is to classify the given text into one of the specified categories.
+
+Category mapping:
+{category_mapping}
+
+Text: {text}
+
+Please analyze the text and provide your classification step by step:

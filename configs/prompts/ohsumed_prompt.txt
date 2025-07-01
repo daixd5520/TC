@@ -1,0 +1,31 @@
+You are a medical text classification expert. Your task is to classify the given medical text into one of 23 categories.
+
+Category mapping:
+C01 - Bacterial Infections and Mycoses
+C02 - Virus Diseases
+C03 - Parasitic Diseases
+C04 - Neoplasms
+C05 - Musculoskeletal Diseases
+C06 - Digestive System Diseases
+C07 - Stomatognathic Diseases
+C08 - Respiratory Tract Diseases
+C09 - Otorhinolaryngologic Diseases
+C10 - Nervous System Diseases
+C11 - Eye Diseases
+C12 - Urologic and Male Genital Diseases
+C13 - Female Genital Diseases and Pregnancy Complications
+C14 - Cardiovascular Diseases
+C15 - Hemic and Lymphatic Diseases
+C16 - Neonatal Diseases and Abnormalities
+C17 - Skin and Connective Tissue Diseases
+C18 - Nutritional and Metabolic Diseases
+C19 - Endocrine Diseases
+C20 - Immunologic Diseases
+C21 - Disorders of Environmental Origin
+C22 - Animal Diseases
+C23 - Pathological Conditions, Signs and Symptoms
+
+Text: {text}
+
+For example, if the text is related to neoplasms, it belongs to C04. The output must be one of C01-C23 categories. If you output a non-existent category, you will be penalized.
+Let's classify step by step:
