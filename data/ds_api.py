@@ -86,40 +86,39 @@ class DeepSeekCoTGenerator:
             return api_config, client
     
     def generate_cot_response(self, text, true_label, max_retries=3):
-        """生成CoT推理过程，基于真实标签补全推理"""
+        """Generate CoT reasoning process based on the true label (English prompt, optimized for quality)"""
         
         system_prompt = (
-            "You are a medical text classification expert. Given a medical text and its correct classification, "
-            "please provide a detailed step-by-step reasoning process that leads to the correct classification.\n\n"
+            "You are a medical text classification expert. Given a medical text and its correct classification label, "
+            "your task is to provide a rigorous, step-by-step reasoning process that logically leads to the correct classification. "
+            "Your explanation should be detailed, professional, and reference key information from the text.\n\n"
             "Available categories:\n"
         )
-        
-        # 添加类别映射
         for code, name in self.category_mapping.items():
             system_prompt += f"{code} - {name}\n"
-        
+
         system_prompt += (
-            "\nPlease follow this format:\n"
-            "1. Identify key medical terms and concepts in the text\n"
-            "2. Analyze the body systems involved\n"
-            "3. Consider the disease type and pathology\n"
-            "4. Explain why this text belongs to the given category\n"
-            "5. Provide final classification with confidence\n\n"
-            "End your response with: 'Final classification: [CATEGORY_CODE]'\n\n"
-            "Important: The final classification must match the given correct label."
+            "\nPlease strictly follow this format:\n"
+            "Step 1: Identify and list key medical terms, symptoms, or concepts mentioned in the text.\n"
+            "Step 2: Analyze which body systems or organs are involved, based on the identified terms.\n"
+            "Step 3: Consider the type of disease or pathology (e.g., infection, neoplasm, metabolic disorder, etc.).\n"
+            "Step 4: Explain in detail why the text should be classified under the given category, referencing evidence from the text.\n"
+            "Step 5: State your final classification with a confidence statement.\n\n"
+            "End your response with: 'Final classification: [CATEGORY_CODE]'\n"
+            "Important: The final classification code must exactly match the provided correct label."
         )
-        
+
         user_prompt = (
-            f"Please provide a detailed reasoning process for this medical text classification:\n\n"
+            "Please provide a detailed, step-by-step reasoning process for the following medical text classification task:\n\n"
             f"Text: {text}\n"
-            f"Correct classification: {true_label}\n\n"
-            f"Please explain step by step why this text belongs to category {true_label}."
+            f"Correct classification label: {true_label}\n\n"
+            f"Explain, step by step, why this text belongs to category {true_label}, following the required format."
         )
-        
+
         for attempt in range(max_retries):
             try:
                 api_config, client = self.get_next_api()
-                print(f"使用API {self.api_index}: {api_config['model']}")
+                print(f"Using API {self.api_index}: {api_config['model']}")
                 
                 response = client.chat.completions.create(
                     model=api_config["model"],
@@ -128,30 +127,30 @@ class DeepSeekCoTGenerator:
                         {'role': 'user', 'content': user_prompt}
                     ],
                     temperature=0.3,
-                    max_tokens=1024,
+                    max_tokens=1000,
                     stream=False,
                     timeout=30
                 )
                 
                 cot_response = response.choices[0].message.content
                 
-                # 验证最终分类是否正确
+                # Check if the final classification is correct
                 if true_label in cot_response:
                     return cot_response
                 else:
-                    # 如果最终分类不正确，强制修正
+                    # If not, force correction
                     corrected_response = cot_response.rstrip() + f"\n\nFinal classification: {true_label}"
-                    print(f"修正最终分类为: {true_label}")
+                    print(f"Corrected final classification to: {true_label}")
                     return corrected_response
                 
             except Exception as e:
-                print(f"API调用错误 (尝试 {attempt + 1}/{max_retries}): {e}")
+                print(f"API call error (attempt {attempt + 1}/{max_retries}): {e}")
                 if attempt < max_retries - 1:
                     wait_time = (attempt + 1) * 2
-                    print(f"等待 {wait_time} 秒后重试...")
+                    print(f"Retrying after {wait_time} seconds...")
                     time.sleep(wait_time)
                 else:
-                    print("达到最大重试次数，跳过此样本")
+                    print("Max retries reached, skipping this sample")
                     return None
     
     def process_batch_parallel(self, batch_data):
@@ -162,7 +161,7 @@ class DeepSeekCoTGenerator:
             # 提交所有任务
             future_to_item = {
                 executor.submit(self.generate_cot_response, item['input'], item['output']): item 
-                for item in batch_data
+                for item in batch_data if item.get('input')
             }
             
             # 收集结果
@@ -170,18 +169,18 @@ class DeepSeekCoTGenerator:
                 item = future_to_item[future]
                 try:
                     cot_response = future.result()
-                    if cot_response:
+                    if cot_response and item.get('input'):
                         cot_item = {
                             "instruction": (
-                                "你是一个医疗文本分类专家。请仔细分析给定的医疗文本，"
-                                "提供详细的推理过程，然后给出最终的分类结果。"
+                                "You are a medical text classification expert. Carefully analyze the given medical text, "
+                                "provide a detailed step-by-step reasoning process, and then give the final classification result."
                             ),
                             "input": item['input'],
                             "output": cot_response
                         }
                         results.append(cot_item)
                     else:
-                        print(f"跳过样本: API调用失败")
+                        print(f"跳过样本: input 为空或API调用失败")
                 except Exception as e:
                     print(f"处理样本时出错: {e}")
         
@@ -299,9 +298,9 @@ class DeepSeekCoTGenerator:
 
 def main():
     # 配置
-    input_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Train_alpaca_noCoT_updated.json"
-    output_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Train_cot.json"
-    checkpoint_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Train_cot_checkpoint.json"
+    input_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Train_alpaca_noCoT_updated.json"
+    output_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Train_cot.json"
+    checkpoint_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Train_cot_checkpoint.json"
     
     # 处理参数
     batch_size = 5  # 每批处理5个样本

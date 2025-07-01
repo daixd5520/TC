@@ -23,6 +23,7 @@ class DataConfig:
     """数据配置"""
     data_path: str
     dataset_name: str
+    num_classes: int
 
 
 @dataclass
@@ -38,6 +39,7 @@ class GenerationConfig:
 class TrainingConfig:
     """训练配置"""
     batch_size: int
+    vote_count: int = 5  # 新增：投票条数，默认5
 
 
 @dataclass
@@ -115,7 +117,11 @@ class ConfigManager:
         model_config = ModelConfig(**config_dict['model'])
         data_config = DataConfig(**config_dict['data'])
         generation_config = GenerationConfig(**config_dict['generation'])
-        training_config = TrainingConfig(**config_dict['training'])
+        # 兼容老配置：vote_count可选
+        training_dict = config_dict['training']
+        if 'vote_count' not in training_dict:
+            training_dict['vote_count'] = 5
+        training_config = TrainingConfig(**training_dict)
         output_config = OutputConfig(**config_dict['output'])
         
         return ExperimentConfig(
@@ -136,7 +142,8 @@ class ConfigManager:
             },
             'data': {
                 'data_path': args.data_path,
-                'dataset_name': args.dataset_name
+                'dataset_name': args.dataset_name,
+                'num_classes': args.num_classes
             },
             'generation': {
                 'max_new_tokens': args.max_new_tokens,
@@ -145,7 +152,8 @@ class ConfigManager:
                 'do_sample': args.do_sample
             },
             'training': {
-                'batch_size': args.batch_size
+                'batch_size': args.batch_size,
+                'vote_count': getattr(args, 'vote_count', 5)
             },
             'output': {
                 'base_output_dir': args.output_dir,
@@ -178,6 +186,7 @@ def create_argument_parser() -> argparse.ArgumentParser:
     # 数据参数
     parser.add_argument("--data-path", type=str, help="数据文件路径")
     parser.add_argument("--dataset-name", type=str, default="ohsumed", help="数据集名称")
+    parser.add_argument("--num-classes", type=int, default=23, help="类别数")
     
     # 生成参数
     parser.add_argument("--max-new-tokens", type=int, default=256, help="最大生成token数")
@@ -187,6 +196,7 @@ def create_argument_parser() -> argparse.ArgumentParser:
     
     # 训练参数
     parser.add_argument("--batch-size", type=int, default=512, help="批处理大小")
+    parser.add_argument("--vote-count", type=int, default=5, help="单样本投票条数（多次推理后投票）")
     
     # 输出参数
     parser.add_argument("--output-dir", type=str, default="./outputs", help="输出目录")

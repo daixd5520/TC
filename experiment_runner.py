@@ -34,9 +34,7 @@ class MedicalTextClassifier:
         self.model = None
         self.logger = self._setup_logger()
         self.prompt_manager = PromptManager()
-        
-        # 类别标签
-        self.class_labels = [f"C{str(i).zfill(2)}" for i in range(1, 24)]
+        self.num_classes = self.config.data.num_classes
         
     def _setup_logger(self) -> logging.Logger:
         """设置日志记录器"""
@@ -128,20 +126,16 @@ class MedicalTextClassifier:
     
     def extract_category(self, output: str) -> int:
         """从推理过程中提取类别编号"""
-        # 匹配最终分类结果
         match = re.search(r"最终分类结果：C(\d{2})", output)
         if match:
             category_num = int(match.group(1))
-            if 1 <= category_num <= 23:
+            if 1 <= category_num <= self.num_classes:
                 return category_num - 1
-        
-        # 匹配任何地方出现的 CXX 格式
         match = re.search(r"C(\d{2})", output)
         if match:
             category_num = int(match.group(1))
-            if 1 <= category_num <= 23:
+            if 1 <= category_num <= self.num_classes:
                 return category_num - 1
-        
         return -1
     
     def predict_batch(self, texts: List[str]) -> Tuple[List[int], List[str]]:
@@ -197,7 +191,7 @@ class MedicalTextClassifier:
     
     def plot_confusion_matrix(self, y_true: List[int], y_pred: List[int], output_dir: str):
         """绘制并保存混淆矩阵"""
-        cm = confusion_matrix(y_true, y_pred)
+        cm = confusion_matrix(y_true, y_pred, labels=list(range(self.num_classes)))
         plt.figure(figsize=(15, 15))
         sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
         plt.title('Confusion Matrix')
@@ -303,31 +297,16 @@ class MedicalTextClassifier:
         
         return results
     
-    def run_test_samples(self, num_samples: int = 5):
-        """运行测试样本展示"""
-        self.logger.info("开始运行测试样本展示...")
-        
-        # 加载模型
-        self.load_model()
-        
-        # 加载数据集
-        test_dataset = self.load_dataset()
-        texts = test_dataset["text"]
-        labels = test_dataset["label"]
-        
-        # 随机选择样本
-        indices = np.random.choice(len(texts), min(num_samples, len(texts)), replace=False)
-        
-        self.logger.info(f"\n使用模型: {'LoRA' if self.config.model.use_lora else 'Base Model'}")
-        self.logger.info(f"数据集: {self.config.data.dataset_name}")
-        self.logger.info("示例输出：")
-        
-        for i, idx in enumerate(indices):
-            text = texts[idx]
-            label = f"C{labels[idx]+1:02d}"
+    def predict_with_vote(self, text: str, vote_count: int = None) -> (int, list):
+        """
+        对单个文本进行多次推理并majority vote，返回最终类别和所有输出
+        """
+        if vote_count is None:
+            vote_count = self.config.training.vote_count
+        preds = []
+        outputs = []
+        for _ in range(vote_count):
             prompt = self.build_prompt(text)
-            
-            # 构建对话格式
             messages = [{"role": "user", "content": prompt}]
             chat_input = self.tokenizer.apply_chat_template(
                 messages,
@@ -335,7 +314,6 @@ class MedicalTextClassifier:
                 add_generation_prompt=True
             )
             inputs = self.tokenizer(chat_input, return_tensors="pt", max_length=2048, truncation=True).to(self.model.device)
-            
             with torch.no_grad():
                 generated_ids = self.model.generate(
                     **inputs,
@@ -346,17 +324,78 @@ class MedicalTextClassifier:
                     pad_token_id=self.tokenizer.pad_token_id,
                     eos_token_id=self.tokenizer.eos_token_id
                 )
-            
             output = self.tokenizer.decode(generated_ids[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
             pred = self.extract_category(output)
-            pred_label = f"C{pred+1:02d}" if pred != -1 else "未分类"
-            
-            self.logger.info(f"\n样本{i+1}：")
-            self.logger.info(f"文本: {text[:200]}...")
-            self.logger.info(f"真实类别: {label}")
-            self.logger.info(f"预测类别: {pred_label}")
-            self.logger.info(f"模型推理过程:\n{output}")
-            self.logger.info("-"*80)
+            preds.append(pred)
+            outputs.append(output)
+        # 统计投票
+        valid_preds = [p for p in preds if p != -1]
+        if not valid_preds:
+            final_pred = -1
+        else:
+            # 多数投票，平票时随机选一个
+            from collections import Counter
+            counter = Counter(valid_preds)
+            most_common = counter.most_common()
+            max_count = most_common[0][1]
+            candidates = [k for k, v in most_common if v == max_count]
+            import random
+            final_pred = random.choice(candidates)
+        return final_pred, outputs
+    
+    def run_test_samples(self, num_samples: int = 5, use_vote: bool = True):
+        """运行测试样本展示，支持majority vote"""
+        self.logger.info("开始运行测试样本展示...")
+        self.load_model()
+        test_dataset = self.load_dataset()
+        texts = test_dataset["text"]
+        labels = test_dataset["label"]
+        indices = np.random.choice(len(texts), min(num_samples, len(texts)), replace=False)
+        self.logger.info(f"\n使用模型: {'LoRA' if self.config.model.use_lora else 'Base Model'}")
+        self.logger.info(f"数据集: {self.config.data.dataset_name}")
+        self.logger.info("示例输出：")
+        for i, idx in enumerate(indices):
+            text = texts[idx]
+            label = f"C{labels[idx]+1:02d}"
+            if use_vote:
+                pred, all_outputs = self.predict_with_vote(text)
+                pred_label = f"C{pred+1:02d}" if pred != -1 else "未分类"
+                self.logger.info(f"\n样本{i+1}：")
+                self.logger.info(f"文本: {text[:200]}...")
+                self.logger.info(f"真实类别: {label}")
+                self.logger.info(f"预测类别: {pred_label}")
+                self.logger.info(f"所有推理输出：")
+                for j, out in enumerate(all_outputs):
+                    self.logger.info(f"  [推理{j+1}]: {out}")
+                self.logger.info("-"*80)
+            else:
+                prompt = self.build_prompt(text)
+                messages = [{"role": "user", "content": prompt}]
+                chat_input = self.tokenizer.apply_chat_template(
+                    messages,
+                    tokenize=False,
+                    add_generation_prompt=True
+                )
+                inputs = self.tokenizer(chat_input, return_tensors="pt", max_length=2048, truncation=True).to(self.model.device)
+                with torch.no_grad():
+                    generated_ids = self.model.generate(
+                        **inputs,
+                        max_new_tokens=self.config.generation.max_new_tokens,
+                        temperature=self.config.generation.temperature,
+                        top_p=self.config.generation.top_p,
+                        do_sample=self.config.generation.do_sample,
+                        pad_token_id=self.tokenizer.pad_token_id,
+                        eos_token_id=self.tokenizer.eos_token_id
+                    )
+                output = self.tokenizer.decode(generated_ids[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+                pred = self.extract_category(output)
+                pred_label = f"C{pred+1:02d}" if pred != -1 else "未分类"
+                self.logger.info(f"\n样本{i+1}：")
+                self.logger.info(f"文本: {text[:200]}...")
+                self.logger.info(f"真实类别: {label}")
+                self.logger.info(f"预测类别: {pred_label}")
+                self.logger.info(f"模型推理过程:\n{output}")
+                self.logger.info("-"*80)
 
 
 def main():

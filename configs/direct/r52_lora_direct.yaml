@@ -1,22 +1,24 @@
 # 基础模型实验配置
 model:
   base_model_path: "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
-  adapter_path: "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed_lora_english_zeroshotCoT"
-  use_lora: false
+  adapter_path: "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_r52_direct_lora"
+  use_lora: true
 
 data:
   data_path: "/mnt/data1/TC/TextClassDemo/data/R52/R52_Test_Cxx.json"
-  dataset_name: r52_zero
+  dataset_name: r52
+  num_classes: 52
 
 generation:
   max_new_tokens: 256
   temperature: 0.4
   top_p: 0.9
-  do_sample: false
+  do_sample: true
 
 training:
   batch_size: 512
+  vote_count: 5
 
 output:
   base_output_dir: "./outputs"
-  experiment_name: "r52_base_zeroshotCoT"
+  experiment_name: "r52_lora_direct"

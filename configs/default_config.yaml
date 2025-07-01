@@ -9,6 +9,7 @@ model:
 data:
   data_path: "/mnt/data1/TC/TextClassDemo/data/ohsumed_Test_alpaca_noCoT_updated.json"
   dataset_name: ohsumed
+  num_classes: 23
 
 # 生成参数配置
 generation:
@@ -20,6 +21,7 @@ generation:
 # 训练配置
 training:
   batch_size: 512
+  vote_count: 5
 
 # 输出配置
 output:

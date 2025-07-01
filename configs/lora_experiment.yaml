@@ -6,6 +6,7 @@ model:
 data:
   data_path: "/mnt/data1/TC/TextClassDemo/data/ohsumed_Test_alpaca_noCoT_updated.json"
   dataset_name: ohsumed
+  num_classes: 23
 
 generation:
   max_new_tokens: 256
@@ -15,6 +16,7 @@ generation:
 
 training:
   batch_size: 512
+  vote_count: 5
 
 output:
   base_output_dir: "./outputs"

@@ -100,6 +100,7 @@ python run_experiments.py --all --mode eval
 
 ### 训练配置
 - `batch_size`: 批处理大小
+- `vote_count`: 单样本投票条数（对同一样本多次推理后投票，提升鲁棒性，默认5）
 
 ### 输出配置
 - `base_output_dir`: 输出目录
@@ -151,6 +152,7 @@ generation:
 
 training:
   batch_size: 512
+  vote_count: 5
 
 output:
   base_output_dir: "./outputs"

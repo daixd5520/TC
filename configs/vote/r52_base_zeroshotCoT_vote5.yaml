@@ -6,17 +6,19 @@ model:
 
 data:
   data_path: "/mnt/data1/TC/TextClassDemo/data/R52/R52_Test_Cxx.json"
-  dataset_name: r52
+  dataset_name: r52_zero
+  num_classes: 52
 
 generation:
   max_new_tokens: 256
-  temperature: 0.4
+  temperature: 1.0
   top_p: 0.9
-  do_sample: false
+  do_sample: true
 
 training:
   batch_size: 512
+  vote_count: 10
 
 output:
   base_output_dir: "./outputs"
-  experiment_name: "r52_base_direct"
+  experiment_name: "r52_base_zeroshotCoT_vote5"
