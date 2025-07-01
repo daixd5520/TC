@@ -90,17 +90,17 @@ python run_experiments.py --all --mode eval
 
 ### 数据配置
 - `data_path`: 数据文件路径
-- `dataset_name`: 数据集名称（用于选择提示词模板）
+- `dataset_name`: 数据集名称（用于选择提示词模板，和configs/prompts/{dataset_name}_prompt.txt对应）
 
 ### 生成参数
 - `max_new_tokens`: 最大生成token数
 - `temperature`: 温度参数
 - `top_p`: top_p参数
-- `do_sample`: 是否采样
+- `do_sample`: 是否采样(投票的时候要打开，不然一直是贪心解码)
 
 ### 训练配置
 - `batch_size`: 批处理大小
-- `vote_count`: 单样本投票条数（对同一样本多次推理后投票，提升鲁棒性，默认5）
+- `vote_count`: 单样本投票条数（对同一样本多次推理后投票，提升鲁棒性，默认5；不需要投票就设置1）
 
 ### 输出配置
 - `base_output_dir`: 输出目录
