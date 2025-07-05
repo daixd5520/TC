@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+"""
+R52数据集CoT数据生成脚本
+"""
+
 import json
 import time
 import os
@@ -11,37 +16,52 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-class DeepSeekCoTGenerator:
+class R52CoTGenerator:
     def __init__(self):
-        # 5个API配置
+        # R52类别映射
+        self.category_mapping = {
+            "C01": "cocoa", "C02": "earn", "C03": "acq", "C04": "copper", "C05": "housing",
+            "C06": "money-supply", "C07": "coffee", "C08": "sugar", "C09": "trade", "C10": "reserves",
+            "C11": "ship", "C12": "cotton", "C13": "grain", "C14": "crude", "C15": "nat-gas",
+            "C16": "cpi", "C17": "interest", "C18": "money-fx", "C19": "alum", "C20": "tin",
+            "C21": "gold", "C22": "strategic-metal", "C23": "retail", "C24": "ipi", "C25": "iron-steel",
+            "C26": "rubber", "C27": "heat", "C28": "jobs", "C29": "lei", "C30": "bop",
+            "C31": "gnp", "C32": "zinc", "C33": "veg-oil", "C34": "orange", "C35": "carcass",
+            "C36": "pet-chem", "C37": "gas", "C38": "wpi", "C39": "livestock", "C40": "lumber",
+            "C41": "instal-debt", "C42": "meal-feed", "C43": "lead", "C44": "potato", "C45": "nickel",
+            "C46": "cpu", "C47": "fuel", "C48": "jet", "C49": "income", "C50": "platinum",
+            "C51": "dlr", "C52": "tea"
+        }
+        
+        # API配置
         self.api_configs = [
             {
                 "name": "API_1",
-                "api_key": "sk-jguwpodlneddocxgvqiimjjrbhbhvglodfyagypskvvcktie",
+                "api_key": "sk-jtymgizloyiflpyevdfuphwwlpnpumqaikhtvjiqmwvitufp",
                 "base_url": "https://api.siliconflow.cn/v1",
                 "model": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
             },
             {
                 "name": "API_2",
-                "api_key": "sk-xrqkuqemtzbspyofxlybphoiqdmssrwrgtpvdeyvureaxcbq",
+                "api_key": "sk-fawxvlgdgcxyumracygkbupzegtktbvixkusivxkwtzzfbij",
                 "base_url": "https://api.siliconflow.cn/v1",
                 "model": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
             },
             {
                 "name": "API_3",
-                "api_key": "sk-ziyvhkysmskpeiywfrkmrhnapzxikqsongenuudigosompsb",
+                "api_key": "sk-ycipmthbccjnttfjewwrsoczocabogrwyfxfumvfujbtxisq",
                 "base_url": "https://api.siliconflow.cn/v1",
                 "model": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
             },
             {
                 "name": "API_4",
-                "api_key": "sk-rgtyodzwijqqzjyuxtbxmmlhurqctnpuvagxcdjmoszfpfwm",
+                "api_key": "sk-vawmgfutubrssefhkgeafidqshafekdxhaqwwehrvcqvydju",
                 "base_url": "https://api.siliconflow.cn/v1",
                 "model": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
             },
             {
                 "name": "API_5",
-                "api_key": "sk-wrpfhdjyrfxryxcsxsjdenwcdklehxswujqwnqoaykyogqrr",
+                "api_key": "sk-xhjauhvonvdkcsqzgvlempanmteewvwnfvfmtjrerfpwvxbi",
                 "base_url": "https://api.siliconflow.cn/v1",
                 "model": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
             }
@@ -63,33 +83,6 @@ class DeepSeekCoTGenerator:
         # API轮换相关
         self.api_index = 0
         self.api_lock = threading.Lock()
-        
-        # 类别映射
-        self.category_mapping = {
-            "C01": "Bacterial Infections and Mycoses",
-            "C02": "Virus Diseases", 
-            "C03": "Parasitic Diseases",
-            "C04": "Neoplasms",
-            "C05": "Musculoskeletal Diseases",
-            "C06": "Digestive System Diseases",
-            "C07": "Stomatognathic Diseases",
-            "C08": "Respiratory Tract Diseases",
-            "C09": "Otorhinolaryngologic Diseases",
-            "C10": "Nervous System Diseases",
-            "C11": "Eye Diseases",
-            "C12": "Urologic and Male Genital Diseases",
-            "C13": "Female Genital Diseases and Pregnancy Complications",
-            "C14": "Cardiovascular Diseases",
-            "C15": "Hemic and Lymphatic Diseases",
-            "C16": "Neonatal Diseases and Abnormalities",
-            "C17": "Skin and Connective Tissue Diseases",
-            "C18": "Nutritional and Metabolic Diseases",
-            "C19": "Endocrine Diseases",
-            "C20": "Immunologic Diseases",
-            "C21": "Disorders of Environmental Origin",
-            "C22": "Animal Diseases",
-            "C23": "Pathological Conditions, Signs and Symptoms"
-        }
     
     def get_next_api(self):
         """轮换获取下一个可用的API"""
@@ -100,6 +93,40 @@ class DeepSeekCoTGenerator:
             client, config = self.clients[self.api_index % len(self.clients)]
             self.api_index = (self.api_index + 1) % len(self.clients)
             return client, config
+    
+    def _build_system_prompt(self):
+        """构建系统提示词 - 针对新闻/金融领域"""
+        prompt = (
+            "You are a news text classification expert. Given a news text and its correct classification label, "
+            "your task is to provide a detailed, step-by-step reasoning process that logically leads to the correct classification. "
+            "Your explanation should analyze the content, context, and key topics mentioned in the text.\n\n"
+            "Available categories:\n"
+        )
+        
+        for code, name in self.category_mapping.items():
+            prompt += f"{code} - {name}\n"
+        
+        prompt += (
+            "\nPlease strictly follow this format:\n"
+            "Step 1: Identify and list key terms, topics, or entities mentioned in the text.\n"
+            "Step 2: Analyze the main subject matter and context of the news.\n"
+            "Step 3: Consider the type of news content and its characteristics.\n"
+            "Step 4: Explain in detail why the text should be classified under the given category, referencing evidence from the text.\n"
+            "Step 5: State your final classification with a confidence statement.\n\n"
+            "End your response with: 'Final classification: [CATEGORY_CODE]'\n"
+            "Important: The final classification code must exactly match the provided correct label."
+        )
+        
+        return prompt
+    
+    def _build_user_prompt(self, text, true_label):
+        """构建用户提示词"""
+        return (
+            "Please provide a detailed, step-by-step reasoning process for the following news text classification task:\n\n"
+            f"Text: {text}\n"
+            f"Correct classification label: {true_label}\n\n"
+            f"Explain, step by step, why this text belongs to category {true_label}, following the required format."
+        )
     
     def generate_cot_response(self, text, true_label, sample_id=None, max_retries=3):
         """生成CoT推理过程，带有重试机制"""
@@ -129,7 +156,7 @@ class DeepSeekCoTGenerator:
                     ],
                     temperature=0.3,
                     max_tokens=1500,
-                    timeout=45  # 增加超时时间
+                    timeout=45
                 )
                 
                 cot_response = response.choices[0].message.content
@@ -155,40 +182,6 @@ class DeepSeekCoTGenerator:
                     logger.error(f"样本 {sample_id} 达到最大重试次数，跳过")
                     return None
     
-    def _build_system_prompt(self):
-        """构建系统提示词"""
-        prompt = (
-            "You are a medical text classification expert. Given a medical text and its correct classification label, "
-            "your task is to provide a rigorous, step-by-step reasoning process that logically leads to the correct classification. "
-            "Your explanation should be detailed, professional, and reference key information from the text.\n\n"
-            "Available categories:\n"
-        )
-        
-        for code, name in self.category_mapping.items():
-            prompt += f"{code} - {name}\n"
-        
-        prompt += (
-            "\nPlease strictly follow this format:\n"
-            "Step 1: Identify and list key medical terms, symptoms, or concepts mentioned in the text.\n"
-            "Step 2: Analyze which body systems or organs are involved, based on the identified terms.\n"
-            "Step 3: Consider the type of disease or pathology (e.g., infection, neoplasm, metabolic disorder, etc.).\n"
-            "Step 4: Explain in detail why the text should be classified under the given category, referencing evidence from the text.\n"
-            "Step 5: State your final classification with a confidence statement.\n\n"
-            "End your response with: 'Final classification: [CATEGORY_CODE]'\n"
-            "Important: The final classification code must exactly match the provided correct label."
-        )
-        
-        return prompt
-    
-    def _build_user_prompt(self, text, true_label):
-        """构建用户提示词"""
-        return (
-            "Please provide a detailed, step-by-step reasoning process for the following medical text classification task:\n\n"
-            f"Text: {text}\n"
-            f"Correct classification label: {true_label}\n\n"
-            f"Explain, step by step, why this text belongs to category {true_label}, following the required format."
-        )
-    
     def _validate_response(self, response, true_label):
         """验证响应质量"""
         if not response:
@@ -202,11 +195,11 @@ class DeepSeekCoTGenerator:
         results = []
         failed_count = 0
         
-        # 过滤有效数据 - 原始数据使用text字段
+        # 过滤有效数据 - R52使用input字段
         valid_batch_data = []
         for i, item in enumerate(batch_data):
-            # 原始数据中的text字段对应断点文件中的input字段
-            if item.get('text') and item.get('text').strip() and item.get('output') and item.get('output').strip():
+            if (item.get('input') and item.get('input').strip() and 
+                item.get('output') and item.get('output').strip()):
                 valid_batch_data.append((item, f"{batch_id}_{i}"))
             else:
                 logger.warning(f"样本 {batch_id}_{i} 数据无效，跳过")
@@ -222,7 +215,7 @@ class DeepSeekCoTGenerator:
             future_to_item = {
                 executor.submit(
                     self.generate_cot_response, 
-                    item['text'],  # 使用text字段作为输入文本
+                    item['input'], 
                     item['output'], 
                     sample_id
                 ): (item, sample_id) 
@@ -234,14 +227,14 @@ class DeepSeekCoTGenerator:
                 for future in as_completed(future_to_item):
                     item, sample_id = future_to_item[future]
                     try:
-                        cot_response = future.result(timeout=60)  # 设置future超时
+                        cot_response = future.result(timeout=60)
                         if cot_response:
                             cot_item = {
                                 "instruction": (
-                                    "You are a medical text classification expert. Carefully analyze the given medical text, "
+                                    "You are a news text classification expert. Carefully analyze the given news text, "
                                     "provide a detailed step-by-step reasoning process, and then give the final classification result."
                                 ),
-                                "input": item['text'],  # 使用text字段作为input
+                                "input": item['input'],
                                 "output": cot_response
                             }
                             results.append(cot_item)
@@ -321,13 +314,11 @@ class DeepSeekCoTGenerator:
             return 0
         
         # 创建已处理输入的集合，用于快速查找
-        # 断点文件的input字段对应原始数据的text字段
         processed_inputs = {item['input'] for item in processed_data if item.get('input')}
         
         # 按顺序检查原始数据，找到第一个未处理的索引
         for i, item in enumerate(original_data):
-            # 原始数据中的text字段对应断点文件中的input字段
-            if item.get('text') and item['text'] not in processed_inputs:
+            if item.get('input') and item['input'] not in processed_inputs:
                 return i
         
         return len(original_data)
@@ -341,13 +332,12 @@ class DeepSeekCoTGenerator:
         count = 0
         
         for item in original_data:
-            # 原始数据中的text字段对应断点文件中的input字段
-            if item.get('text') and item['text'] in processed_inputs:
+            if item.get('input') and item['input'] in processed_inputs:
                 count += 1
         
         return count
     
-    def process_dataset(self, input_file, output_file, checkpoint_file, batch_size=5, max_samples=None, original_data=None):
+    def process_dataset(self, input_file, output_file, checkpoint_file, batch_size=5, max_samples=None):
         """处理数据集 - 支持断点续传和定期保存"""
         
         # 测试API连接
@@ -356,16 +346,13 @@ class DeepSeekCoTGenerator:
             return []
         
         # 读取原始数据
-        if original_data is None:
-            logger.info(f"读取原始数据: {input_file}")
-            try:
-                with open(input_file, 'r', encoding='utf-8') as f:
-                    original_data = json.load(f)
-            except Exception as e:
-                logger.error(f"读取原始数据失败: {e}")
-                return []
-        else:
-            logger.info(f"使用传入的原始数据: {len(original_data)} 个样本")
+        logger.info(f"读取原始数据: {input_file}")
+        try:
+            with open(input_file, 'r', encoding='utf-8') as f:
+                original_data = json.load(f)
+        except Exception as e:
+            logger.error(f"读取原始数据失败: {e}")
+            return []
         
         # 加载已处理数据
         processed_data = self.load_checkpoint(checkpoint_file)
@@ -380,7 +367,6 @@ class DeepSeekCoTGenerator:
         
         if start_index >= len(original_data):
             logger.info("所有数据已处理完成！")
-            # 保存最终结果
             self.save_final_result(processed_data, output_file)
             return processed_data
         
@@ -455,240 +441,72 @@ class DeepSeekCoTGenerator:
             logger.error(f"保存最终结果失败: {e}")
 
 def main():
-    """主函数 - 处理数据集"""
-    # 配置
-    input_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Train.json"
-    output_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Train_cot.json"
-    checkpoint_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Train_cot_checkpoint.json"
+    """主函数"""
+    print("=" * 60)
+    print("R52数据集CoT数据生成")
+    print("=" * 60)
+    
+    # 文件路径配置
+    input_file = "/mnt/data1/TC/TextClassDemo/data/R52/R52_Train.json"
+    output_file = "/mnt/data1/TC/TextClassDemo/data/R52/R52_Train_cot.json"
+    checkpoint_file = "/mnt/data1/TC/TextClassDemo/data/R52/R52_Train_cot_checkpoint.json"
     
     # 处理参数
-    batch_size = 10
-    max_samples = 2000  # None表示处理全部
+    batch_size = 5
+    max_samples = None  # 处理全部数据
     
-    # 创建生成器
-    generator = DeepSeekCoTGenerator()
+    print(f"✅ 输入文件: {input_file}")
+    print(f"✅ 输出文件: {output_file}")
+    print(f"✅ 断点文件: {checkpoint_file}")
+    print(f"✅ 批次大小: {batch_size}")
+    print(f"✅ 最大样本数: {max_samples if max_samples else '全部'}")
     
-    # 处理数据
-    cot_data = generator.process_dataset(
-        input_file=input_file,
-        output_file=output_file,
-        checkpoint_file=checkpoint_file,
-        batch_size=batch_size,
-        max_samples=max_samples
-    )
-    
-    # 显示示例
-    if cot_data:
-        logger.info("最新生成的CoT数据示例:")
-        print(json.dumps(cot_data[-1], ensure_ascii=False, indent=2))
-
-def test_cot_generation():
-    """测试CoT生成功能"""
-    logger.info("开始测试CoT生成功能...")
-    
-    # 创建生成器
-    generator = DeepSeekCoTGenerator()
-    
-    # 测试数据
-    test_cases = [
-        {
-            "text": "The patient presents with severe chest pain, shortness of breath, and elevated cardiac enzymes. ECG shows ST-segment elevation in leads II, III, and aVF.",
-            "true_label": "C14",  # Cardiovascular Diseases
-            "description": "心血管疾病案例"
-        },
-        {
-            "text": "A 45-year-old male with fever, cough, and chest X-ray showing infiltrates in the right lower lobe. Sputum culture positive for Streptococcus pneumoniae.",
-            "true_label": "C08",  # Respiratory Tract Diseases
-            "description": "呼吸系统疾病案例"
-        },
-        {
-            "text": "Patient with elevated blood glucose levels, polyuria, polydipsia, and weight loss. HbA1c is 9.2%.",
-            "true_label": "C18",  # Nutritional and Metabolic Diseases
-            "description": "代谢性疾病案例"
-        }
-    ]
-    
-    results = []
-    
-    for i, test_case in enumerate(test_cases, 1):
-        logger.info(f"\n测试案例 {i}: {test_case['description']}")
-        logger.info(f"文本: {test_case['text'][:100]}...")
-        logger.info(f"正确标签: {test_case['true_label']}")
-        
-        try:
-            # 生成CoT响应
-            cot_response = generator.generate_cot_response(
-                text=test_case['text'],
-                true_label=test_case['true_label'],
-                sample_id=f"test_{i}"
-            )
-            
-            if cot_response:
-                # 验证响应
-                validation_result = validate_cot_response(cot_response, test_case['true_label'])
-                
-                result = {
-                    "test_id": i,
-                    "description": test_case['description'],
-                    "text": test_case['text'],
-                    "true_label": test_case['true_label'],
-                    "cot_response": cot_response,
-                    "validation": validation_result,
-                    "success": validation_result["is_valid"]
-                }
-                
-                results.append(result)
-                
-                # 打印结果
-                logger.info(f"✅ 测试案例 {i} 成功")
-                logger.info(f"响应长度: {len(cot_response)} 字符")
-                logger.info(f"包含正确标签: {validation_result['contains_correct_label']}")
-                logger.info(f"包含步骤分析: {validation_result['has_step_analysis']}")
-                logger.info(f"最终分类正确: {validation_result['final_classification_correct']}")
-                
-                # 打印CoT响应的前200个字符
-                logger.info(f"CoT响应预览: {cot_response[:200]}...")
-                
-            else:
-                logger.error(f"❌ 测试案例 {i} 失败: 未生成响应")
-                results.append({
-                    "test_id": i,
-                    "description": test_case['description'],
-                    "success": False,
-                    "error": "未生成响应"
-                })
-                
-        except Exception as e:
-            logger.error(f"❌ 测试案例 {i} 异常: {e}")
-            results.append({
-                "test_id": i,
-                "description": test_case['description'],
-                "success": False,
-                "error": str(e)
-            })
-    
-    # 统计结果
-    successful_tests = sum(1 for r in results if r.get('success', False))
-    total_tests = len(results)
-    
-    logger.info(f"\n{'='*50}")
-    logger.info(f"测试完成！成功: {successful_tests}/{total_tests}")
-    logger.info(f"成功率: {successful_tests/total_tests*100:.1f}%")
-    
-    # 保存测试结果
-    test_output_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/test_results.json"
-    try:
-        with open(test_output_file, 'w', encoding='utf-8') as f:
-            json.dump(results, f, ensure_ascii=False, indent=2)
-        logger.info(f"测试结果已保存到: {test_output_file}")
-    except Exception as e:
-        logger.error(f"保存测试结果失败: {e}")
-    
-    return results
-
-def validate_cot_response(response, true_label):
-    """验证CoT响应的质量"""
-    if not response:
-        return {
-            "is_valid": False,
-            "contains_correct_label": False,
-            "has_step_analysis": False,
-            "final_classification_correct": False,
-            "issues": ["响应为空"]
-        }
-    
-    issues = []
-    
-    # 检查是否包含正确的标签
-    contains_correct_label = true_label in response
-    if not contains_correct_label:
-        issues.append(f"未包含正确标签 {true_label}")
-    
-    # 检查是否包含步骤分析
-    step_keywords = ["Step 1:", "Step 2:", "Step 3:", "Step 4:", "Step 5:"]
-    has_step_analysis = any(keyword in response for keyword in step_keywords)
-    if not has_step_analysis:
-        issues.append("缺少步骤分析格式")
-    
-    # 检查最终分类是否正确
-    final_classification_correct = False
-    if "Final classification:" in response:
-        final_line = [line for line in response.split('\n') if "Final classification:" in line]
-        if final_line:
-            final_class = final_line[0].split("Final classification:")[-1].strip()
-            final_classification_correct = final_class == true_label
-            if not final_classification_correct:
-                issues.append(f"最终分类错误: 期望 {true_label}, 实际 {final_class}")
-    
-    # 检查响应长度
-    if len(response) < 100:
-        issues.append("响应过短")
-    
-    # 检查是否包含关键医学术语分析
-    medical_keywords = ["medical", "disease", "symptom", "diagnosis", "treatment", "patient"]
-    has_medical_analysis = any(keyword in response.lower() for keyword in medical_keywords)
-    if not has_medical_analysis:
-        issues.append("缺少医学分析内容")
-    
-    is_valid = (
-        contains_correct_label and 
-        has_step_analysis and 
-        final_classification_correct and 
-        len(response) >= 100 and
-        has_medical_analysis
-    )
-    
-    return {
-        "is_valid": is_valid,
-        "contains_correct_label": contains_correct_label,
-        "has_step_analysis": has_step_analysis,
-        "final_classification_correct": final_classification_correct,
-        "response_length": len(response),
-        "has_medical_analysis": has_medical_analysis,
-        "issues": issues
-    }
-
-def test_single_api():
-    """测试单个API调用"""
-    logger.info("测试单个API调用...")
-    
-    generator = DeepSeekCoTGenerator()
-    
-    # 测试API连接
-    if not generator.test_all_apis():
-        logger.error("API连接测试失败")
+    # 检查输入文件
+    if not os.path.exists(input_file):
+        logger.error(f"输入文件不存在: {input_file}")
         return
     
-    # 简单测试
-    test_text = "Patient with diabetes mellitus type 2, blood glucose 280 mg/dL, HbA1c 8.5%"
-    test_label = "C18"  # Nutritional and Metabolic Diseases
+    # 创建生成器
+    logger.info("初始化生成器...")
+    generator = R52CoTGenerator()
     
-    logger.info(f"测试文本: {test_text}")
-    logger.info(f"测试标签: {test_label}")
-    
+    # 处理数据
+    logger.info("开始处理数据...")
     try:
-        response = generator.generate_cot_response(test_text, test_label, "single_test")
+        cot_data = generator.process_dataset(
+            input_file=input_file,
+            output_file=output_file,
+            checkpoint_file=checkpoint_file,
+            batch_size=batch_size,
+            max_samples=max_samples
+        )
         
-        if response:
-            logger.info("✅ 单个API测试成功")
-            logger.info(f"响应长度: {len(response)}")
-            logger.info("响应内容:")
-            print("-" * 50)
-            print(response)
-            print("-" * 50)
+        print("\n" + "=" * 60)
+        print("处理完成!")
+        print("=" * 60)
+        
+        if cot_data:
+            print(f"✅ 总共生成: {len(cot_data)} 个CoT样本")
+            print(f"✅ 结果保存到: {output_file}")
+            print(f"✅ 断点保存到: {checkpoint_file}")
             
-            # 验证响应
-            validation = validate_cot_response(response, test_label)
-            logger.info(f"验证结果: {validation}")
+            # 显示最新样本示例
+            print("\n最新生成的CoT样本示例:")
+            print("-" * 50)
+            latest_sample = cot_data[-1]
+            print(f"Instruction: {latest_sample['instruction'][:100]}...")
+            print(f"Input: {latest_sample['input'][:100]}...")
+            print(f"Output: {latest_sample['output'][:200]}...")
+            print("-" * 50)
         else:
-            logger.error("❌ 单个API测试失败: 无响应")
+            print("❌ 没有生成任何数据")
             
+    except KeyboardInterrupt:
+        print("\n用户中断处理")
     except Exception as e:
-        logger.error(f"❌ 单个API测试异常: {e}")
+        print(f"\n❌ 处理过程中出错: {e}")
+        import traceback
+        traceback.print_exc()
 
 if __name__ == "__main__":
-    # 运行单个API测试
-    test_single_api()
-    
-    # 运行完整测试
-    # test_cot_generation() 
+    main() 
