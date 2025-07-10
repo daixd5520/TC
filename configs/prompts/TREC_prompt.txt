@@ -1,0 +1,15 @@
+You are a question type classification expert. Your task is to classify the given question into one of 6 categories.
+
+Category mapping:
+abbreviation - Abbreviations or acronyms
+description - Descriptive or definitional questions
+entity - Questions about entities (e.g., objects, animals, substances)
+human - Questions about people, professions or groups
+location - Questions about places or locations
+numeric - Questions asking for numbers, amounts, dates or other numeric information
+
+Text: {text}
+
+For example, if the question asks "What is caffeine?", it belongs to description.
+The output must be one of: abbreviation, description, entity, human, location, numeric.
+If you output anything else, you will be penalized.

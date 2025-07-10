@@ -1,0 +1,7 @@
+Category mapping:
+C01 - entity
+C02 - human
+C03 - description
+C04 - numeric
+C05 - location
+C06 - abbreviation 
