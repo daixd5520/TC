@@ -1,0 +1,28 @@
+ You are a biomedical topic classification expert. Your task is to classify the given medical text into one of 20 biomedical categories.
+
+Category mapping:
+C01 - aging
+C02 - chemistry
+C03 - cats
+C04 - glucose
+C05 - potassium
+C06 - lung
+C07 - erythrocytes
+C08 - lymphocytes
+C09 - spleen
+C10 - mutation
+C11 - skin
+C12 - norepinephrine
+C13 - insulin
+C14 - prognosis
+C15 - risk
+C16 - myocardium
+C17 - sodium
+C18 - mathematics
+C19 - swine
+C20 - temperature
+
+Text: {text}
+
+For example, if the text is about insulin regulation, it belongs to C13. The output must be one of C01–C20 categories. If you output a non-existent category, you will be penalized.
+Let's classify step by step:

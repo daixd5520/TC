@@ -1,0 +1,870 @@
+[
+  {
+    "index": 5,
+    "text": "how tall is the sears building ?",
+    "true_label": "C04",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"how tall is the sears building\", let's break it down step by step:\n\n1. The question is asking for a specific piece of information about something.\n2. The information being asked is related to a physical attribute (height).\n3. The attribute is being asked about a specific entity (the Sears building).\n\nBased on these observations, the question is asking for a specific type of information that is related to an entity.\n\nTherefore, the classification is: \nC01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 6,
+    "text": "george bush purchased a small interest in which baseball team ?",
+    "true_label": "C02",
+    "predicted_label": "C01",
+    "model_output": "To classify the question, let's break it down step by step:\n\n1. The question is asking about a specific action (purchased) involving a person (George Bush) and a baseball team.\n2. The question is not asking for a definition or description of something.\n3. The question is not asking about a specific number or amount.\n4. The question is not asking about a location.\n5. The question is not asking about a group of people or a profession.\n6. The question is not asking about an abbreviation or acronym.\n\nBased on the above analysis, the question is asking about a specific person (George Bush) and a baseball team, which is an entity.\n\nSo, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 7,
+    "text": "what is australia ' s national flower ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is Australia's national flower?\", let's break it down step by step:\n\n1. The question is asking for a specific piece of information about Australia.\n2. The information being asked is related to a specific aspect of Australia (its national flower).\n3. The question is not asking for a location, as it's not asking \"where\" something is, but rather \"what\" something is.\n4. The question is not asking for a number or a date.\n5. The question is not asking about a person or a group of people.\n6. The question is not asking for an abbreviation or acronym.\n\nBased on these steps, the question is asking for a description of something (the national flower of Australia). \n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 10,
+    "text": "what city had a world fair in 1900 ?",
+    "true_label": "C05",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what city had a world fair in 1900\", let's break it down:\n\n1. The question is asking for a specific city, which is a type of location.\n2. The question is not asking for a definition or description of a city.\n3. The question is not asking for a number or date (although it mentions a specific year, it's not asking for the year itself, but rather a city associated with it).\n4. The question is not asking about a person, profession, or group.\n5. The question is not asking for an abbreviation or acronym.\n\nBased on these observations, the question is best classified as a question about a location."
+  },
+  {
+    "index": 11,
+    "text": "what person ' s head is on a dime ?",
+    "true_label": "C02",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what person's head is on a dime?\", let's break it down step by step:\n\n1. The question is asking about a specific attribute of a person (the head on a dime).\n2. The question is not asking for a definition or description of a person.\n3. The question is not asking for a specific number or amount.\n4. The question is not asking about a location.\n5. The question is not asking about an abbreviation or acronym.\n6. The question is asking about a person, specifically whose head is depicted on a dime.\n\nBased on these steps, the question is asking about a person, so it belongs to the category of \"human\"."
+  },
+  {
+    "index": 15,
+    "text": "what is the life expectancy for crickets ?",
+    "true_label": "C04",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what is the life expectancy for crickets\", let's break it down step by step:\n\n1. The question is asking for information about a specific topic, which is \"life expectancy\".\n2. Life expectancy is a measurable value, often expressed in years.\n3. The question is asking for this value for a specific entity, which is \"crickets\".\n\nBased on this analysis, the question is asking for a numeric value related to an entity (crickets). \n\nTherefore, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 22,
+    "text": "what river in the us is known as the big muddy ?",
+    "true_label": "C05",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what river in the us is known as the big muddy?\", let's break it down step by step:\n\n1. The question is asking for a specific river in the US.\n2. The river is known by a specific name, \"the big muddy\".\n3. The question is not asking for a definition or description of the river.\n4. It's not asking for a person, profession, or group.\n5. It's not asking for a location outside of the US.\n6. It's not asking for a number, amount, date, or other numeric information.\n\nBased on these steps, the question is asking for a specific entity (the river) with a specific name. \n\nSo, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 29,
+    "text": "what hemisphere is the philippines in ?",
+    "true_label": "C05",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what hemisphere is the Philippines in?\", let's break it down step by step:\n\n1. The question is asking about a geographical location (the Philippines).\n2. The question is asking for a specific characteristic or attribute of that location (its hemisphere).\n3. The answer to this question would be a descriptive term (e.g., Eastern Hemisphere).\n\nBased on this analysis, the question is asking for a descriptive term that characterizes a location, which falls under the category of \"description\".\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 31,
+    "text": "where are the rocky mountains ?",
+    "true_label": "C05",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"where are the rocky mountains?\", let's break it down:\n\n1. The question is asking for a location.\n2. It's not asking for a definition or description of the Rocky Mountains.\n3. It's not asking for a specific person, profession, or group.\n4. It's not asking for a number or amount.\n5. It's not asking for an abbreviation or acronym.\n\nBased on these observations, the question \"where are the rocky mountains?\" is asking for a location.\n\nSo, the classification is: location."
+  },
+  {
+    "index": 34,
+    "text": "when did john f kennedy get elected as president ?",
+    "true_label": "C04",
+    "predicted_label": "C02",
+    "model_output": "To classify the question \"when did john f kennedy get elected as president?\", let's break it down:\n\n1. The question is asking for a specific event or occurrence in time, which is related to a person.\n2. The person in question is a historical figure, specifically a president.\n3. The question is asking for a date, which falls under a specific category.\n\nBased on these observations, the question is asking for a date related to a person, which is a president. Therefore, the category is related to people or professions, but more specifically, it's asking for a date related to a person, which is a president.\n\nSo, the classification is: C02 - Questions about people, professions or groups"
+  },
+  {
+    "index": 40,
+    "text": "material called linen is made from what plant ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the given question, let's break it down step by step:\n\n1. The question is asking for a characteristic or a property of something (linen).\n2. It's not asking for a location, a person, a profession, or a group.\n3. It's not asking for a number or an amount.\n4. It's not asking for an abbreviation or acronym.\n5. The question is asking for a description of the material that linen is made from.\n\nBased on these observations, the question is asking for a description of the material that linen is made from.\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 44,
+    "text": "what is the proper name for a female walrus ?",
+    "true_label": "C01",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is the proper name for a female walrus\", let's break it down:\n\n1. The question is asking for a specific term or name.\n2. The term is related to a female walrus, which is an entity.\n3. The question is not asking for a description, location, number, or abbreviation.\n\nBased on the above analysis, the question is asking for a specific term or name of an entity, which is a female walrus.\n\nTherefore, the classification is: entity."
+  },
+  {
+    "index": 45,
+    "text": "what is a group of turkeys called ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is a group of turkeys called\", let's break it down:\n\n1. The question is asking for a name or term to describe a group of turkeys.\n2. It's not asking for a definition or description of what turkeys are, but rather a specific term used to describe a group of them.\n3. It's not asking for a location, a person, or a number.\n4. It's not asking for an abbreviation or acronym.\n\nBased on this analysis, the question is asking for a term or name, which is a type of description. \n\nSo, the classification is: C03 - Descriptive or definitional questions"
+  },
+  {
+    "index": 49,
+    "text": "what is the name of the chocolate company in san francisco ?",
+    "true_label": "C02",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what is the name of the chocolate company in san francisco\", let's break it down:\n\n1. The question is asking for a specific name, which is a type of entity.\n2. The entity in question is a company, which is a type of organization.\n3. The company is located in a specific place, San Francisco, but the question is not asking about the location itself, but rather about the company within that location.\n\nBased on this analysis, the question is asking for a specific entity (the name of the company), which is a type of organization.\n\nSo, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 56,
+    "text": "when did elvis presley die ?",
+    "true_label": "C04",
+    "predicted_label": "C02",
+    "model_output": "To classify the question \"when did elvis presley die\", let's break it down:\n\n1. The question is asking for a specific date related to a person.\n2. The person in question is Elvis Presley, a well-known musician.\n\nBased on this analysis, the question is asking for a date related to a person, which falls under the category of people or professions.\n\nSo, the classification is: C02 - Questions about people, professions or groups"
+  },
+  {
+    "index": 57,
+    "text": "what is the capital of yugoslavia ?",
+    "true_label": "C05",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is the capital of yugoslavia\", let's break it down step by step:\n\n1. The question is asking for a specific piece of information about a location.\n2. The location in question is a country (Yugoslavia).\n3. The question is asking for a specific characteristic of that location (its capital).\n\nBased on this analysis, the question is asking for a characteristic of a location, which is a specific type of entity. However, since the question is asking for a characteristic of a location, it is more specifically a question about a location.\n\nSo, the classification is: location"
+  },
+  {
+    "index": 59,
+    "text": "what is the speed hummingbirds fly ?",
+    "true_label": "C04",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is the speed hummingbirds fly\", let's break it down:\n\n1. The question is asking for a characteristic or a property of hummingbirds.\n2. The characteristic being asked is their speed.\n3. This is a descriptive question, as it is asking for a specific attribute or quality of hummingbirds.\n\nBased on this analysis, the question \"what is the speed hummingbirds fly\" belongs to the category: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 60,
+    "text": "what is the oldest city in the united states ?",
+    "true_label": "C05",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what is the oldest city in the united states\", let's break it down step by step:\n\n1. The question is asking for information about a specific topic, which is a city.\n2. The question is asking for a descriptive answer, specifically the age or the fact that it is the oldest.\n3. The question is not asking for a person, profession, or group.\n4. The question is not asking for a location in general, but rather a specific city within a location (the United States).\n5. The question is not asking for a number or a date.\n\nBased on these observations, the question is asking for a descriptive answer about a specific entity (the city), which is the oldest in the United States.\n\nTherefore, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 62,
+    "text": "what river flows between fargo , north dakota and moorhead , minnesota ?",
+    "true_label": "C05",
+    "predicted_label": "C01",
+    "model_output": "To classify the given question, let's break it down step by step:\n\n1. The question is asking for a specific river that flows between two locations.\n2. The locations mentioned are Fargo, North Dakota, and Moorhead, Minnesota.\n3. The question is not asking for a definition or description of the river, but rather its name.\n4. It's not asking for a number, amount, or date.\n5. It's not asking about people, professions, or groups.\n6. It's not asking for an abbreviation or acronym.\n7. The question is asking for a geographical feature (a river) that is located between two specific locations.\n\nBased on these steps, the question is asking for a specific geographical entity (a river) that is located between two places.\n\nTherefore, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)."
+  },
+  {
+    "index": 69,
+    "text": "what strait separates north america from asia ?",
+    "true_label": "C05",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what strait separates north america from asia\", let's break it down:\n\n1. The question is asking for a specific geographical feature (a strait).\n2. A strait is a narrow body of water that connects two larger bodies of water.\n3. The question is asking for the name of a specific strait that separates two continents (North America and Asia).\n\nBased on this analysis, the question is asking for a specific geographical location or feature, which is a type of entity.\n\nSo, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 72,
+    "text": "what is the largest city in the world ?",
+    "true_label": "C05",
+    "predicted_label": "C04",
+    "model_output": "To classify the question \"what is the largest city in the world\", let's break it down step by step:\n\n1. The question is asking for a specific piece of information about a city.\n2. The question is not asking for a definition or description of a city.\n3. The question is not asking for a specific person, profession, or group.\n4. The question is not asking for a location, but rather a characteristic of a location.\n5. The question is asking for a specific piece of numeric information (the size of the city).\n\nBased on these steps, the question \"what is the largest city in the world\" is asking for a numeric value (the size of the city), which is the largest.\n\nSo, the classification is: C04 - Questions asking for numbers, amounts, dates or other numeric information."
+  },
+  {
+    "index": 76,
+    "text": "what type of currency is used in australia ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what type of currency is used in Australia?\", let's break it down step by step:\n\n1. The question is asking for a specific type or characteristic of something.\n2. The something in question is a currency, which is a specific type of entity.\n3. The question is asking for a descriptive answer, specifically the type or classification of the currency used in Australia.\n\nBased on this analysis, the question is asking for a descriptive answer about a specific entity (currency), so it belongs to the category of \"description\".\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 90,
+    "text": "the u s department of treasury first issued paper currency for the u s during which war ?",
+    "true_label": "C01",
+    "predicted_label": "C04",
+    "model_output": "To classify the given question, let's break it down step by step:\n\n1. The question is asking for information about a specific event or historical fact.\n2. The event is related to the U.S. Department of Treasury issuing paper currency.\n3. The question is asking for a specific date or time period associated with this event.\n\nBased on these observations, the question is asking for a specific date or time period, which falls under the category of numeric information.\n\nTherefore, the classification of the question is: C04 - Questions asking for numbers, amounts, dates or other numeric information."
+  },
+  {
+    "index": 94,
+    "text": "what is the oldest university in the us ?",
+    "true_label": "C02",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what is the oldest university in the us\", let's break it down step by step:\n\n1. The question is asking for information about a specific entity, which is a university.\n2. The question is asking for a specific characteristic of that entity, which is its age or age ranking.\n3. The question is asking for a specific university, which is the oldest one in the US.\n\nBased on these steps, the question is asking for information about a specific entity (university) and its characteristic (age), which makes it a question about an entity.\n\nSo, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 99,
+    "text": "what is the longest major league baseball winning streak ?",
+    "true_label": "C01",
+    "predicted_label": "C04",
+    "model_output": "To classify the question \"what is the longest major league baseball winning streak\", let's break it down step by step:\n\n1. The question is asking for information about a specific topic, which is \"major league baseball winning streak\".\n2. The question is asking for a specific piece of information, which is the \"longest\" one.\n3. The answer to this question would be a number, as it is asking for the longest streak, which implies a quantity.\n\nBased on this analysis, the question is asking for a specific type of information that can be classified as numeric.\n\nTherefore, the classification of the question is: C04 - Questions asking for numbers, amounts, dates or other numeric information."
+  },
+  {
+    "index": 103,
+    "text": "who is duke ellington ?",
+    "true_label": "C02",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"who is duke ellington\", let's break it down:\n\n1. The question is asking for information about a person.\n2. The question is inquiring about the identity of a person.\n3. The person in question is a well-known figure in the field of music.\n\nBased on these observations, the question \"who is duke ellington\" falls under the category of asking about a person, specifically a human.\n\nSo, the classification is: human."
+  },
+  {
+    "index": 107,
+    "text": "what is the ohio state bird ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is the ohio state bird?\", let's break it down:\n\n1. The question is asking for a description of something.\n2. The something is related to a specific state (Ohio).\n3. The question is asking for a specific type of description, which is the official state bird.\n\nBased on these points, the question is asking for a description of the state bird of Ohio.\n\nSo, the classification is: C03 - Descriptive or definitional questions"
+  },
+  {
+    "index": 109,
+    "text": "what is the highest dam in the u s ?",
+    "true_label": "C05",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is the highest dam in the U.S.?\", let's break it down step by step:\n\n1. The question is asking for a specific piece of information about a particular entity.\n2. The entity in question is a dam, which is a man-made structure.\n3. The question is asking for a characteristic of this entity (its height).\n4. The question is also specifying a location (the U.S.).\n\nHowever, the main focus of the question is on the entity (the dam) and its characteristic (its height), rather than the location. \n\nSo, the question is asking for a characteristic of an entity, which falls under the category of \"entity\"."
+  },
+  {
+    "index": 110,
+    "text": "what color is a poison arrow frog ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what color is a poison arrow frog\", let's break it down step by step:\n\n1. The question is asking for a characteristic of something.\n2. The something is a specific type of entity, which is a poison arrow frog.\n3. The question is asking for a descriptive characteristic, specifically a color.\n\nBased on this analysis, the question is asking for a descriptive characteristic of an entity, which falls under the category of \"description\".\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 126,
+    "text": "how wide is the milky way galaxy ?",
+    "true_label": "C04",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"how wide is the milky way galaxy?\", let's break it down step by step:\n\n1. The question is asking for a measurement or a quantity.\n2. The quantity being asked about is related to a specific object, which is the Milky Way galaxy.\n3. The question is not asking for a definition or description of the Milky Way galaxy.\n4. It's not asking about people, professions, or groups.\n5. It's not asking about a location in the sense of a place or address.\n6. It's not asking for an abbreviation or acronym.\n\nBased on these steps, the question is asking for a specific numeric value (width) related to an entity (the Milky Way galaxy). \n\nTherefore, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 135,
+    "text": "what is the major fault line near kentucky ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is the major fault line near Kentucky?\", let's break it down step by step:\n\n1. The question is asking for information about a specific topic, which is a fault line.\n2. The question is asking for a description or definition of the fault line, as it is asking \"what\" which implies a definition or explanation.\n3. The question is not asking for a specific person, place, or number, but rather a descriptive term.\n\nBased on these steps, the question \"what is the major fault line near Kentucky?\" belongs to the category of descriptive or definitional questions.\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 142,
+    "text": "where are the national archives ?",
+    "true_label": "C05",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"where are the national archives?\", let's break it down:\n\n1. The question is asking for a location.\n2. The question is not asking for a definition or description of something.\n3. The question is not asking about a specific entity, person, or profession.\n4. The question is not asking for a number or amount.\n5. The question is not asking about an abbreviation or acronym.\n\nBased on these observations, the question \"where are the national archives?\" is best classified as a question about a location. \n\nSo, the answer is: location"
+  },
+  {
+    "index": 147,
+    "text": "what were christopher columbus ' three ships ?",
+    "true_label": "C01",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what were christopher columbus'three ships?\", let's break it down:\n\n1. The question is asking for information about something related to Christopher Columbus.\n2. The question specifically asks for the names of three ships.\n3. The question is not asking for a definition, location, or numeric information.\n\nBased on the above points, the question is asking for the names of entities (ships) related to Christopher Columbus.\n\nSo, the classification is: entity."
+  },
+  {
+    "index": 150,
+    "text": "what is another name for vitamin b1 ?",
+    "true_label": "C01",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is another name for vitamin b1\", let's break it down:\n\n1. The question is asking for an alternative name or description of something.\n2. The something in question is a specific substance, which is \"vitamin B1\".\n\nBased on this analysis, the question is asking for a description of a specific entity (vitamin B1). \n\nSo, the classification is: entity."
+  },
+  {
+    "index": 154,
+    "text": "what baseball team was the first to make numbers part of their uniform ?",
+    "true_label": "C02",
+    "predicted_label": "C01",
+    "model_output": "To classify the question, let's break it down step by step:\n\n1. The question is asking about a specific event or action related to baseball teams.\n2. The question is inquiring about a particular aspect of baseball teams, which is the introduction of numbers on their uniforms.\n3. The question is not asking for a definition, description, or a specific number.\n4. It's not asking about a person, profession, or group.\n5. It's not asking about a location.\n6. The question is asking for a specific team that was the first to make numbers part of their uniform.\n\nBased on these steps, the question is asking for a specific entity (in this case, a baseball team) that performed a particular action (being the first to make numbers part of their uniform).\n\nTherefore, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 155,
+    "text": "what continent is egypt on ?",
+    "true_label": "C05",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what continent is egypt on\", let's break it down step by step:\n\n1. The question is asking for a specific piece of information about a location.\n2. The location in question is a country (Egypt).\n3. The question is asking for the geographical location of this country.\n\nBased on these steps, the question is asking for a location, which is a geographical area.\n\nSo, the classification is: location."
+  },
+  {
+    "index": 164,
+    "text": "what is another astronomic term for the northern lights ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is another astronomic term for the northern lights?\", let's break it down:\n\n1. The question is asking for an alternative term, which implies a description or definition.\n2. The term \"astronomic\" is related to astronomy, which is a field of study.\n3. The question is specifically asking for a term related to a natural phenomenon (the northern lights).\n\nBased on these points, the question is asking for a description or definition of a term related to astronomy.\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 165,
+    "text": "what peninsula is spain part of ?",
+    "true_label": "C05",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what peninsula is spain part of\", let's break it down step by step:\n\n1. The question is asking for a specific geographical location related to Spain.\n2. It's not asking for a definition or description of Spain or a peninsula.\n3. It's not asking for a person, profession, or group.\n4. It's not asking for a number, amount, or date.\n5. It's asking for a specific location, which is a peninsula.\n\nBased on these steps, the question is asking for a location, which is a peninsula related to Spain.\n\nThe answer is: location"
+  },
+  {
+    "index": 168,
+    "text": "what state has the least amount of rain per year ?",
+    "true_label": "C05",
+    "predicted_label": "C04",
+    "model_output": "To classify the question \"what state has the least amount of rain per year\", let's break it down step by step:\n\n1. The question is asking for a specific piece of information about a particular state.\n2. The information being asked is related to a measurable quantity (amount of rain per year).\n3. The question is not asking for a definition or description of a state.\n4. The question is not asking about a person, profession, or group.\n5. The question is not asking for an abbreviation or acronym.\n6. The question is not asking for a location in general, but rather a specific state.\n\nBased on these steps, the question is asking for a specific piece of numeric information (amount of rain per year) about a particular state.\n\nTherefore, the classification is: C04 - Questions asking for numbers, amounts, dates or other numeric information."
+  },
+  {
+    "index": 175,
+    "text": "what u s state ' s motto is ` ` live free or die ' ' ?",
+    "true_label": "C05",
+    "predicted_label": "C01",
+    "model_output": "To classify the given question, let's break it down step by step:\n\n1. The question is asking for information about a specific phrase, which is the motto of a U.S. state.\n2. The question is not asking for a definition or description of the phrase itself, but rather what the phrase is.\n3. The phrase is not a person, profession, or group.\n4. The phrase is not a location or place.\n5. The question is not asking for a number or amount.\n\nBased on these observations, the question is asking for the name or title of the U.S. state's motto, which is a type of entity (the motto itself is not an entity, but the state it belongs to is).\n\nTherefore, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)."
+  },
+  {
+    "index": 184,
+    "text": "what is natural gas composed of ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is natural gas composed of\", let's break it down:\n\n1. The question is asking for a description of what natural gas is composed of.\n2. It's not asking for an abbreviation or acronym.\n3. It's not asking about a specific entity, person, or location.\n4. It's not asking for a number or amount.\n5. It's asking for a description of the composition of natural gas.\n\nBased on this analysis, the question falls under the category of \"description\". \n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 190,
+    "text": "what is the sales tax in minnesota ?",
+    "true_label": "C01",
+    "predicted_label": "C04",
+    "model_output": "To classify the question \"what is the sales tax in minnesota\", let's break it down step by step:\n\n1. The question is asking for information about a specific topic, which is \"sales tax\".\n2. The question is asking for a specific value or amount, which is the sales tax rate.\n3. The location mentioned in the question is \"Minnesota\".\n\nBased on these observations, the question is asking for a specific value or amount related to a location. \n\nTherefore, the classification is: C04 - Questions asking for numbers, amounts, dates or other numeric information."
+  },
+  {
+    "index": 195,
+    "text": "what city has the zip code of 35824 ?",
+    "true_label": "C05",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what city has the zip code of 35824\", let's break it down step by step:\n\n1. The question is asking for a specific piece of information about a location.\n2. The information being asked is related to a geographic location (a city).\n3. The question is not asking for a description of the city, but rather a specific city that matches a certain criterion (having a specific zip code).\n\nBased on these observations, the question is most closely related to the category of locations.\n\nSo, the classification is: location."
+  },
+  {
+    "index": 196,
+    "text": "what currency is used in algeria ?",
+    "true_label": "C01",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what currency is used in algeria\", let's break it down:\n\n1. The question is asking for information about a specific topic (currency used in Algeria).\n2. The question is not asking for a definition or description of the currency.\n3. The question is not asking about a person, profession, or group.\n4. The question is not asking for a location, but rather a specific aspect of a location (currency used in Algeria).\n5. The question is not asking for a number or amount.\n\nBased on these observations, the question is asking for a specific type of information related to a location, but it's not a location itself. Therefore, it's not a location question. \n\nThe question is asking for a specific type of information that is related to a location, but it's not a location."
+  },
+  {
+    "index": 198,
+    "text": "what was the most popular toy in 1957 ?",
+    "true_label": "C01",
+    "predicted_label": "C04",
+    "model_output": "To classify the question \"what was the most popular toy in 1957\", let's break it down:\n\n1. The question is asking for information about a specific year (1957), which is a date.\n2. The question is also asking for information about a specific item (the most popular toy), which is related to a specific year.\n3. The question is not asking for a definition, abbreviation, or location.\n4. The question is not asking about a person, profession, or group.\n5. The question is not asking for a number or amount.\n\nBased on these observations, the question is asking for information about a specific year and a specific item, which is related to a category that involves numbers or dates.\n\nTherefore, the classification is: C04 - Questions asking for numbers, amounts, dates or other numeric information."
+  },
+  {
+    "index": 199,
+    "text": "what is pastrami made of ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is pastrami made of\", let's break it down:\n\n1. The question is asking for a description of something (pastrami).\n2. The question is asking for the composition or ingredients of pastrami.\n\nBased on this analysis, the question is asking for a description of pastrami, which is its composition or ingredients.\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 203,
+    "text": "what are the animals that don ' t have backbones called ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what are the animals that don't have backbones called?\", let's break it down step by step:\n\n1. The question is asking for a category or classification of animals, which implies a descriptive answer.\n2. The question is not asking for a specific animal, but rather a group or type of animal.\n3. The question is not asking for a location, a person, or a number.\n4. The question is not asking for an abbreviation or acronym.\n\nBased on these observations, the question is best classified as a descriptive question, as it is asking for a description or classification of a group of animals. \n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 213,
+    "text": "what new york city structure is also known as the twin towers ?",
+    "true_label": "C05",
+    "predicted_label": "C01",
+    "model_output": "To classify the question, let's break it down step by step:\n\n1. The question is asking for a specific thing, which is a structure in New York City.\n2. The question is asking for an alternative name of that structure, which is the \"twin towers\".\n3. This indicates that the question is looking for a descriptive or definitional answer, but since it's asking for a specific name, it's more about identifying a specific entity.\n\nBased on this analysis, the question is asking for a specific entity, which is a structure in New York City.\n\nSo, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 215,
+    "text": "what is the most frequently spoken language in the netherlands ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is the most frequently spoken language in the netherlands?\", let's break it down:\n\n1. The question is asking for information about a specific topic (language).\n2. The question is asking for a descriptive answer (the most frequently spoken language).\n3. The question is not asking for a specific entity, person, location, or number.\n\nBased on the above analysis, the question is asking for a descriptive answer about a specific topic, which falls under the category of \"description\".\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 217,
+    "text": "what are the spots on dominoes called ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what are the spots on dominoes called\", let's break it down step by step:\n\n1. The question is asking for a name or a term to describe something.\n2. The something in question is a feature or a part of a specific object (dominoes).\n3. The question is not asking for a definition, but rather a specific term.\n\nBased on these observations, the question is asking for a term or a name, which is a type of description.\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 223,
+    "text": "what is the electrical output in madrid , spain ?",
+    "true_label": "C01",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is the electrical output in madrid, spain\", let's break it down:\n\n1. The question is asking for a specific type of information, which is related to a particular location (Madrid, Spain).\n2. The question is not asking for a definition or description of something.\n3. It's not asking for a person, profession, or group.\n4. It's not asking for a number or amount.\n5. The question is asking for a specific type of information related to a location, which is the electrical output.\n\nBased on the above analysis, the question is asking for information about a specific aspect of a location.\n\nThe answer is: location"
+  },
+  {
+    "index": 225,
+    "text": "what is plastic made of ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is plastic made of\", let's break it down:\n\n1. The question is asking for a description of what plastic is composed of.\n2. It's not asking for an abbreviation or acronym.\n3. It's not asking about a specific entity, person, location, or profession.\n4. It's not asking for a number or amount.\n\nBased on the above analysis, the question is asking for a description of what plastic is made of, which falls under the category of a descriptive or definitional question.\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 234,
+    "text": "what are the two houses of the legislative branch ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what are the two houses of the legislative branch\", let's break it down:\n\n1. The question is asking for information about a concept or a system, which is the legislative branch.\n2. It's asking for the specific components or parts of this system, which are the two houses.\n3. The question is not asking for a definition, but rather a specific piece of information about the system.\n\nBased on this analysis, the question is asking for a descriptive piece of information about a system, which is the legislative branch. \n\nSo, the classification is: C03 - Descriptive or definitional questions"
+  },
+  {
+    "index": 239,
+    "text": "how fast is sound ?",
+    "true_label": "C04",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"how fast is sound\", let's break it down:\n\n1. The question is asking for a characteristic or property of something.\n2. The something in question is \"sound\".\n3. The question is asking for a specific type of property, which is a speed or rate.\n\nBased on this analysis, the question is asking for a description of the speed of sound.\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 245,
+    "text": "what is the longest suspension bridge in the u s ?",
+    "true_label": "C05",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is the longest suspension bridge in the U.S.?\", let's break it down step by step:\n\n1. The question is asking for a specific piece of information about something.\n2. The something in question is a bridge.\n3. The bridge is described as the longest suspension bridge in a specific location (the U.S.).\n\nBased on these steps, the question is asking for a description of a specific entity (the longest suspension bridge in the U.S.). \n\nSo, the classification is: entity."
+  },
+  {
+    "index": 249,
+    "text": "what is the criterion for being legally blind ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is the criterion for being legally blind\", let's break it down:\n\n1. The question is asking for a definition or explanation of a concept (being legally blind).\n2. It's not asking for an abbreviation, entity, person, location, or number.\n\nBased on this analysis, the question falls under the category of asking for a description or definition of a concept.\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 253,
+    "text": "what is the statue of liberty made of ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is the statue of liberty made of\", let's break it down:\n\n1. The question is asking for a description of something.\n2. The subject of the question is the Statue of Liberty, which is a specific entity.\n3. However, the question is not asking for information about the entity itself, but rather its composition.\n\nBased on this analysis, the question is asking for a description of the Statue of Liberty's composition, which falls under the category of \"description\".\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 255,
+    "text": "what planet is known as the ` ` red ' ' planet ?",
+    "true_label": "C05",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what planet is known as the'red' planet\", let's break it down step by step:\n\n1. The question is asking for a specific type of information about a planet.\n2. The question is not asking for a definition or description of the planet.\n3. The question is not asking for a number or amount.\n4. The question is not asking about a person, profession, or group.\n5. The question is not asking about a location other than a planet.\n6. The question is asking for the name of a planet.\n\nBased on these steps, the question is asking for the name of a specific entity (a planet).\n\nSo, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 257,
+    "text": "what is the colorful korean traditional dress called ?",
+    "true_label": "C01",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is the colorful korean traditional dress called?\", let's break it down:\n\n1. The question is asking for a name or a term to describe something.\n2. The question is specifically asking about a traditional dress from Korea.\n3. The question is not asking for a definition, but rather a name.\n\nBased on these points, the question is asking for a name or a term to describe a specific entity, which is the colorful Korean traditional dress.\n\nSo, the classification is: entity."
+  },
+  {
+    "index": 260,
+    "text": "who was the first african american to play for the brooklyn dodgers ?",
+    "true_label": "C02",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"who was the first african american to play for the brooklyn dodgers?\", let's break it down step by step:\n\n1. The question is asking for a specific person, which is a type of entity.\n2. The question is specifically asking about a person who is African American, which is a characteristic of the entity.\n3. The question is also asking about a specific profession (baseball player) and a specific team (Brooklyn Dodgers).\n\nHowever, the main focus of the question is on the person, not the team or the profession. Therefore, the question is primarily asking about a person.\n\nSo, the classification is: human."
+  },
+  {
+    "index": 263,
+    "text": "what instrument did glenn miller play ?",
+    "true_label": "C01",
+    "predicted_label": "C02",
+    "model_output": "To classify the question \"what instrument did glenn miller play\", let's break it down:\n\n1. The question is asking for information about a specific person (Glenn Miller).\n2. The question is asking for a specific attribute or characteristic of that person (the instrument they played).\n\nBased on this analysis, the question is about a person and is asking for a specific attribute or characteristic of that person.\n\nSo, the classification is: C02 - Questions about people, professions or groups."
+  },
+  {
+    "index": 267,
+    "text": "what is the capital of ethiopia ?",
+    "true_label": "C05",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is the capital of ethiopia\", let's break it down step by step:\n\n1. The question is asking for a specific piece of information about a location.\n2. The location in question is a country, Ethiopia.\n3. The question is asking for a specific characteristic of that location, which is its capital.\n\nBased on this analysis, the question is asking for a specific piece of information about a location, which is a country. \n\nSo, the classification is: location."
+  },
+  {
+    "index": 269,
+    "text": "how did janice joplin die ?",
+    "true_label": "C03",
+    "predicted_label": "C02",
+    "model_output": "To classify the question \"how did janice joplin die\", let's break it down:\n\n1. The question is asking for information about a specific event or cause of death, which is related to a person.\n2. The question is not asking for a definition or description of Janice Joplin, but rather about a specific event related to her.\n3. The question is not asking for a location, number, or abbreviation.\n4. The question is not asking for a general description of a person, but rather a specific event related to a person.\n\nBased on these observations, the question \"how did janice joplin die\" is most closely related to a person, specifically asking for information about a specific event or cause of death related to that person.\n\nTherefore, the classification is: C02 - Questions about people, professions or groups."
+  },
+  {
+    "index": 279,
+    "text": "what is a mirror made out of ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is a mirror made out of\", let's break it down:\n\n1. The question is asking for a description of something (a mirror).\n2. The question is not asking for an abbreviation or acronym.\n3. The question is not asking about a specific entity (object, animal, substance).\n4. The question is not asking about people, professions, or groups.\n5. The question is not asking about a location.\n6. The question is asking for a description of the composition of a mirror.\n\nBased on the above analysis, the question \"what is a mirror made out of\" belongs to the category: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 284,
+    "text": "where is hitler buried ?",
+    "true_label": "C05",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"where is hitler buried\", let's break it down:\n\n1. The question is asking for a location, which is a specific place where something is situated.\n2. The subject of the question is Hitler, a person.\n3. However, the question is not asking about the person itself, but rather about the location of the person's remains.\n\nBased on this analysis, the question is asking for a location, which is the final resting place of Hitler.\n\nSo, the classification is: location."
+  },
+  {
+    "index": 288,
+    "text": "what is naproxen ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what is naproxen\", let's break it down:\n\n1. The question is asking for a definition or explanation of something.\n2. The question is not asking for a specific person, place, or location.\n3. The question is not asking for a number or amount.\n4. The question is not asking for an abbreviation or acronym.\n\nBased on these observations, the question \"what is naproxen\" is asking for a description or definition of a substance, which is a type of entity.\n\nSo, the classification is: C01 - entity."
+  },
+  {
+    "index": 290,
+    "text": "what is the largest city in the u s ?",
+    "true_label": "C05",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what is the largest city in the U.S.?\", let's break it down step by step:\n\n1. The question is asking for a specific piece of information about a location.\n2. The location in question is a city, which is a type of entity.\n3. The question is asking for a characteristic of that entity (the largest city), which is a descriptive aspect.\n4. However, the primary focus of the question is to identify the name of the city, not to describe its characteristics.\n\nBased on these steps, the question is primarily asking for a specific entity (the largest city in the U.S.), but it's not asking for a description of the entity itself. Therefore, the most fitting category is:\n\nC01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 291,
+    "text": "what is foot and mouth disease ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is foot and mouth disease?\", let's break it down:\n\n1. The question is asking for a definition or explanation of something.\n2. It's not asking for an abbreviation or acronym.\n3. It's not asking about a specific entity, person, location, or number.\n4. It's not asking about a person, profession, or group.\n\nBased on the above analysis, the question \"what is foot and mouth disease?\" is asking for a description or definition of a concept. \n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 292,
+    "text": "what is the life expectancy of a dollar bill ?",
+    "true_label": "C04",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what is the life expectancy of a dollar bill\", let's break it down step by step:\n\n1. The question is asking for a specific piece of information about a dollar bill.\n2. The information being asked is related to a specific aspect of a dollar bill, which is its life expectancy.\n3. Life expectancy is a measure of how long something lasts or survives, which is a numeric value.\n\nBased on this analysis, the question is asking for a numeric value related to a specific entity (a dollar bill). \n\nTherefore, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 293,
+    "text": "what do you call a professional map drawer ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what do you call a professional map drawer\", let's break it down step by step:\n\n1. The question is asking for a name or a term to describe a profession.\n2. It's not asking for a definition or description of the profession itself.\n3. It's not asking for a specific person, location, or entity.\n4. It's not asking for a number or amount.\n\nBased on these observations, the question is asking for a term or name to describe a profession, which falls under the category of \"description\" or \"definitional questions\". However, since the question is asking for a specific term or name, it's more accurate to classify it as a \"description\" of a profession.\n\nSo, the classification is: C03 - Descriptive or definitional questions"
+  },
+  {
+    "index": 296,
+    "text": "what color is indigo ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what color is indigo\", let's break it down:\n\n1. The question is asking for a characteristic of something (indigo).\n2. The characteristic being asked is a property (color).\n3. The question is not asking for a definition, but rather a specific attribute.\n\nBased on this analysis, the question is asking for a description of indigo, which is its color.\n\nSo, the classification is: C03 - Descriptive or definitional questions"
+  },
+  {
+    "index": 298,
+    "text": "what does a barometer measure ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what does a barometer measure\", let's break it down:\n\n1. The question is asking for a description or explanation of what a barometer measures.\n2. It is not asking for an abbreviation or acronym.\n3. It is not asking about a specific entity, person, or location.\n4. It is not asking for a number or amount.\n\nBased on the above analysis, the question \"what does a barometer measure\" is asking for a description or explanation of a concept, which falls under the category of \"description\".\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 307,
+    "text": "what planet has the strongest magnetic field of all the planets ?",
+    "true_label": "C05",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what planet has the strongest magnetic field of all the planets\", let's break it down:\n\n1. The question is asking for a specific piece of information about a planet.\n2. The question is not asking for a definition or description of a planet.\n3. The question is not asking for a location or a place.\n4. The question is not asking for a number or a date.\n5. The question is not asking about people or professions.\n6. The question is not asking for an abbreviation or acronym.\n\nBased on these observations, the question is asking about a specific entity (a planet) and is inquiring about one of its properties (magnetic field strength). \n\nTherefore, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 310,
+    "text": "what is the capital of persia ?",
+    "true_label": "C05",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is the capital of Persia?\", let's break it down step by step:\n\n1. The question is asking for a specific piece of information, which is a characteristic of a descriptive question.\n2. However, the question is not asking for a definition or a description of something, but rather a specific piece of information about a location.\n3. The question is specifically asking about a location, which is the capital of a particular place.\n\nBased on these observations, the question \"what is the capital of Persia?\" is best classified as a question about a location."
+  },
+  {
+    "index": 312,
+    "text": "how many hearts does an octopus have ?",
+    "true_label": "C04",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"how many hearts does an octopus have\", let's break it down:\n\n1. The question is asking for a quantity or a count.\n2. The quantity being asked is related to a specific entity (an octopus).\n3. The question is not asking for a definition or description of an octopus.\n4. It's not asking about a person, profession, or group.\n5. It's not asking about a location.\n6. It's not asking for an abbreviation or acronym.\n\nBased on these observations, the question is asking for a specific number related to an entity. \n\nThe answer is: C01 - entity"
+  },
+  {
+    "index": 314,
+    "text": "what is the deepest lake in the us ?",
+    "true_label": "C05",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what is the deepest lake in the us\", let's break it down step by step:\n\n1. The question is asking for a specific piece of information about a particular entity.\n2. The entity in question is a lake, which is a geographical feature.\n3. The question is asking for a characteristic of this entity (its depth).\n4. The question is also specifying the location of the lake (in the US).\n\nBased on these steps, the question is asking for a characteristic of a geographical feature, which is a type of entity.\n\nSo, the classification is: \nC01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 316,
+    "text": "who was the first u s president to appear on tv ?",
+    "true_label": "C02",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"who was the first u s president to appear on tv?\", let's break it down:\n\n1. The question is asking for a person, specifically a historical figure.\n2. The question is asking for a specific person, not a general description or category.\n3. The question is not asking for a location, number, or abbreviation.\n\nBased on these observations, the question is about a person, which falls under the category of \"human\"."
+  },
+  {
+    "index": 319,
+    "text": "what is the brightest star ?",
+    "true_label": "C05",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is the brightest star\", let's break it down:\n\n1. The question is asking for a description of something.\n2. The something is a specific type of celestial object, but the question is not asking for its location or any numeric information.\n3. The question is not asking about a person, profession, or group.\n4. The question is not asking for an abbreviation or acronym.\n\nBased on these observations, the question \"what is the brightest star\" is asking for a description of a specific entity, which is a celestial object.\n\nSo, the classification is: entity."
+  },
+  {
+    "index": 322,
+    "text": "what is tmj ?",
+    "true_label": "C06",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is tmj\", let's break it down:\n\n1. The question is asking for a definition or explanation of something.\n2. The term \"tmj\" is likely an abbreviation or acronym.\n\nBased on these observations, I would classify the question as \"abbreviation\"."
+  },
+  {
+    "index": 323,
+    "text": "what color is yak milk ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what color is yak milk\", let's break it down step by step:\n\n1. The question is asking for a characteristic of something (yak milk).\n2. The characteristic being asked is a property (color), which is a type of descriptive information.\n3. Therefore, the question is asking for a description of yak milk.\n\nBased on this analysis, the question \"what color is yak milk\" belongs to the category: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 325,
+    "text": "what does the technical term isdn mean ?",
+    "true_label": "C06",
+    "predicted_label": "C03",
+    "model_output": "To classify the given question, let's break it down step by step:\n\n1. The question is asking for an explanation or definition of a term.\n2. The term in question is \"ISDN,\" which is likely an abbreviation or acronym.\n3. The question is not asking for a description of a person, place, or entity, but rather an explanation of what the term means.\n\nBased on this analysis, the question \"what does the technical term ISDN mean\" belongs to category: C03 - Descriptive or definitional questions"
+  },
+  {
+    "index": 329,
+    "text": "what is the milky way ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what is the milky way?\", let's break it down:\n\n1. The question is asking for a description or definition of something.\n2. The subject of the question is \"the milky way\", which is a specific entity (a galaxy).\n\nHowever, the question is asking for a description of this entity, not asking for the entity itself.\n\nSo, the question is asking for a description of an entity.\n\nTherefore, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 332,
+    "text": "what is a group of frogs called ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is a group of frogs called\", let's break it down:\n\n1. The question is asking for a name or term to describe a group of frogs.\n2. It's not asking for a definition or description of frogs themselves, but rather a collective term.\n3. It's not asking for a specific person, profession, or group of people.\n4. It's not asking for a location or a place.\n5. It's not asking for a number or a specific amount.\n\nBased on these observations, the question is asking for a term or name, which is a type of description. \n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 333,
+    "text": "what is the name of william penn ' s ship ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is the name of william penn's ship?\", let's break it down:\n\n1. The question is asking for a specific name, which is a type of descriptive information.\n2. The question is not asking for an abbreviation or acronym.\n3. The question is not asking about a person, profession, or group.\n4. The question is not asking about a place or location.\n5. The question is not asking for a number, amount, date, or other numeric information.\n\nBased on the above analysis, the question \"what is the name of william penn's ship?\" is asking for a descriptive answer, which is the name of a specific entity (the ship). However, since it's asking for a name, it's more accurately classified as a descriptive question about an entity.\n\nSo, the classification is: C03 - Descriptive or definitional questions"
+  },
+  {
+    "index": 338,
+    "text": "what is ursa major ?",
+    "true_label": "C03",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is Ursa Major\", let's break it down:\n\n1. The question is asking for a description of something.\n2. The something is a noun phrase \"Ursa Major\".\n3. Ursa Major is a constellation in the night sky.\n\nBased on the above analysis, the question is asking for a description of a celestial entity, which is a type of entity.\n\nSo, the classification is: entity."
+  },
+  {
+    "index": 341,
+    "text": "what was president lyndon johnson ' s reform program called ?",
+    "true_label": "C01",
+    "predicted_label": "C02",
+    "model_output": "To classify the question, let's break it down step by step:\n\n1. The question is asking for a name or title of a program, which is associated with a person (Lyndon Johnson).\n2. The question is not asking for a definition or description of the program.\n3. The question is not asking for a specific number or amount.\n4. The question is not asking for a location.\n5. The question is not asking for an abbreviation or acronym.\n6. The question is asking about a person (Lyndon Johnson) and his associated program.\n\nBased on these steps, the question is about a person (Lyndon Johnson) and his associated program, which falls under the category of people, professions, or groups.\n\nClassification: C02 - Questions about people, professions or groups"
+  },
+  {
+    "index": 343,
+    "text": "who is the only president to serve 2 non consecutive terms ?",
+    "true_label": "C02",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"who is the only president to serve 2 non consecutive terms\", let's break it down:\n\n1. The question is asking for a person, as indicated by the word \"who\".\n2. The question is specifically asking for a person who holds a particular position (president).\n3. The question is asking for a specific person, not a general category of people.\n\nBased on these observations, the question is about a person, which falls under the category of \"human\"."
+  },
+  {
+    "index": 344,
+    "text": "what is the population of australia ?",
+    "true_label": "C04",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is the population of Australia?\", let's break it down step by step:\n\n1. The question is asking for information about a specific topic, which is the population of a country.\n2. The question is not asking for a definition or description of a concept (C03).\n3. The question is not asking about a specific person, profession, or group (C02).\n4. The question is not asking about a place or location in a general sense (C05).\n5. The question is asking for a specific piece of information that can be quantified, which is the population of Australia.\n\nBased on these observations, the question \"what is the population of Australia?\" falls under the category of asking for numbers, amounts, dates, or other numeric information.\n\nTherefore, the classification is: C04 - Questions asking for numbers, amounts, dates or other numeric information."
+  },
+  {
+    "index": 346,
+    "text": "name a stimulant",
+    "true_label": "C01",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"name a stimulant\", let's break it down:\n\n1. The question is asking for a specific example or instance of a stimulant.\n2. It's not asking for a definition or description of a stimulant.\n3. It's not asking for a person, profession, or group related to stimulants.\n4. It's not asking for a location or place related to stimulants.\n5. It's not asking for a number, amount, or date related to stimulants.\n\nBased on the above analysis, the question is asking for a specific example or instance of a stimulant, which falls under the category of \"entity\" since a stimulant is a type of substance.\n\nSo, the classification is: entity."
+  },
+  {
+    "index": 352,
+    "text": "what is the illinois state flower ?",
+    "true_label": "C01",
+    "predicted_label": "C05",
+    "model_output": "To classify the question \"what is the illinois state flower\", let's break it down step by step:\n\n1. The question is asking for a specific piece of information about a particular entity.\n2. The entity in question is a state, which is a location.\n3. The question is asking for a characteristic or attribute of that location (the state flower).\n\nBased on this analysis, the question is not asking for a description, a number, or an abbreviation. It's also not asking about people or professions. Therefore, it's not about entities in general, but rather about a specific attribute of a location.\n\nSo, the classification is: C05 - Questions about places or locations"
+  },
+  {
+    "index": 359,
+    "text": "what kind of dog was toto in the wizard of oz ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what kind of dog was toto in the wizard of oz\", let's break it down:\n\n1. The question is asking for a characteristic or type of something (Toto).\n2. The something is a dog.\n3. The question is asking for a specific type of dog.\n\nBased on this analysis, the question is asking for a description or definition of a type of dog.\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 366,
+    "text": "what color does litmus paper turn when it comes into contact with a strong acid ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the given question, let's break it down step by step:\n\n1. The question is asking for a characteristic or property of something (litmus paper).\n2. The question is not asking for a definition or description of a term (it's not asking \"what is litmus paper?\", but rather a specific property of it).\n3. The question is not asking about a specific person, profession, or group.\n4. The question is not asking about a location.\n5. The question is not asking for a number or amount.\n6. The question is asking about the color change of a substance (litmus paper) when it comes into contact with a strong acid, which implies a specific outcome or result.\n\nBased on these observations, the question is asking for a descriptive or definitional answer about a specific property or characteristic of litmus paper.\n\nTherefore, the classification is: C03 - Descriptive or definitional questions"
+  },
+  {
+    "index": 371,
+    "text": "what currency do they use in brazil ?",
+    "true_label": "C01",
+    "predicted_label": "C05",
+    "model_output": "To classify the question \"what currency do they use in Brazil?\", let's break it down step by step:\n\n1. The question is asking for information about a specific topic, which is the currency used in Brazil.\n2. The question is not asking for a definition or description of the currency, but rather what it is called.\n3. The question is not asking about a person, profession, or group.\n4. The question is not asking for a location, but rather a specific aspect of a location (Brazil).\n5. The question is not asking for a number or amount.\n\nBased on these observations, the question is asking for a specific type of information that is related to a location (Brazil), but it's not a location itself. It's asking for a specific aspect of a location, which is the currency used there.\n\nTherefore, the classification is: C05 - Questions about places or locations"
+  },
+  {
+    "index": 376,
+    "text": "where do apple snails live ?",
+    "true_label": "C05",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"where do apple snails live?\", let's break it down:\n\n1. The question is asking for a location or a place where something lives.\n2. It's not asking for a definition or description of apple snails.\n3. It's not asking for a specific number or amount.\n4. It's not asking about people, professions, or groups.\n5. It's not asking about entities in general, but rather a specific type of entity (apple snails).\n6. It's not asking for an abbreviation or acronym.\n\nBased on these observations, the question \"where do apple snails live?\" is best classified as a question about a location or a place. \n\nSo, the answer is: location."
+  },
+  {
+    "index": 382,
+    "text": "what birthstone is turquoise ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what birthstone is turquoise\", let's break it down:\n\n1. The question is asking for a specific type of information related to \"turquoise\".\n2. The information being asked is a characteristic or attribute of \"turquoise\".\n3. The question is asking for a specific term or name that is associated with \"turquoise\".\n\nBased on these observations, the question is asking for a descriptive term or name that is associated with \"turquoise\". \n\nSo, the classification is: C03 - Descriptive or definitional questions"
+  },
+  {
+    "index": 384,
+    "text": "how old was the youngest president of the united states ?",
+    "true_label": "C04",
+    "predicted_label": "C02",
+    "model_output": "To classify the question \"how old was the youngest president of the united states\", let's break it down step by step:\n\n1. The question is asking for information about a specific person (the youngest president of the United States).\n2. The question is not asking for a definition or description of the person, but rather a specific piece of information about them (their age).\n3. The question is not asking for an abbreviation or acronym.\n4. The question is not asking for a location.\n5. The question is not asking for a number or amount, but rather a specific age.\n\nBased on these steps, the question is asking for information about a person, specifically a piece of numeric information about that person.\n\nTherefore, the classification is: C02 - Questions about people, professions or groups"
+  },
+  {
+    "index": 392,
+    "text": "what is a baby lion called ?",
+    "true_label": "C01",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is a baby lion called\", let's break it down:\n\n1. The question is asking for a name or a term to describe something.\n2. The something in question is a baby lion, which is a specific type of animal.\n3. The question is not asking for a location, a number, or an abbreviation.\n4. It's not asking for information about people or professions.\n\nBased on these observations, the question is asking for a descriptive term to identify a specific entity (the baby lion). \n\nSo, the classification is: entity."
+  },
+  {
+    "index": 399,
+    "text": "what is the fourth highest mountain in the world ?",
+    "true_label": "C05",
+    "predicted_label": "C04",
+    "model_output": "To classify the question \"what is the fourth highest mountain in the world\", let's break it down step by step:\n\n1. The question is asking for information about a specific thing (mountain).\n2. The question is not asking for a definition or description of the thing (it's not asking \"what is a mountain?\").\n3. The question is not asking for a location (it's not asking \"where is the fourth highest mountain?\").\n4. The question is not asking for a person or group (it's not asking about a person or a profession).\n5. The question is not asking for an abbreviation or acronym (it's not asking about a shortened form of a word).\n6. The question is asking for a specific piece of information (the rank of a mountain).\n\nBased on these steps, the question is asking for a specific piece of information that can be quantified (the rank of a mountain). Therefore, the correct classification is:\n\nC04 - Questions asking for numbers, amounts, dates or other numeric information"
+  },
+  {
+    "index": 400,
+    "text": "what is shakespeare ' s nickname ?",
+    "true_label": "C02",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is shakespeare's nickname?\", let's break it down:\n\n1. The question is asking for a characteristic or attribute of a person (Shakespeare).\n2. The question is not asking for a definition or description of Shakespeare himself, but rather a specific nickname associated with him.\n3. The question is not asking for a location, number, or amount.\n4. The question is not asking about a group or profession.\n5. The question is not asking for an abbreviation or acronym.\n\nBased on these observations, the question is asking for a characteristic or attribute of a person, which falls under the category of \"human\"."
+  },
+  {
+    "index": 401,
+    "text": "what is the heaviest naturally occurring element ?",
+    "true_label": "C01",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is the heaviest naturally occurring element\", let's break it down step by step:\n\n1. The question is asking for a description of something.\n2. The question is specifically asking for a characteristic of an element (heaviest).\n3. The answer will be a noun (an element).\n\nBased on these steps, the question is asking for a description of an entity (an element), so it belongs to the category of entities.\n\nThe answer is: entity"
+  },
+  {
+    "index": 411,
+    "text": "what are cigarettes made of ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what are cigarettes made of\", let's break it down:\n\n1. The question is asking for a description of what cigarettes are composed of.\n2. It's not asking for an abbreviation or acronym.\n3. It's not asking about a specific entity, person, location, or number.\n4. It's not asking about people, professions, or groups.\n\nBased on the above analysis, the question \"what are cigarettes made of\" is asking for a description of cigarettes, which is a type of object.\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 421,
+    "text": "what are canada ' s two territories ?",
+    "true_label": "C05",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what are Canada's two territories?\", let's break it down step by step:\n\n1. The question is asking for information about a specific topic, which is Canada's territories.\n2. The question is not asking for a definition or description of a concept (C03).\n3. The question is not asking for a specific person, profession, or group (C02).\n4. The question is not asking for a number, amount, date, or other numeric information (C04).\n5. The question is not asking for an abbreviation or acronym (C06).\n6. The question is asking for information about a geographical location, specifically the territories of Canada.\n\nBased on the above analysis, the question \"what are Canada's two territories?\" belongs to the category of location."
+  },
+  {
+    "index": 431,
+    "text": "what is the name given to the tiger at louisiana state university ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is the name given to the tiger at louisiana state university\", let's break it down:\n\n1. The question is asking for a specific name, which is a type of description.\n2. The description is related to a tiger, which is an entity.\n3. The entity is located at a specific place, but the question is not asking about the place itself, but rather about the entity.\n4. The question is not asking for a number, amount, date, or abbreviation.\n\nBased on the above analysis, the question is asking for a description of an entity, which is a type of descriptive question.\n\nSo, the classification is: C03 - Descriptive or definitional questions"
+  },
+  {
+    "index": 438,
+    "text": "what does the abbreviation sos mean ?",
+    "true_label": "C06",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what does the abbreviation sos mean?\", let's break it down:\n\n1. The question is asking for the meaning of something.\n2. The something is an abbreviation.\n3. The question is not asking for a description of the abbreviation, but rather its meaning.\n\nBased on this analysis, the question is asking for the definition or meaning of an abbreviation.\n\nSo, the classification is: C03 - Descriptive or definitional questions"
+  },
+  {
+    "index": 442,
+    "text": "which country has the most water pollution ?",
+    "true_label": "C05",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"which country has the most water pollution?\", let's break it down step by step:\n\n1. The question is asking for a specific country, which implies it's looking for a particular entity.\n2. The question is not asking for a definition or description of water pollution, but rather which country has the most of it.\n3. It's not asking for a number or amount, but rather a specific country.\n4. It's not asking about people, professions, or groups.\n5. It's not asking about a place or location in general, but rather a specific country.\n\nBased on these steps, the question is asking about a specific entity, which is a country. \n\nSo, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 446,
+    "text": "what is the rainiest place on earth ?",
+    "true_label": "C05",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"what is the rainiest place on earth\", let's break it down step by step:\n\n1. The question is asking for a specific place, which is known for a particular characteristic (rainfall).\n2. The question is not asking for a definition or description of the place itself, but rather which place holds a specific record.\n3. The question is not asking for a number or amount, but rather a location.\n4. The question is not asking about people, professions, or groups.\n5. The question is not asking for an abbreviation or acronym.\n\nBased on these observations, the question \"what is the rainiest place on earth\" is best classified as a question about a location."
+  },
+  {
+    "index": 451,
+    "text": "what is the most popular sport in japan ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is the most popular sport in Japan?\", let's break it down step by step:\n\n1. The question is asking for information about a specific topic, which is a sport.\n2. The question is asking for a description or definition of the most popular sport in Japan, not a specific entity, person, location, abbreviation, or numeric information.\n3. Therefore, the question is asking for a description or definition of something.\n\nBased on the category mapping, the question \"what is the most popular sport in Japan?\" belongs to category C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 452,
+    "text": "what is the active ingredient in baking soda ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is the active ingredient in baking soda?\", let's break it down step by step:\n\n1. The question is asking for a description of something related to baking soda.\n2. The question is not asking for an abbreviation or acronym.\n3. The question is not asking about a specific entity, person, location, or group.\n4. The question is not asking for a number or date.\n\nBased on the above analysis, the question is asking for a description of the active ingredient in baking soda.\n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 456,
+    "text": "what is the most common eye color ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is the most common eye color\", let's break it down step by step:\n\n1. The question is asking for a description of something (eye color).\n2. The question is not asking for an abbreviation or acronym.\n3. The question is not asking about a specific entity (object, animal, substance).\n4. The question is not asking about a person, profession, or group.\n5. The question is not asking about a location.\n6. The question is asking for a description of a characteristic (eye color), which is a type of descriptive information.\n\nBased on the above analysis, the question \"what is the most common eye color\" belongs to the category: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 460,
+    "text": "what did jesse jackson organize ?",
+    "true_label": "C02",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what did jesse jackson organize\", let's break it down:\n\n1. The question is asking for information about an action or event that Jesse Jackson was involved in.\n2. The question is not asking for a definition or description of Jesse Jackson.\n3. It's not asking for a location or a number.\n4. It's not asking for an abbreviation or acronym.\n5. It's not asking for a person or a profession.\n\nBased on the above analysis, the question is asking about an action or event that Jesse Jackson was involved in, which is related to a specific entity (Jesse Jackson). However, the question is not asking about Jesse Jackson himself, but rather about something he organized.\n\nSo, the closest category would be an entity, but in this case, it's more specific to the action or event that the entity (Jesse Jackson) was involved in.\n\nHowever, the question is asking for an event or action, which is related to Jesse Jackson, so the correct category is: \n\nC01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 465,
+    "text": "what do you call a word that is spelled the same backwards and forwards ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the given question, let's break it down step by step:\n\n1. The question is asking for a term or a name, as indicated by \"what do you call a word\".\n2. The question is describing a specific property of a word, which is being spelled the same backwards and forwards.\n3. The question is not asking for a definition, but rather a term or name for a specific property.\n\nBased on these observations, the question is asking for a term or name that describes a specific property of a word. This is similar to asking for a description of a concept.\n\nTherefore, the classification is: C03 - Descriptive or definitional questions"
+  },
+  {
+    "index": 466,
+    "text": "what are pediatricians ?",
+    "true_label": "C03",
+    "predicted_label": "C02",
+    "model_output": "To classify the question \"what are pediatricians\", let's break it down:\n\n1. The question is asking for a definition or explanation of something.\n2. The subject of the question is \"pediatricians\", which refers to a group of people.\n\nBased on these observations, the question is asking for a description of a group of people.\n\nSo, the classification is: C02 - Questions about people, professions or groups."
+  },
+  {
+    "index": 467,
+    "text": "what chain store is headquartered in bentonville , arkansas ?",
+    "true_label": "C02",
+    "predicted_label": "C01",
+    "model_output": "To classify the question, let's break it down step by step:\n\n1. The question is asking for a specific type of information: a chain store.\n2. The question is asking for the headquarters location of the chain store, which is in Bentonville, Arkansas.\n3. The question is not asking for a definition or description of the chain store.\n4. The question is not asking for a specific person or group.\n5. The question is not asking for a number or date.\n6. The question is asking for a specific location (the headquarters of the chain store), but it's not asking for a general location, it's asking for a specific chain store in a specific location.\n\nBased on these steps, the question is asking for a specific chain store that is located in a specific location (Bentonville, Arkansas). This means the question is about a specific entity (the chain store), but it's not asking for a general entity, it's asking for a specific one.\n\nSo, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)."
+  },
+  {
+    "index": 472,
+    "text": "what currency does luxembourg use ?",
+    "true_label": "C01",
+    "predicted_label": "C05",
+    "model_output": "To classify the question \"what currency does Luxembourg use?\", let's break it down:\n\n1. The question is asking for information about a specific topic.\n2. The topic is related to a country (Luxembourg).\n3. The question is asking for a specific type of information related to the country (its currency).\n\nBased on this analysis, the question is asking for a specific type of information that is related to a location (country), but it's not directly asking for a location itself. It's asking for something associated with a location.\n\nTherefore, the classification is: C05 - Questions about places or locations"
+  },
+  {
+    "index": 476,
+    "text": "what is a thermometer ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what is a thermometer\", let's break it down:\n\n1. The question is asking for a definition or explanation of something.\n2. The question is not asking for a specific person, place, or location.\n3. The question is not asking for a number or amount.\n4. The question is not asking for an abbreviation or acronym.\n5. The question is not asking about a group of people or a profession.\n\nBased on these observations, the question \"what is a thermometer\" is asking for a definition or explanation of a thing, which is an object. \n\nSo, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 478,
+    "text": "what color are crickets ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what color are crickets\", let's break it down:\n\n1. The question is asking for a characteristic of something.\n2. The something is a type of entity (crickets).\n3. The characteristic being asked is a descriptive one (color).\n\nBased on this analysis, the question is asking for a descriptive characteristic of an entity.\n\nSo, the classification is: C03 - Descriptive or definitional questions"
+  },
+  {
+    "index": 479,
+    "text": "which country gave new york the statue of liberty ?",
+    "true_label": "C05",
+    "predicted_label": "C02",
+    "model_output": "To classify the question \"which country gave new york the statue of liberty?\", let's break it down:\n\n1. The question is asking for information about a specific event or action (giving the Statue of Liberty to New York).\n2. The question is not asking for a definition or description of something.\n3. The question is not asking for a specific person, profession, or group.\n4. The question is not asking for a location, but rather a country that performed an action in a location (New York).\n5. The question is not asking for a number, amount, date, or other numeric information.\n\nBased on the above analysis, the question is asking for information about a specific event or action involving a country, which is related to a location (New York). However, the country is the main focus of the question.\n\nSo, the question is asking about a country, but the country is not a person or a profession. Therefore, it is not C02. \n\nThe question is not asking for a description of the Statue of Liberty or New York, so it is not C03.\n\nThe question is not asking for a number, amount, date, or other numeric information, so it is not C04.\n\nThe question is not asking for a location,"
+  },
+  {
+    "index": 481,
+    "text": "what precious stone is a form of pure carbon ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what precious stone is a form of pure carbon\", let's break it down step by step:\n\n1. The question is asking for a specific type of precious stone.\n2. The question is asking for a description of a type of precious stone.\n3. The question is not asking for an abbreviation, location, person, or number.\n4. The question is asking for a description of a specific type of precious stone.\n\nBased on the above analysis, the question is asking for a description of a specific type of precious stone, which is a \"diamond\" (a form of pure carbon). \n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 482,
+    "text": "what kind of gas is in a fluorescent bulb ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what kind of gas is in a fluorescent bulb\", let's break it down:\n\n1. The question is asking for a description of something (the type of gas).\n2. It's not asking for an abbreviation or acronym.\n3. It's not asking about a specific entity, person, location, or number.\n4. It's not asking about people, professions, or groups.\n\nBased on the above analysis, the question is asking for a description of something, which falls under the category of \"description\". \n\nSo, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 484,
+    "text": "what river runs through rowe , italy ?",
+    "true_label": "C05",
+    "predicted_label": "C01",
+    "model_output": "To classify the question \"what river runs through rowe, italy?\", let's break it down:\n\n1. The question is asking for a specific type of entity (a river).\n2. The question is asking for a river that runs through a specific location (Rowe, Italy).\n3. The question is not asking for a description of the river, nor is it asking for a numeric value or abbreviation.\n\nBased on these observations, the question is asking about a specific entity (a river) that is related to a location (Rowe, Italy).\n\nTherefore, the classification is: C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 488,
+    "text": "what is the source of natural gas ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the question \"what is the source of natural gas?\", let's break it down step by step:\n\n1. The question is asking for a description or explanation of something.\n2. The question is not asking for a specific person, place, or entity.\n3. The question is not asking for a location or a place.\n4. The question is not asking for a number or a specific amount.\n5. The question is not asking for an abbreviation or acronym.\n\nBased on these steps, the question \"what is the source of natural gas?\" is asking for a description or explanation of the source of natural gas.\n\nTherefore, the classification is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 492,
+    "text": "what ' s the easiest way to remove wallpaper ?",
+    "true_label": "C01",
+    "predicted_label": "C03",
+    "model_output": "To classify the given question, let's break it down step by step:\n\n1. The question is asking for a method or a process, not a definition or description of something.\n2. It's not asking about a specific entity, person, location, or number.\n3. The question is focused on finding the easiest way to accomplish a task, which involves a process or a method.\n\nBased on these observations, the question is asking for a process or a method, which is related to a task or an activity.\n\nThe category that best fits this description is: C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 495,
+    "text": "who was the 22nd president of the us ?",
+    "true_label": "C02",
+    "predicted_label": "未分类",
+    "model_output": "To classify the question \"who was the 22nd president of the us\", let's break it down:\n\n1. The question is asking for a person, as indicated by the word \"who\".\n2. The person being asked about is a historical figure, specifically a president of the US.\n3. The question is asking for a specific person, not a general category of people.\n\nBased on these observations, the question is about a person, which falls under the category of \"human\"."
+  },
+  {
+    "index": 496,
+    "text": "what is the money they use in zambia ?",
+    "true_label": "C01",
+    "predicted_label": "C05",
+    "model_output": "To classify the question \"what is the money they use in zambia\", let's break it down:\n\n1. The question is asking for information about something specific.\n2. The question is asking about a concept or a thing.\n3. The concept or thing is related to a country (Zambia).\n4. The concept or thing is related to a specific aspect of the country (the money they use).\n\nBased on these points, the question is asking for a description of something related to a location (Zambia). \n\nSo, the classification is: C05 - Questions about places or locations."
+  }
+]

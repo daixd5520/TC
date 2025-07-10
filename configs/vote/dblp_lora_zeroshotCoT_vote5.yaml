@@ -1,0 +1,24 @@
+# DBLP LoRA投票评估配置
+model:
+  base_model_path: "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
+  adapter_path: "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_dblp_direct_lora"
+  use_lora: true
+
+data:
+  data_path: "/mnt/data1/TC/TextClassDemo/data/dblp/dblp_Test_Cxx.json"
+  dataset_name: dblp_zero
+  num_classes: 6
+
+generation:
+  max_new_tokens: 256
+  temperature: 0.6
+  top_p: 0.9
+  do_sample: true
+
+training:
+  batch_size: 512
+  vote_count: 10
+
+output:
+  base_output_dir: "./outputs"
+  experiment_name: "dblp_lora_zeroshotCoT_vote5" 

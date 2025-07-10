@@ -1,0 +1,24 @@
+# CR LoRA直接评估配置
+model:
+  base_model_path: "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
+  adapter_path: "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_cr_direct_lora"
+  use_lora: true
+
+data:
+  data_path: "/mnt/data1/TC/TextClassDemo/data/CR/CR_Test_Cxx.json"
+  dataset_name: cr
+  num_classes: 2
+
+generation:
+  max_new_tokens: 256
+  temperature: 0
+  top_p: 0.9
+  do_sample: true
+
+training:
+  batch_size: 512
+  vote_count: 1
+
+output:
+  base_output_dir: "./outputs"
+  experiment_name: "cr_lora_direct" 

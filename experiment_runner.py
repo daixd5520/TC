@@ -121,7 +121,8 @@ class MedicalTextClassifier:
         """构建提示词"""
         return self.prompt_manager.build_prompt(
             dataset_name=self.config.data.dataset_name,
-            text=text
+            text=text,
+            category_mapping=""  # 添加默认的category_mapping参数
         )
     
     def extract_category(self, output: str) -> int:

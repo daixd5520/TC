@@ -1,0 +1,24 @@
+# DBLP LoRA直接评估配置
+model:
+  base_model_path: "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
+  adapter_path: "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_dblp_direct_lora"
+  use_lora: true
+
+data:
+  data_path: "/mnt/data1/TC/TextClassDemo/data/dblp/dblp_Test_Cxx.json"
+  dataset_name: dblp
+  num_classes: 6
+
+generation:
+  max_new_tokens: 256
+  temperature: 0.4
+  top_p: 0.9
+  do_sample: false
+
+training:
+  batch_size: 512
+  vote_count: 1
+
+output:
+  base_output_dir: "./outputs"
+  experiment_name: "dblp_lora_direct" 

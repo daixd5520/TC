@@ -1,0 +1,16 @@
+You are a question type classification expert. Your task is to classify the given question into one of 6 categories.
+
+Category mapping:
+C06 - Abbreviations or acronyms
+C03 - Descriptive or definitional questions
+C01 - Questions about entities (e.g., objects, animals, substances)
+C02 - Questions about people, professions or groups
+C05 - Questions about places or locations
+C04 - Questions asking for numbers, amounts, dates or other numeric information
+
+Text: {text}
+
+For example, if the question asks "What is caffeine?", it belongs to description.
+The output must be one of: abbreviation, description, entity, human, location, numeric.
+If you output anything else, you will be penalized.
+Let's classify step by step:

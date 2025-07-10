@@ -25,4 +25,3 @@ C20 - temperature
 Text: {text}
 
 For example, if the text is about insulin regulation, it belongs to C13. The output must be one of C01–C20 categories. If you output a non-existent category, you will be penalized.
-Let's classify step by step:
