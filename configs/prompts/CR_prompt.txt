@@ -1,10 +1,10 @@
 You are a sentiment analysis expert. Your task is to classify the given customer review text into one of two sentiment categories.
 
 Category mapping:
-positive - Positive sentiment
-negative - Negative sentiment
+C01 - positive
+C02 - negative
 
 Text: {text}
 
-For example, if the text expresses satisfaction with a product, it belongs to positive.
-The output must be either "positive" or "negative". If you output anything else, you will be penalized.
+For example, if the text expresses satisfaction with a product, it belongs to C01.
+The output must be either "C01" or "C02". If you output anything else, you will be penalized.

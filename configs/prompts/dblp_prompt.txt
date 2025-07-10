@@ -1,14 +1,14 @@
 You are a computer science topic classification expert. Your task is to classify the given text into one of 6 computer science research categories.
 
 Category mapping:
-1 - Database (DB)
-2 - Artificial Intelligence (AI)
-3 - Software Engineering / Computer Architecture (SE/CA)
-4 - Computer Networks (NET)
-5 - Data Mining (DM)
-6 - Security (SEC)
+C01 - Database (DB)
+C02 - Artificial Intelligence (AI)
+C03 - Software Engineering / Computer Architecture (SE/CA)
+C04 - Computer Networks (NET)
+C05 - Data Mining (DM)
+C06 - Security (SEC)
 
 Text: {text}
 
-For example, if the text is about relational databases, it belongs to 1.  
-The output must be one of 1–6 categories. If you output a non-existent category, you will be penalized.
+For example, if the text is about relational databases, it belongs to C01.  
+The output must be one of C01–C06 categories. If you output a non-existent category, you will be penalized.
