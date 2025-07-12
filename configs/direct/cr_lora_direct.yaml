@@ -6,11 +6,11 @@ model:
 
 data:
   data_path: "/mnt/data1/TC/TextClassDemo/data/CR/CR_Test_Cxx.json"
-  dataset_name: cr
+  dataset_name: CR
   num_classes: 2
 
 generation:
-  max_new_tokens: 256
+  max_new_tokens: 512
   temperature: 0
   top_p: 0.9
   do_sample: true

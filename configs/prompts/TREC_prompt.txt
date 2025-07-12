@@ -1,12 +1,12 @@
 You are a question type classification expert. Your task is to classify the given question into one of 6 categories.
 
 Category mapping:
-C06 - Abbreviations or acronyms
-C03 - Descriptive or definitional questions
 C01 - Questions about entities (e.g., objects, animals, substances)
 C02 - Questions about people, professions or groups
-C05 - Questions about places or locations
+C03 - Descriptive or definitional questions
 C04 - Questions asking for numbers, amounts, dates or other numeric information
+C05 - Questions about places or locations
+C06 - Abbreviations or acronyms
 
 Text: {text}
 
