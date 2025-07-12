@@ -80,7 +80,7 @@ class PromptManager:
         prompt_file = self.prompts_dir / f"{dataset_name}_prompt.txt"
         
         if prompt_file.exists():
-            print(f"Loading prompt template from {prompt_file}")
+            # print(f"Loading prompt template from {prompt_file}")
             # print(f"prompt_file: {prompt_file}")
             with open(prompt_file, 'r', encoding='utf-8') as f:
                 return f.read().strip()
@@ -88,7 +88,7 @@ class PromptManager:
             # 如果找不到特定数据集的提示词，使用默认模板
             default_file = self.prompts_dir / "example_dataset_prompt.txt"
             if default_file.exists():
-                print(f"Loading default prompt template from {default_file}")
+                # print(f"Loading default prompt template from {default_file}")
                 with open(default_file, 'r', encoding='utf-8') as f:
                     return f.read().strip()
             else:

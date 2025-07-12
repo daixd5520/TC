@@ -6,6 +6,6 @@ C02 - negative
 
 Text: {text}
 
-For example, if the text expresses satisfaction with a product, it belongs to C01.
-The output must be either "C01" or "C02". If you output anything else, you will be penalized.
+For example, if the text expresses satisfaction with a product, it belongs to C01. The output must be either "C01" or "C02".
+Output your final classification in the end of your reply.
 Let's classify step by step:

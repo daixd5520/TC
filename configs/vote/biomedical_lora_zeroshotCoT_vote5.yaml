@@ -10,15 +10,15 @@ data:
   num_classes: 20
 
 generation:
-  max_new_tokens: 256
+  max_new_tokens: 512
   temperature: 0.6
   top_p: 0.9
   do_sample: true
 
 training:
   batch_size: 512
-  vote_count: 10
+  vote_count: 5
 
 output:
   base_output_dir: "./outputs"
-  experiment_name: "biomedical_lora_zeroshotCoT_vote5" 
+  experiment_name: "biomedical_lora_zeroshotCoT_vote10_WH" 

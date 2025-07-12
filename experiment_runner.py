@@ -121,22 +121,158 @@ class MedicalTextClassifier:
         """构建提示词"""
         return self.prompt_manager.build_prompt(
             dataset_name=self.config.data.dataset_name,
-            text=text,
-            category_mapping=""  # 添加默认的category_mapping参数
+            text=text
         )
     
     def extract_category(self, output: str) -> int:
         """从推理过程中提取类别编号"""
-        match = re.search(r"最终分类结果：C(\d{2})", output)
-        if match:
-            category_num = int(match.group(1))
+        # 方案1：优先查找"最终分类结果：Cxx"格式
+        matches = re.findall(r"最终分类结果：C(\d{2})", output)
+        if matches:
+            category_num = int(matches[-1])  # 取最后一个匹配
             if 1 <= category_num <= self.num_classes:
                 return category_num - 1
-        match = re.search(r"C(\d{2})", output)
-        if match:
-            category_num = int(match.group(1))
-            if 1 <= category_num <= self.num_classes:
-                return category_num - 1
+        
+        # 方案2：查找"答案是Cxx"或"结论是Cxx"等明确结论格式
+        conclusion_patterns = [
+            r"答案是\s*C(\d{2})",
+            r"结论是\s*C(\d{2})", 
+            r"因此\s*C(\d{2})",
+            r"所以\s*C(\d{2})",
+            r"最终答案\s*C(\d{2})",
+            r"分类结果\s*C(\d{2})"
+        ]
+        
+        for pattern in conclusion_patterns:
+            matches = re.findall(pattern, output)
+            if matches:
+                category_num = int(matches[-1])
+                if 1 <= category_num <= self.num_classes:
+                    return category_num - 1
+        
+        # 方案3：查找所有Cxx格式，但优先选择后半部分的匹配
+        all_matches = list(re.finditer(r"C(\d{2})", output))
+        if all_matches:
+            # 如果只有一个匹配，直接使用
+            if len(all_matches) == 1:
+                category_num = int(all_matches[0].group(1))
+                if 1 <= category_num <= self.num_classes:
+                    return category_num - 1
+            else:
+                # 如果有多个匹配，优先选择后半部分的匹配
+                mid_point = len(output) // 2
+                for match in reversed(all_matches):  # 从后往前遍历
+                    if match.start() >= mid_point:  # 在后半部分
+                        category_num = int(match.group(1))
+                        if 1 <= category_num <= self.num_classes:
+                            return category_num - 1
+                
+                # 如果后半部分没有有效匹配，使用最后一个
+                category_num = int(all_matches[-1].group(1))
+                if 1 <= category_num <= self.num_classes:
+                    return category_num - 1
+        
+        # 方案4：兜底方案 - 查找数字并转换为Cxx格式
+        # 优先查找后半部分的数字（先找二位数字，再找一位数字）
+        
+        # 4.1 查找二位数字
+        all_digit_matches = list(re.finditer(r"\b(\d{2})\b", output))
+        if all_digit_matches:
+            # 如果只有一个匹配，直接使用
+            if len(all_digit_matches) == 1:
+                category_num = int(all_digit_matches[0].group(1))
+                if 1 <= category_num <= self.num_classes:
+                    # 将数字转换为Cxx格式，然后重新匹配
+                    converted_output = output.replace(
+                        all_digit_matches[0].group(0), 
+                        f"C{category_num:02d}"
+                    )
+                    # 重新在转换后的文本中查找Cxx格式
+                    c_matches = re.findall(r"C(\d{2})", converted_output)
+                    if c_matches:
+                        return int(c_matches[-1]) - 1
+                    return category_num - 1
+            else:
+                # 如果有多个匹配，优先选择后半部分的匹配
+                mid_point = len(output) // 2
+                for match in reversed(all_digit_matches):  # 从后往前遍历
+                    if match.start() >= mid_point:  # 在后半部分
+                        category_num = int(match.group(1))
+                        if 1 <= category_num <= self.num_classes:
+                            # 将数字转换为Cxx格式，然后重新匹配
+                            converted_output = output.replace(
+                                match.group(0), 
+                                f"C{category_num:02d}"
+                            )
+                            # 重新在转换后的文本中查找Cxx格式
+                            c_matches = re.findall(r"C(\d{2})", converted_output)
+                            if c_matches:
+                                return int(c_matches[-1]) - 1
+                            return category_num - 1
+                
+                # 如果后半部分没有有效匹配，使用最后一个
+                category_num = int(all_digit_matches[-1].group(1))
+                if 1 <= category_num <= self.num_classes:
+                    # 将数字转换为Cxx格式，然后重新匹配
+                    converted_output = output.replace(
+                        all_digit_matches[-1].group(0), 
+                        f"C{category_num:02d}"
+                    )
+                    # 重新在转换后的文本中查找Cxx格式
+                    c_matches = re.findall(r"C(\d{2})", converted_output)
+                    if c_matches:
+                        return int(c_matches[-1]) - 1
+                    return category_num - 1
+        
+        # 4.2 查找一位数字（1-9）
+        all_single_digit_matches = list(re.finditer(r"\b(\d)\b", output))
+        if all_single_digit_matches:
+            # 如果只有一个匹配，直接使用
+            if len(all_single_digit_matches) == 1:
+                category_num = int(all_single_digit_matches[0].group(1))
+                if 1 <= category_num <= 9:  # 一位数字只考虑1-9
+                    # 将数字转换为Cxx格式，然后重新匹配
+                    converted_output = output.replace(
+                        all_single_digit_matches[0].group(0), 
+                        f"C{category_num:02d}"
+                    )
+                    # 重新在转换后的文本中查找Cxx格式
+                    c_matches = re.findall(r"C(\d{2})", converted_output)
+                    if c_matches:
+                        return int(c_matches[-1]) - 1
+                    return category_num - 1
+            else:
+                # 如果有多个匹配，优先选择后半部分的匹配
+                mid_point = len(output) // 2
+                for match in reversed(all_single_digit_matches):  # 从后往前遍历
+                    if match.start() >= mid_point:  # 在后半部分
+                        category_num = int(match.group(1))
+                        if 1 <= category_num <= 9:  # 一位数字只考虑1-9
+                            # 将数字转换为Cxx格式，然后重新匹配
+                            converted_output = output.replace(
+                                match.group(0), 
+                                f"C{category_num:02d}"
+                            )
+                            # 重新在转换后的文本中查找Cxx格式
+                            c_matches = re.findall(r"C(\d{2})", converted_output)
+                            if c_matches:
+                                return int(c_matches[-1]) - 1
+                            return category_num - 1
+                
+                # 如果后半部分没有有效匹配，使用最后一个
+                category_num = int(all_single_digit_matches[-1].group(1))
+                if 1 <= category_num <= 9:  # 一位数字只考虑1-9
+                    # 将数字转换为Cxx格式，然后重新匹配
+                    converted_output = output.replace(
+                        all_single_digit_matches[-1].group(0), 
+                        f"C{category_num:02d}"
+                    )
+                    # 重新在转换后的文本中查找Cxx格式
+                    c_matches = re.findall(r"C(\d{2})", converted_output)
+                    if c_matches:
+                        return int(c_matches[-1]) - 1
+                    return category_num - 1
+        
         return -1
     
     def predict_batch(self, texts: List[str]) -> Tuple[List[int], List[str]]:
@@ -233,8 +369,18 @@ class MedicalTextClassifier:
         texts = test_dataset["text"]
         labels = test_dataset["label"]
         
-        # 批量预测
-        preds, outputs = self.predict_batch(texts)
+        # 根据vote_count决定使用单一推理还是投票推理
+        if self.config.training.vote_count > 1:
+            self.logger.info(f"使用投票推理模式，投票次数：{self.config.training.vote_count}")
+            preds = []
+            outputs = []
+            for i in tqdm(range(len(texts)), desc="投票推理"):
+                pred, all_outputs = self.predict_with_vote(texts[i])
+                preds.append(pred)
+                outputs.append(all_outputs)  # 保存所有推理输出
+        else:
+            self.logger.info("使用单一推理模式")
+            preds, outputs = self.predict_batch(texts)
         
         # 计算评估指标
         self.logger.info("计算评估指标...")
@@ -278,7 +424,8 @@ class MedicalTextClassifier:
                     "do_sample": self.config.generation.do_sample
                 },
                 "training": {
-                    "batch_size": self.config.training.batch_size
+                    "batch_size": self.config.training.batch_size,
+                    "vote_count": self.config.training.vote_count
                 }
             },
             "timestamp": datetime.now().isoformat()
@@ -291,6 +438,9 @@ class MedicalTextClassifier:
         self.logger.info("\n评估结果：")
         self.logger.info(f"模型类型: {'LoRA' if self.config.model.use_lora else 'Base Model'}")
         self.logger.info(f"数据集: {self.config.data.dataset_name}")
+        self.logger.info(f"推理模式: {'投票推理' if self.config.training.vote_count > 1 else '单一推理'}")
+        if self.config.training.vote_count > 1:
+            self.logger.info(f"投票次数: {self.config.training.vote_count}")
         self.logger.info(f"准确率：{acc:.4f}")
         self.logger.info(f"错误样本数：{len(errors)}")
         self.logger.info(f"总样本数：{len(texts)}")
@@ -298,15 +448,32 @@ class MedicalTextClassifier:
         
         return results
     
-    def predict_with_vote(self, text: str, vote_count: int = None) -> (int, list):
+
+    
+    def predict_with_vote(self, text: str, vote_count: int = None) -> tuple[int, list]:
         """
-        对单个文本进行多次推理并majority vote，返回最终类别和所有输出
+        对单个文本进行多次推理并智能投票，返回最终类别和所有输出
+        改进策略：
+        1. 使用不同的生成参数增加多样性
+        2. 基于置信度的加权投票
+        3. 考虑推理质量的自适应权重
         """
         if vote_count is None:
             vote_count = self.config.training.vote_count
+        
         preds = []
         outputs = []
-        for _ in range(vote_count):
+        confidences = []
+        
+        # 使用不同的生成参数增加多样性
+        temperature_variations = [0.3, 0.5, 0.7, 0.9, 1.1]  # 不同的温度值
+        top_p_variations = [0.8, 0.85, 0.9, 0.95, 0.98]    # 不同的top_p值
+        
+        for i in range(vote_count):
+            # 随机选择生成参数
+            temp = temperature_variations[i % len(temperature_variations)]
+            top_p = top_p_variations[i % len(top_p_variations)]
+            
             prompt = self.build_prompt(text)
             messages = [{"role": "user", "content": prompt}]
             chat_input = self.tokenizer.apply_chat_template(
@@ -314,50 +481,155 @@ class MedicalTextClassifier:
                 tokenize=False,
                 add_generation_prompt=True
             )
-            inputs = self.tokenizer(chat_input, return_tensors="pt", max_length=2048, truncation=True).to(self.model.device)
+            inputs = self.tokenizer(chat_input, return_tensors="pt", max_length=1024, truncation=True).to(self.model.device)
+            
             with torch.no_grad():
                 generated_ids = self.model.generate(
                     **inputs,
                     max_new_tokens=self.config.generation.max_new_tokens,
-                    temperature=self.config.generation.temperature,
-                    top_p=self.config.generation.top_p,
-                    do_sample=self.config.generation.do_sample,
+                    temperature=temp,
+                    top_p=top_p,
+                    do_sample=True,
                     pad_token_id=self.tokenizer.pad_token_id,
                     eos_token_id=self.tokenizer.eos_token_id
                 )
+            
             output = self.tokenizer.decode(generated_ids[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
             pred = self.extract_category(output)
             preds.append(pred)
             outputs.append(output)
-        # 统计投票
-        valid_preds = [p for p in preds if p != -1]
-        if not valid_preds:
-            final_pred = -1
-        else:
-            # 多数投票，平票时随机选一个
-            from collections import Counter
-            counter = Counter(valid_preds)
-            most_common = counter.most_common()
-            max_count = most_common[0][1]
-            candidates = [k for k, v in most_common if v == max_count]
-            import random
-            final_pred = random.choice(candidates)
+            
+            # 计算置信度分数
+            confidence = self._calculate_confidence(output, pred)
+            confidences.append(confidence)
+        
+        # 智能投票策略
+        final_pred = self._smart_voting(preds, confidences)
+        
         return final_pred, outputs
     
-    def run_test_samples(self, num_samples: int = 5, use_vote: bool = True):
-        """运行测试样本展示，支持majority vote"""
+    def _calculate_confidence(self, output: str, pred: int) -> float:
+        """
+        计算推理输出的置信度分数
+        基于多个因素：推理长度、结论明确性、关键词匹配等
+        """
+        if pred == -1:
+            return 0.0
+        
+        confidence = 0.0
+        
+        # 1. 推理长度分数 (适中的长度更好)
+        length = len(output)
+        if 100 <= length <= 500:
+            confidence += 0.3
+        elif 50 <= length <= 800:
+            confidence += 0.2
+        else:
+            confidence += 0.1
+        
+        # 2. 结论明确性分数
+        conclusion_keywords = [
+            "最终分类结果", "答案是", "结论是", "因此", "所以", 
+            "最终答案", "分类结果", "综上所述"
+        ]
+        for keyword in conclusion_keywords:
+            if keyword in output:
+                confidence += 0.2
+                break
+        
+        # 3. 推理逻辑分数 (包含分析步骤)
+        reasoning_keywords = [
+            "分析", "考虑", "因为", "由于", "基于", "根据", 
+            "特征", "症状", "表现", "检查", "诊断"
+        ]
+        reasoning_count = sum(1 for keyword in reasoning_keywords if keyword in output)
+        confidence += min(reasoning_count * 0.1, 0.3)
+        
+        # 4. 类别编号出现次数 (多次出现可能更确定)
+        category_pattern = f"C{pred+1:02d}"
+        category_count = output.count(category_pattern)
+        confidence += min(category_count * 0.1, 0.2)
+        
+        return min(confidence, 1.0)
+    
+    def _smart_voting(self, preds: List[int], confidences: List[float]) -> int:
+        """
+        智能投票策略
+        1. 基于置信度的加权投票
+        2. 考虑推理质量
+        3. 处理平票情况
+        """
+        from collections import Counter, defaultdict
+        
+        # 过滤无效预测
+        valid_data = [(pred, conf) for pred, conf in zip(preds, confidences) if pred != -1]
+        
+        if not valid_data:
+            return -1
+        
+        # 计算加权投票
+        weighted_votes = defaultdict(float)
+        for pred, conf in valid_data:
+            weighted_votes[pred] += conf
+        
+        # 找到最高权重的预测
+        max_weight = max(weighted_votes.values())
+        best_candidates = [pred for pred, weight in weighted_votes.items() if weight == max_weight]
+        
+        if len(best_candidates) == 1:
+            return best_candidates[0]
+        
+        # 处理平票情况：使用传统多数投票作为tie-breaker
+        valid_preds = [pred for pred in preds if pred != -1]
+        if not valid_preds:
+            return -1
+        
+        counter = Counter(valid_preds)
+        most_common = counter.most_common()
+        max_count = most_common[0][1]
+        tie_candidates = [k for k, v in most_common if v == max_count]
+        
+        # 在平票候选中选择置信度最高的
+        if len(tie_candidates) == 1:
+            return tie_candidates[0]
+        
+        # 如果还是平票，选择置信度最高的
+        best_confidence = 0.0
+        best_pred = tie_candidates[0]
+        
+        for pred in tie_candidates:
+            pred_confidences = [conf for p, conf in zip(preds, confidences) if p == pred]
+            if pred_confidences:
+                avg_confidence = sum(pred_confidences) / len(pred_confidences)
+                if avg_confidence > best_confidence:
+                    best_confidence = avg_confidence
+                    best_pred = pred
+        
+        return best_pred
+    
+    def run_test_samples(self, num_samples: int = 5):
+        """运行测试样本展示，根据配置自动选择推理模式"""
         self.logger.info("开始运行测试样本展示...")
         self.load_model()
         test_dataset = self.load_dataset()
         texts = test_dataset["text"]
         labels = test_dataset["label"]
         indices = np.random.choice(len(texts), min(num_samples, len(texts)), replace=False)
+        
+        # 根据配置决定推理模式
+        use_vote = self.config.training.vote_count > 1
+        
         self.logger.info(f"\n使用模型: {'LoRA' if self.config.model.use_lora else 'Base Model'}")
         self.logger.info(f"数据集: {self.config.data.dataset_name}")
+        self.logger.info(f"推理模式: {'投票推理' if use_vote else '单一推理'}")
+        if use_vote:
+            self.logger.info(f"投票次数: {self.config.training.vote_count}")
         self.logger.info("示例输出：")
+        
         for i, idx in enumerate(indices):
             text = texts[idx]
             label = f"C{labels[idx]+1:02d}"
+            
             if use_vote:
                 pred, all_outputs = self.predict_with_vote(text)
                 pred_label = f"C{pred+1:02d}" if pred != -1 else "未分类"
@@ -371,13 +643,8 @@ class MedicalTextClassifier:
                 self.logger.info("-"*80)
             else:
                 prompt = self.build_prompt(text)
-                messages = [{"role": "user", "content": prompt}]
-                chat_input = self.tokenizer.apply_chat_template(
-                    messages,
-                    tokenize=False,
-                    add_generation_prompt=True
-                )
-                inputs = self.tokenizer(chat_input, return_tensors="pt", max_length=2048, truncation=True).to(self.model.device)
+                # 直接使用提示词，不使用chat template
+                inputs = self.tokenizer(prompt, return_tensors="pt", max_length=2048, truncation=True).to(self.model.device)
                 with torch.no_grad():
                     generated_ids = self.model.generate(
                         **inputs,

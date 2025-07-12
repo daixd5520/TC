@@ -10,7 +10,5 @@ C04 - Questions asking for numbers, amounts, dates or other numeric information
 
 Text: {text}
 
-For example, if the question asks "What is caffeine?", it belongs to description.
-The output must be one of: abbreviation, description, entity, human, location, numeric.
-If you output anything else, you will be penalized.
+For example, if the question asks 'What is caffeine?', it belongs to C03. The output must be one of C01-C06 categories.
 Let's classify step by step:

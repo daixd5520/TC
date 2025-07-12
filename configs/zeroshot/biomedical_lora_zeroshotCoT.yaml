@@ -10,7 +10,7 @@ data:
   num_classes: 20
 
 generation:
-  max_new_tokens: 256
+  max_new_tokens: 512
   temperature: 0.4
   top_p: 0.9
   do_sample: false
@@ -21,4 +21,4 @@ training:
 
 output:
   base_output_dir: "./outputs"
-  experiment_name: "biomedical_lora_zeroshotCoT" 
+  experiment_name: "biomedical_lora_zeroshotCoT_wh" 

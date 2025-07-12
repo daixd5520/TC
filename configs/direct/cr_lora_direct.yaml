@@ -10,8 +10,8 @@ data:
   num_classes: 2
 
 generation:
-  max_new_tokens: 512
-  temperature: 0
+  max_new_tokens: 256
+  temperature: 0.2
   top_p: 0.9
   do_sample: true
 
@@ -21,4 +21,4 @@ training:
 
 output:
   base_output_dir: "./outputs"
-  experiment_name: "cr_lora_direct" 
+  experiment_name: "RE_cr_lora_direct" 

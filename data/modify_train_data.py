@@ -1,38 +1,73 @@
 import json
 
-def build_prompt(text):
+def build_prompt_bio(text):
     return (
-        "You are a medical text classification expert. Your task is to classify the given medical text into one of 23 categories.\n\n"
+        "You are a biomedical topic classification expert. Your task is to classify the given medical text into one of 20 biomedical categories.\n\n"
         "Category mapping:\n"
-        "C01 - Bacterial Infections and Mycoses\n"
-        "C02 - Virus Diseases\n"
-        "C03 - Parasitic Diseases\n"
-        "C04 - Neoplasms\n"
-        "C05 - Musculoskeletal Diseases\n"
-        "C06 - Digestive System Diseases\n"
-        "C07 - Stomatognathic Diseases\n"
-        "C08 - Respiratory Tract Diseases\n"
-        "C09 - Otorhinolaryngologic Diseases\n"
-        "C10 - Nervous System Diseases\n"
-        "C11 - Eye Diseases\n"
-        "C12 - Urologic and Male Genital Diseases\n"
-        "C13 - Female Genital Diseases and Pregnancy Complications\n"
-        "C14 - Cardiovascular Diseases\n"
-        "C15 - Hemic and Lymphatic Diseases\n"
-        "C16 - Neonatal Diseases and Abnormalities\n"
-        "C17 - Skin and Connective Tissue Diseases\n"
-        "C18 - Nutritional and Metabolic Diseases\n"
-        "C19 - Endocrine Diseases\n"
-        "C20 - Immunologic Diseases\n"
-        "C21 - Disorders of Environmental Origin\n"
-        "C22 - Animal Diseases\n"
-        "C23 - Pathological Conditions, Signs and Symptoms\n\n"
+        "C01 - aging\n"
+        "C02 - chemistry\n"
+        "C03 - cats\n"
+        "C04 - glucose\n"
+        "C05 - potassium\n"
+        "C06 - lung\n"
+        "C07 - erythrocytes\n"
+        "C08 - lymphocytes\n"
+        "C09 - spleen\n"
+        "C10 - mutation\n"
+        "C11 - skin\n"
+        "C12 - norepinephrine\n"
+        "C13 - insulin\n"
+        "C14 - prognosis\n"
+        "C15 - risk\n"
+        "C16 - myocardium\n"
+        "C17 - sodium\n"
+        "C18 - mathematics\n"
+        "C19 - swine\n"
+        "C20 - temperature\n\n"
         f"Text: {text}\n\n"
-        "For example, if the text is related to neoplasms, it belongs to C04. The output must be one of C01-C23 categories. If you output a non-existent category, you will be penalized."
+        "For example, if the text is about insulin regulation, it belongs to C13. The output must be one of C01-C20 categories."
+    )
+
+def build_prompt_cr(text):
+    return (
+        "You are a sentiment analysis expert. Your task is to classify the given customer review text into one of two sentiment categories.\n\n"
+        "Category mapping:\n"
+        "C01 - positive\n"
+        "C02 - negative\n\n"
+        f"Text: {text}\n\n"
+        "For example, if the text expresses satisfaction with a product, it belongs to C01. The output must be either 'C01' or 'C02'."
+    )
+
+def build_prompt_dblp(text):
+    return (
+        "You are a computer science topic classification expert. Your task is to classify the given text into one of 6 computer science research categories.\n\n"
+        "Category mapping:\n"
+        "C01 - Database (DB)\n"
+"C02 - Artificial Intelligence (AI)\n"
+"C03 - Software Engineering / Computer Architecture (SE/CA)\n"
+"C04 - Computer Networks (NET)\n"
+"C05 - Data Mining (DM)\n"
+        "C06 - Security (SEC)\n\n"
+        f"Text: {text}\n\n"
+        "For example, if the text is about relational databases, it belongs to C01. The output must be one of C01–C06 categories."
+    )
+    
+def build_prompt_trec(text):
+    return (
+        "You are a question type classification expert. Your task is to classify the given question into one of 6 categories.\n\n"
+        "Category mapping:\n"
+        "C01 - Questions about entities (e.g., objects, animals, substances)\n"
+        "C02 - Questions about people, professions or groups\n"
+        "C03 - Descriptive or definitional questions\n"
+        "C04 - Questions asking for numbers, amounts, dates or other numeric information\n"
+        "C05 - Questions about places or locations\n"
+        "C06 - Abbreviations or acronyms\n\n"
+        f"Text: {text}\n\n"
+        "For example, if the question asks 'What is caffeine?', it belongs to C03. The output must be one of C01-C06 categories."
     )
 
 # 读取原始文件
-file_path = "/mnt/data1/TC/TextClassDemo/data/ohsumed_Train_alpaca_noCoT_updated.json"
+file_path = "/mnt/data1/TC/TextClassDemo/data/TREC/TREC_Train_Cxx.json"
 with open(file_path, 'r', encoding='utf-8') as f:
     data = json.load(f)
 
@@ -40,7 +75,7 @@ with open(file_path, 'r', encoding='utf-8') as f:
 for item in data:
     # 使用原始input构建新的instruction
     original_input = item["input"]
-    item["instruction"] = build_prompt(original_input)
+    item["instruction"] = build_prompt_trec(original_input)
     # 清空input
     item["input"] = ""
 
