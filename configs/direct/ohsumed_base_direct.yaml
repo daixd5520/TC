@@ -6,8 +6,8 @@ model:
 
 data:
   data_path: "/mnt/data1/TC/TextClassDemo/data/R52/R52_Test_Cxx.json"
-  dataset_name: r52
-  num_classes: 52
+  dataset_name: ohsumed
+  num_classes: 23
 
 generation:
   max_new_tokens: 256

@@ -1,8 +1,8 @@
 # TREC LoRA直接评估配置
 model:
-  base_model_path: "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
+  base_model_path: "/mnt/data1/FT/inspire_data_prep/models/gemma2-2b"
   adapter_path: "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_trec_direct_lora"
-  use_lora: true
+  use_lora: false
 
 data:
   data_path: "/mnt/data1/TC/TextClassDemo/data/TREC/TREC_Test_Cxx.json"
@@ -21,4 +21,4 @@ training:
 
 output:
   base_output_dir: "./outputs"
-  experiment_name: "trec_lora_direct" 
+  experiment_name: "gemma2-2b_trec_lora_direct" 

@@ -1,0 +1,63 @@
+2025-07-19 17:23:29,001 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 开始运行评估实验...
+2025-07-19 17:23:29,001 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 实验配置:
+2025-07-19 17:23:29,001 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:23:29,002 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 使用LoRA: False
+2025-07-19 17:23:29,002 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 数据集: r52
+2025-07-19 17:23:29,002 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/R52/R52_Test_Cxx.json
+2025-07-19 17:23:29,003 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - ================================================================================
+2025-07-19 17:23:29,003 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-19 17:23:29,003 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:23:29,004 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 是否使用LoRA: False
+2025-07-19 17:23:29,004 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - ================================================================================
+2025-07-19 17:23:29,004 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:23:31,341 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - Tokenizer加载完成
+2025-07-19 17:23:31,342 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - Chat template: {{ bos_token }}{% if messages[0]['role'] == 'system' %}{{ raise_exception('System role not supported') }}{% endif %}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if (message['role'] == 'assistant') %}{% set role = 'model' %}{% else %}{% set role = message['role'] %}{% endif %}{{ '<start_of_turn>' + role + '
+' + message['content'] | trim + '<end_of_turn>
+' }}{% endfor %}{% if add_generation_prompt %}{{'<start_of_turn>model
+'}}{% endif %}
+2025-07-19 17:23:31,342 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 检测到Gemma模型，使用直接提示词（避免重复输出）
+2025-07-19 17:23:31,342 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 模板策略: direct_prompt
+2025-07-19 17:23:31,342 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:23:35,657 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 基础模型加载完成
+2025-07-19 17:23:35,658 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-19 17:23:35,660 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - ================================================================================
+2025-07-19 17:23:35,661 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 模型加载完成！
+2025-07-19 17:23:35,661 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 最终使用的模型: 基础模型
+2025-07-19 17:23:35,661 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:23:35,662 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 模板策略: direct_prompt
+2025-07-19 17:23:35,662 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - ================================================================================
+2025-07-19 17:23:35,662 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/R52/R52_Test_Cxx.json
+2025-07-19 17:23:35,700 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 使用单一推理模式
+2025-07-19 17:23:35,701 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 开始批量推理...
+2025-07-19 17:26:20,779 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 开始运行评估实验...
+2025-07-19 17:26:20,779 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 实验配置:
+2025-07-19 17:26:20,779 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:26:20,779 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 使用LoRA: False
+2025-07-19 17:26:20,779 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 数据集: r52
+2025-07-19 17:26:20,779 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/R52/R52_Test_Cxx.json
+2025-07-19 17:26:20,779 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - ================================================================================
+2025-07-19 17:26:20,779 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-19 17:26:20,779 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:26:20,779 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 是否使用LoRA: False
+2025-07-19 17:26:20,779 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - ================================================================================
+2025-07-19 17:26:20,779 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:26:22,092 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - Tokenizer加载完成
+2025-07-19 17:26:22,092 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - Chat template: {{ bos_token }}{% if messages[0]['role'] == 'system' %}{{ raise_exception('System role not supported') }}{% endif %}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if (message['role'] == 'assistant') %}{% set role = 'model' %}{% else %}{% set role = message['role'] %}{% endif %}{{ '<start_of_turn>' + role + '
+' + message['content'] | trim + '<end_of_turn>
+' }}{% endfor %}{% if add_generation_prompt %}{{'<start_of_turn>model
+'}}{% endif %}
+2025-07-19 17:26:22,092 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 检测到Gemma模型，使用直接提示词（避免重复输出）
+2025-07-19 17:26:22,092 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 模板策略: direct_prompt
+2025-07-19 17:26:22,092 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:28:44,881 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 开始运行评估实验...
+2025-07-19 17:28:44,881 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 实验配置:
+2025-07-19 17:28:44,881 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:28:44,881 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 使用LoRA: False
+2025-07-19 17:28:44,881 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 数据集: r52
+2025-07-19 17:28:44,881 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/R52/R52_Test_Cxx.json
+2025-07-19 17:28:44,881 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - ================================================================================
+2025-07-19 17:28:44,881 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-19 17:28:44,881 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:28:44,881 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 是否使用LoRA: False
+2025-07-19 17:28:44,881 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - ================================================================================
+2025-07-19 17:28:44,881 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b

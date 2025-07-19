@@ -9,8 +9,7 @@ import numpy as np
 import re
 from transformers import (
     AutoModelForCausalLM,
-    AutoTokenizer,
-    BitsAndBytesConfig
+    AutoTokenizer
 )
 from peft import PeftModel
 from datasets import Dataset
@@ -66,9 +65,16 @@ class MedicalTextClassifier:
     
     def load_model(self):
         """加载模型和tokenizer"""
+        self.logger.info("="*80)
         self.logger.info("开始加载模型和tokenizer...")
+        self.logger.info(f"基础模型路径: {self.config.model.base_model_path}")
+        self.logger.info(f"是否使用LoRA: {self.config.model.use_lora}")
+        if self.config.model.use_lora:
+            self.logger.info(f"LoRA适配器路径: {self.config.model.adapter_path}")
+        self.logger.info("="*80)
         
         # 加载tokenizer
+        self.logger.info(f"正在加载tokenizer: {self.config.model.base_model_path}")
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.config.model.base_model_path, 
             trust_remote_code=True
@@ -77,9 +83,14 @@ class MedicalTextClassifier:
         self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
         self.tokenizer.padding_side = "left"
         
+        self.logger.info(f"Tokenizer加载完成")
         self.logger.info(f"Chat template: {self.tokenizer.chat_template}")
         
+        # 检测模型类型并设置模板策略
+        self._setup_template_strategy()
+        
         # 加载基础模型
+        self.logger.info(f"正在加载基础模型: {self.config.model.base_model_path}")
         self.model = AutoModelForCausalLM.from_pretrained(
             self.config.model.base_model_path,
             device_map="auto",
@@ -87,23 +98,74 @@ class MedicalTextClassifier:
             torch_dtype=torch.float16,
             low_cpu_mem_usage=True
         )
+        self.logger.info(f"基础模型加载完成")
         
         # 加载LoRA适配器（如果启用）
         if self.config.model.use_lora:
-            self.logger.info("加载PEFT适配器...")
+            self.logger.info(f"正在加载PEFT适配器: {self.config.model.adapter_path}")
             self.model = PeftModel.from_pretrained(
                 self.model,
                 self.config.model.adapter_path,
                 device_map="auto",
                 torch_dtype=torch.float16
             )
+            self.logger.info("PEFT适配器加载完成")
         else:
             self.logger.info("使用基础模型，不加载LoRA适配器")
         
         self.model.config.pad_token_id = self.tokenizer.pad_token_id
         self.model.eval()
         
-        self.logger.info("模型加载完成")
+        self.logger.info("="*80)
+        self.logger.info("模型加载完成！")
+        self.logger.info(f"最终使用的模型: {'LoRA适配模型' if self.config.model.use_lora else '基础模型'}")
+        self.logger.info(f"模型路径: {self.config.model.base_model_path}")
+        if self.config.model.use_lora:
+            self.logger.info(f"适配器路径: {self.config.model.adapter_path}")
+        self.logger.info(f"模板策略: {self.template_strategy}")
+        self.logger.info("="*80)
+    
+    def _setup_template_strategy(self):
+        """设置模板策略，根据模型类型选择合适的模板方式"""
+        model_name = self.config.model.base_model_path.lower()
+        
+        # 检测模型类型
+        if "llama" in model_name or "llama3" in model_name:
+            self.template_strategy = "chat_template"
+            self.logger.info("检测到Llama模型，使用chat_template")
+        elif "gemma" in model_name:
+            self.template_strategy = "direct_prompt"
+            self.logger.info("检测到Gemma模型，使用直接提示词（避免重复输出）")
+        elif "qwen" in model_name:
+            self.template_strategy = "chat_template"
+            self.logger.info("检测到Qwen模型，使用chat_template")
+        elif "chatglm" in model_name:
+            self.template_strategy = "direct_prompt"
+            self.logger.info("检测到ChatGLM模型，使用直接提示词")
+        else:
+            # 默认策略：如果tokenizer有chat_template就使用，否则直接提示词
+            if self.tokenizer.chat_template is not None:
+                self.template_strategy = "chat_template"
+                self.logger.info("使用默认chat_template策略")
+            else:
+                self.template_strategy = "direct_prompt"
+                self.logger.info("模型无chat_template，使用直接提示词")
+        
+        self.logger.info(f"模板策略: {self.template_strategy}")
+    
+    def _format_prompt(self, prompt: str) -> str:
+        """根据模板策略格式化提示词"""
+        if self.template_strategy == "chat_template":
+            # 使用chat template
+            messages = [{"role": "user", "content": prompt}]
+            return self.tokenizer.apply_chat_template(
+                messages,
+                tokenize=False,
+                add_generation_prompt=True
+            )
+        else:
+            # 直接使用提示词
+            return prompt
     
     def load_dataset(self) -> Dataset:
         """加载数据集"""
@@ -286,19 +348,12 @@ class MedicalTextClassifier:
             batch_texts = texts[i:i+self.config.training.batch_size]
             batch_prompts = [self.build_prompt(text) for text in batch_texts]
             
-            # 构建批处理的对话格式
-            batch_messages = [[{"role": "user", "content": prompt}] for prompt in batch_prompts]
-            batch_chat_inputs = [
-                self.tokenizer.apply_chat_template(
-                    messages,
-                    tokenize=False,
-                    add_generation_prompt=True
-                ) for messages in batch_messages
-            ]
+            # 根据模板策略格式化提示词
+            batch_formatted_prompts = [self._format_prompt(prompt) for prompt in batch_prompts]
             
             # 批处理tokenization
             batch_inputs = self.tokenizer(
-                batch_chat_inputs, 
+                batch_formatted_prompts, 
                 return_tensors="pt", 
                 max_length=512, 
                 truncation=True,
@@ -360,6 +415,13 @@ class MedicalTextClassifier:
     def run_evaluation(self):
         """运行完整评估"""
         self.logger.info("开始运行评估实验...")
+        self.logger.info(f"实验配置:")
+        self.logger.info(f"  - 基础模型: {self.config.model.base_model_path}")
+        self.logger.info(f"  - 使用LoRA: {self.config.model.use_lora}")
+        if self.config.model.use_lora:
+            self.logger.info(f"  - 适配器路径: {self.config.model.adapter_path}")
+        self.logger.info(f"  - 数据集: {self.config.data.dataset_name}")
+        self.logger.info(f"  - 数据路径: {self.config.data.data_path}")
         
         # 加载模型
         self.load_model()
@@ -475,13 +537,8 @@ class MedicalTextClassifier:
             top_p = top_p_variations[i % len(top_p_variations)]
             
             prompt = self.build_prompt(text)
-            messages = [{"role": "user", "content": prompt}]
-            chat_input = self.tokenizer.apply_chat_template(
-                messages,
-                tokenize=False,
-                add_generation_prompt=True
-            )
-            inputs = self.tokenizer(chat_input, return_tensors="pt", max_length=1024, truncation=True).to(self.model.device)
+            formatted_prompt = self._format_prompt(prompt)
+            inputs = self.tokenizer(formatted_prompt, return_tensors="pt", max_length=1024, truncation=True).to(self.model.device)
             
             with torch.no_grad():
                 generated_ids = self.model.generate(
@@ -610,6 +667,14 @@ class MedicalTextClassifier:
     def run_test_samples(self, num_samples: int = 5):
         """运行测试样本展示，根据配置自动选择推理模式"""
         self.logger.info("开始运行测试样本展示...")
+        self.logger.info(f"测试配置:")
+        self.logger.info(f"  - 基础模型: {self.config.model.base_model_path}")
+        self.logger.info(f"  - 使用LoRA: {self.config.model.use_lora}")
+        if self.config.model.use_lora:
+            self.logger.info(f"  - 适配器路径: {self.config.model.adapter_path}")
+        self.logger.info(f"  - 数据集: {self.config.data.dataset_name}")
+        self.logger.info(f"  - 测试样本数: {num_samples}")
+        
         self.load_model()
         test_dataset = self.load_dataset()
         texts = test_dataset["text"]
@@ -643,8 +708,8 @@ class MedicalTextClassifier:
                 self.logger.info("-"*80)
             else:
                 prompt = self.build_prompt(text)
-                # 直接使用提示词，不使用chat template
-                inputs = self.tokenizer(prompt, return_tensors="pt", max_length=2048, truncation=True).to(self.model.device)
+                formatted_prompt = self._format_prompt(prompt)
+                inputs = self.tokenizer(formatted_prompt, return_tensors="pt", max_length=2048, truncation=True).to(self.model.device)
                 with torch.no_grad():
                     generated_ids = self.model.generate(
                         **inputs,

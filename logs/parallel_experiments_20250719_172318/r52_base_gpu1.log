@@ -1,0 +1,60 @@
+从配置文件加载配置: /mnt/data1/TC/TextClassDemo/configs/direct/r52_base_direct.yaml
+2025-07-19 17:23:29,001 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 开始运行评估实验...
+2025-07-19 17:23:29,001 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 实验配置:
+2025-07-19 17:23:29,001 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:23:29,002 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 使用LoRA: False
+2025-07-19 17:23:29,002 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 数据集: r52
+2025-07-19 17:23:29,002 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/R52/R52_Test_Cxx.json
+2025-07-19 17:23:29,003 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - ================================================================================
+2025-07-19 17:23:29,003 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-19 17:23:29,003 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:23:29,004 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 是否使用LoRA: False
+2025-07-19 17:23:29,004 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - ================================================================================
+2025-07-19 17:23:29,004 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:23:31,341 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - Tokenizer加载完成
+2025-07-19 17:23:31,342 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - Chat template: {{ bos_token }}{% if messages[0]['role'] == 'system' %}{{ raise_exception('System role not supported') }}{% endif %}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if (message['role'] == 'assistant') %}{% set role = 'model' %}{% else %}{% set role = message['role'] %}{% endif %}{{ '<start_of_turn>' + role + '
+' + message['content'] | trim + '<end_of_turn>
+' }}{% endfor %}{% if add_generation_prompt %}{{'<start_of_turn>model
+'}}{% endif %}
+2025-07-19 17:23:31,342 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 检测到Gemma模型，使用直接提示词（避免重复输出）
+2025-07-19 17:23:31,342 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 模板策略: direct_prompt
+2025-07-19 17:23:31,342 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+/mnt/data1/miniconda3/envs/lmf/lib/python3.12/site-packages/accelerate/utils/modeling.py:808: UserWarning: CUDA initialization: Unexpected error from cudaGetDeviceCount(). Did you run some cuda functions before calling NumCudaDevices() that might have already set an error? Error 802: system not yet initialized (Triggered internally at ../c10/cuda/CUDAFunctions.cpp:108.)
+  _ = torch.tensor([0], device=i)
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:03<00:03,  3.62s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:03<00:00,  1.60s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:03<00:00,  1.91s/it]
+2025-07-19 17:23:35,657 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 基础模型加载完成
+2025-07-19 17:23:35,658 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-19 17:23:35,660 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - ================================================================================
+2025-07-19 17:23:35,661 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 模型加载完成！
+2025-07-19 17:23:35,661 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 最终使用的模型: 基础模型
+2025-07-19 17:23:35,661 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:23:35,662 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 模板策略: direct_prompt
+2025-07-19 17:23:35,662 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - ================================================================================
+2025-07-19 17:23:35,662 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/R52/R52_Test_Cxx.json
+2025-07-19 17:23:35,700 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 使用单一推理模式
+2025-07-19 17:23:35,701 - MedicalClassifier_gemma2-2b_r52_base_direct - INFO - 开始批量推理...
+处理批次:   0%|          | 0/6 [00:00<?, ?it/s]处理批次:   0%|          | 0/6 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/mnt/data1/TC/TextClassDemo/experiment_runner.py", line 767, in <module>
+    main()
+  File "/mnt/data1/TC/TextClassDemo/experiment_runner.py", line 761, in main
+    classifier.run_evaluation()
+  File "/mnt/data1/TC/TextClassDemo/experiment_runner.py", line 445, in run_evaluation
+    preds, outputs = self.predict_batch(texts)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data1/TC/TextClassDemo/experiment_runner.py", line 355, in predict_batch
+    batch_inputs = self.tokenizer(
+                   ^^^^^^^^^^^^^^^
+  File "/mnt/data1/miniconda3/envs/lmf/lib/python3.12/site-packages/transformers/tokenization_utils_base.py", line 2867, in __call__
+    encodings = self._call_one(text=text, text_pair=text_pair, **all_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data1/miniconda3/envs/lmf/lib/python3.12/site-packages/transformers/tokenization_utils_base.py", line 2955, in _call_one
+    return self.batch_encode_plus(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data1/miniconda3/envs/lmf/lib/python3.12/site-packages/transformers/tokenization_utils_base.py", line 3156, in batch_encode_plus
+    return self._batch_encode_plus(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data1/miniconda3/envs/lmf/lib/python3.12/site-packages/transformers/tokenization_utils_fast.py", line 541, in _batch_encode_plus
+    encodings = self._tokenizer.encode_batch(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

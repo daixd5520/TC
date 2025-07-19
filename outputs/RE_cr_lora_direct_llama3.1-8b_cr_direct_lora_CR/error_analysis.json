@@ -95,18 +95,11 @@
     "text": "as a windows user , i had to install the software including drivers and itunes on my desktop , and this is the only area where i encountered a nuisance",
     "true_label": "C02",
     "predicted_label": "C01",
-    "model_output": "C01\n\nThe word \"nuisance\" has a negative connotation, but the overall tone of the review is that it's the only area of difficulty, implying that the rest of the experience was positive."
+    "model_output": "C01"
   },
   {
     "index": 283,
     "text": "in any case , navigation by artist album is ok however i miss an ability to navigate by folders",
-    "true_label": "C02",
-    "predicted_label": "C01",
-    "model_output": "C01"
-  },
-  {
-    "index": 286,
-    "text": "i took my zen micro with me over the weekend , and was forced to lug my laptop with me on the trip for one reason to keep the zen micro charged",
     "true_label": "C02",
     "predicted_label": "C01",
     "model_output": "C01"
@@ -165,7 +158,7 @@
     "text": "unfortunately , the 6610 does not offer voice dialing like my previous phone , but the other features it packs outweighs this shortcoming",
     "true_label": "C02",
     "predicted_label": "C01",
-    "model_output": "C01\n\nThe text mentions a shortcoming (lack of voice dialing), but the overall tone is positive as it states that the other features outweigh this shortcoming, indicating that the customer is satisfied with the product."
+    "model_output": "C01\n\nThe customer mentions a drawback (lack of voice dialing), but the tone is not overwhelmingly negative. The phrase \"but the other features it packs outweighs this shortcoming\" indicates that the customer is generally satisfied with the product, outweighing the negative aspect."
   },
   {
     "index": 333,

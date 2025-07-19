@@ -1,0 +1,127 @@
+2025-07-19 17:23:25,333 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 开始运行评估实验...
+2025-07-19 17:23:25,333 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 实验配置:
+2025-07-19 17:23:25,333 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:23:25,333 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 使用LoRA: True
+2025-07-19 17:23:25,333 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_trec_direct_lora
+2025-07-19 17:23:25,333 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 数据集: TREC
+2025-07-19 17:23:25,333 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/TREC/TREC_Test_Cxx.json
+2025-07-19 17:23:25,333 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - ================================================================================
+2025-07-19 17:23:25,333 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 开始加载模型和tokenizer...
+2025-07-19 17:23:25,333 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:23:25,333 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 是否使用LoRA: True
+2025-07-19 17:23:25,333 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - LoRA适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_trec_direct_lora
+2025-07-19 17:23:25,333 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - ================================================================================
+2025-07-19 17:23:25,333 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:23:26,673 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - Tokenizer加载完成
+2025-07-19 17:23:26,674 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - Chat template: {{ bos_token }}{% if messages[0]['role'] == 'system' %}{{ raise_exception('System role not supported') }}{% endif %}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if (message['role'] == 'assistant') %}{% set role = 'model' %}{% else %}{% set role = message['role'] %}{% endif %}{{ '<start_of_turn>' + role + '
+' + message['content'] | trim + '<end_of_turn>
+' }}{% endfor %}{% if add_generation_prompt %}{{'<start_of_turn>model
+'}}{% endif %}
+2025-07-19 17:23:26,674 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 检测到Gemma模型，使用直接提示词（避免重复输出）
+2025-07-19 17:23:26,674 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 模板策略: direct_prompt
+2025-07-19 17:23:26,674 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:23:29,984 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 基础模型加载完成
+2025-07-19 17:23:29,985 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 正在加载PEFT适配器: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_trec_direct_lora
+2025-07-19 17:26:04,176 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 开始运行评估实验...
+2025-07-19 17:26:04,176 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 实验配置:
+2025-07-19 17:26:04,176 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:26:04,176 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 使用LoRA: True
+2025-07-19 17:26:04,176 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_trec_direct_lora
+2025-07-19 17:26:04,176 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 数据集: TREC
+2025-07-19 17:26:04,176 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/TREC/TREC_Test_Cxx.json
+2025-07-19 17:26:04,176 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - ================================================================================
+2025-07-19 17:26:04,176 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 开始加载模型和tokenizer...
+2025-07-19 17:26:04,176 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:26:04,176 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 是否使用LoRA: True
+2025-07-19 17:26:04,176 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - LoRA适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_trec_direct_lora
+2025-07-19 17:26:04,176 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - ================================================================================
+2025-07-19 17:26:04,176 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:26:05,429 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - Tokenizer加载完成
+2025-07-19 17:26:05,429 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - Chat template: {{ bos_token }}{% if messages[0]['role'] == 'system' %}{{ raise_exception('System role not supported') }}{% endif %}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if (message['role'] == 'assistant') %}{% set role = 'model' %}{% else %}{% set role = message['role'] %}{% endif %}{{ '<start_of_turn>' + role + '
+' + message['content'] | trim + '<end_of_turn>
+' }}{% endfor %}{% if add_generation_prompt %}{{'<start_of_turn>model
+'}}{% endif %}
+2025-07-19 17:26:05,429 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 检测到Gemma模型，使用直接提示词（避免重复输出）
+2025-07-19 17:26:05,429 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 模板策略: direct_prompt
+2025-07-19 17:26:05,429 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:26:06,588 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 基础模型加载完成
+2025-07-19 17:26:06,589 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 正在加载PEFT适配器: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_trec_direct_lora
+2025-07-19 17:28:25,782 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 开始运行评估实验...
+2025-07-19 17:28:25,782 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 实验配置:
+2025-07-19 17:28:25,782 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:28:25,782 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 使用LoRA: True
+2025-07-19 17:28:25,782 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_trec_direct_lora
+2025-07-19 17:28:25,782 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 数据集: TREC
+2025-07-19 17:28:25,782 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/TREC/TREC_Test_Cxx.json
+2025-07-19 17:28:25,782 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - ================================================================================
+2025-07-19 17:28:25,782 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 开始加载模型和tokenizer...
+2025-07-19 17:28:25,782 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:28:25,782 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 是否使用LoRA: True
+2025-07-19 17:28:25,782 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - LoRA适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_trec_direct_lora
+2025-07-19 17:28:25,782 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - ================================================================================
+2025-07-19 17:28:25,782 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:28:27,071 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - Tokenizer加载完成
+2025-07-19 17:28:27,072 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - Chat template: {{ bos_token }}{% if messages[0]['role'] == 'system' %}{{ raise_exception('System role not supported') }}{% endif %}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if (message['role'] == 'assistant') %}{% set role = 'model' %}{% else %}{% set role = message['role'] %}{% endif %}{{ '<start_of_turn>' + role + '
+' + message['content'] | trim + '<end_of_turn>
+' }}{% endfor %}{% if add_generation_prompt %}{{'<start_of_turn>model
+'}}{% endif %}
+2025-07-19 17:28:27,072 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 检测到Gemma模型，使用直接提示词（避免重复输出）
+2025-07-19 17:28:27,072 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 模板策略: direct_prompt
+2025-07-19 17:28:27,072 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:28:30,261 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 基础模型加载完成
+2025-07-19 17:28:30,261 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 正在加载PEFT适配器: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_trec_direct_lora
+2025-07-19 17:29:42,564 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 开始运行评估实验...
+2025-07-19 17:29:42,565 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 实验配置:
+2025-07-19 17:29:42,565 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:29:42,565 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 使用LoRA: True
+2025-07-19 17:29:42,565 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_trec_direct_lora
+2025-07-19 17:29:42,565 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 数据集: TREC
+2025-07-19 17:29:42,565 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/TREC/TREC_Test_Cxx.json
+2025-07-19 17:29:42,565 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - ================================================================================
+2025-07-19 17:29:42,565 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 开始加载模型和tokenizer...
+2025-07-19 17:29:42,565 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:29:42,565 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 是否使用LoRA: True
+2025-07-19 17:29:42,565 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - LoRA适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_trec_direct_lora
+2025-07-19 17:29:42,565 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - ================================================================================
+2025-07-19 17:29:42,565 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:29:43,860 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - Tokenizer加载完成
+2025-07-19 17:29:43,860 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - Chat template: {{ bos_token }}{% if messages[0]['role'] == 'system' %}{{ raise_exception('System role not supported') }}{% endif %}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if (message['role'] == 'assistant') %}{% set role = 'model' %}{% else %}{% set role = message['role'] %}{% endif %}{{ '<start_of_turn>' + role + '
+' + message['content'] | trim + '<end_of_turn>
+' }}{% endfor %}{% if add_generation_prompt %}{{'<start_of_turn>model
+'}}{% endif %}
+2025-07-19 17:29:43,860 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 检测到Gemma模型，使用直接提示词（避免重复输出）
+2025-07-19 17:29:43,860 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 模板策略: direct_prompt
+2025-07-19 17:29:43,860 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:29:47,879 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 基础模型加载完成
+2025-07-19 17:29:47,879 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 正在加载PEFT适配器: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_trec_direct_lora
+2025-07-19 17:30:22,360 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 开始运行评估实验...
+2025-07-19 17:30:22,360 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 实验配置:
+2025-07-19 17:30:22,360 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:30:22,360 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 使用LoRA: False
+2025-07-19 17:30:22,360 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 数据集: TREC
+2025-07-19 17:30:22,360 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/TREC/TREC_Test_Cxx.json
+2025-07-19 17:30:22,360 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - ================================================================================
+2025-07-19 17:30:22,360 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 开始加载模型和tokenizer...
+2025-07-19 17:30:22,360 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:30:22,360 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 是否使用LoRA: False
+2025-07-19 17:30:22,360 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - ================================================================================
+2025-07-19 17:30:22,360 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:30:23,632 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - Tokenizer加载完成
+2025-07-19 17:30:23,632 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - Chat template: {{ bos_token }}{% if messages[0]['role'] == 'system' %}{{ raise_exception('System role not supported') }}{% endif %}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if (message['role'] == 'assistant') %}{% set role = 'model' %}{% else %}{% set role = message['role'] %}{% endif %}{{ '<start_of_turn>' + role + '
+' + message['content'] | trim + '<end_of_turn>
+' }}{% endfor %}{% if add_generation_prompt %}{{'<start_of_turn>model
+'}}{% endif %}
+2025-07-19 17:30:23,632 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 检测到Gemma模型，使用直接提示词（避免重复输出）
+2025-07-19 17:30:23,632 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 模板策略: direct_prompt
+2025-07-19 17:30:23,632 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:30:27,548 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 基础模型加载完成
+2025-07-19 17:30:27,548 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-19 17:30:27,550 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - ================================================================================
+2025-07-19 17:30:27,550 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 模型加载完成！
+2025-07-19 17:30:27,550 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 最终使用的模型: 基础模型
+2025-07-19 17:30:27,550 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 17:30:27,550 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 模板策略: direct_prompt
+2025-07-19 17:30:27,550 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - ================================================================================
+2025-07-19 17:30:27,550 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/TREC/TREC_Test_Cxx.json
+2025-07-19 17:30:27,561 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 使用单一推理模式
+2025-07-19 17:30:27,561 - MedicalClassifier_gemma2-2b_trec_lora_direct - INFO - 开始批量推理...
