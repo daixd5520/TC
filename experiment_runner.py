@@ -20,6 +20,7 @@ from tqdm import tqdm
 from typing import List, Tuple, Dict, Any
 import logging
 from datetime import datetime
+from accelerate import Accelerator
 
 from utils.config_manager import ConfigManager, ExperimentConfig, PromptManager
 
@@ -34,6 +35,9 @@ class MedicalTextClassifier:
         self.logger = self._setup_logger()
         self.prompt_manager = PromptManager()
         self.num_classes = self.config.data.num_classes
+        self.accelerator = Accelerator()
+        self.rank = self.accelerator.process_index
+        self.world_size = self.accelerator.num_processes
         
     def _setup_logger(self) -> logging.Logger:
         """设置日志记录器"""
@@ -73,6 +77,31 @@ class MedicalTextClassifier:
             self.logger.info(f"LoRA适配器路径: {self.config.model.adapter_path}")
         self.logger.info("="*80)
         
+        import os
+        def is_distributed():
+            return (
+                int(os.environ.get("WORLD_SIZE", "1")) > 1 or
+                int(os.environ.get("LOCAL_WORLD_SIZE", "1")) > 1 or
+                int(os.environ.get("LOCAL_RANK", "-1")) >= 0 or
+                int(os.environ.get("RANK", "-1")) >= 0
+            )
+        model_path = self.config.model.base_model_path
+        is_70b = "70b" in model_path.lower()
+        distributed = is_distributed()
+        if is_70b:
+            if distributed:
+                device_map = None
+                self.logger.info("检测到70B大模型，当前为多进程（torchrun/accelerate），采用数据并行（device_map=None）")
+            else:
+                device_map = "auto"
+                self.logger.info("检测到70B大模型，单进程，采用模型并行（device_map=auto）")
+        else:
+            device_map = None
+            if distributed:
+                self.logger.info("非70B模型，当前为多进程，采用数据并行（device_map=None）")
+            else:
+                self.logger.info("非70B模型，单进程，采用单卡推理（device_map=None）")
+        
         # 加载tokenizer
         self.logger.info(f"正在加载tokenizer: {self.config.model.base_model_path}")
         self.tokenizer = AutoTokenizer.from_pretrained(
@@ -93,11 +122,12 @@ class MedicalTextClassifier:
         self.logger.info(f"正在加载基础模型: {self.config.model.base_model_path}")
         self.model = AutoModelForCausalLM.from_pretrained(
             self.config.model.base_model_path,
-            device_map="auto",
+            device_map=None,
             trust_remote_code=True,
             torch_dtype=torch.float16,
             low_cpu_mem_usage=True
         )
+        self.model = self.model.to(self.accelerator.device)
         self.logger.info(f"基础模型加载完成")
         
         # 加载LoRA适配器（如果启用）
@@ -106,9 +136,10 @@ class MedicalTextClassifier:
             self.model = PeftModel.from_pretrained(
                 self.model,
                 self.config.model.adapter_path,
-                device_map="auto",
+                device_map=None,
                 torch_dtype=torch.float16
             )
+            self.model = self.model.to(self.accelerator.device)
             self.logger.info("PEFT适配器加载完成")
         else:
             self.logger.info("使用基础模型，不加载LoRA适配器")
@@ -436,85 +467,101 @@ class MedicalTextClassifier:
         test_dataset = self.load_dataset()
         texts = test_dataset["text"]
         labels = test_dataset["label"]
-        
-        # 根据vote_count决定使用单一推理还是投票推理
+
+        # ====== 数据分片，每个进程只处理自己那一份 ======
+        total = len(texts)
+        indices = list(range(total))
+        my_indices = indices[self.rank::self.world_size]
+        my_texts = [texts[i] for i in my_indices]
+        my_labels = [labels[i] for i in my_indices]
+
+        # 推理
         if self.config.training.vote_count > 1:
             self.logger.info(f"使用投票推理模式，投票次数：{self.config.training.vote_count}")
-            preds = []
-            outputs = []
-            for i in tqdm(range(len(texts)), desc="投票推理"):
-                pred, all_outputs = self.predict_with_vote(texts[i])
-                preds.append(pred)
-                outputs.append(all_outputs)  # 保存所有推理输出
+            my_preds = []
+            my_outputs = []
+            for i in tqdm(range(len(my_texts)), desc="投票推理"):
+                pred, all_outputs = self.predict_with_vote(my_texts[i])
+                my_preds.append(pred)
+                my_outputs.append(all_outputs)
         else:
             self.logger.info("使用单一推理模式")
-            preds, outputs = self.predict_batch(texts)
-        
-        # 计算评估指标
-        self.logger.info("计算评估指标...")
-        acc = accuracy_score(labels, preds)
-        report = classification_report(labels, preds, output_dict=True)
-        
-        # 获取输出目录
-        output_dir = self.config.get_output_dir()
-        
-        # 绘制混淆矩阵
-        self.logger.info("绘制混淆矩阵...")
-        self.plot_confusion_matrix(labels, preds, output_dir)
-        
-        # 分析错误样本
-        self.logger.info("分析错误样本...")
-        errors = self.analyze_errors(texts, labels, preds, outputs, output_dir)
-        
-        # 保存评估结果
-        results = {
-            "accuracy": acc,
-            "report": report,
-            "error_count": len(errors),
-            "total_samples": len(texts),
-            "outputs": outputs,
-            "use_lora": self.config.model.use_lora,
-            "model_type": "LoRA" if self.config.model.use_lora else "Base Model",
-            "config": {
-                "model": {
-                    "base_model_path": self.config.model.base_model_path,
-                    "adapter_path": self.config.model.adapter_path,
-                    "use_lora": self.config.model.use_lora
+            my_preds, my_outputs = self.predict_batch(my_texts)
+
+        # ====== 收集所有进程的推理结果 ======
+        all_preds = self.accelerator.gather_for_metrics(torch.tensor(my_preds)).cpu().tolist()
+        all_labels = self.accelerator.gather_for_metrics(torch.tensor(my_labels)).cpu().tolist()
+        # outputs 只能用 all_gather_object
+        all_outputs = self.accelerator.gather_object(my_outputs)
+
+        # 只在主进程保存和输出
+        if self.rank == 0:
+            # 计算评估指标
+            self.logger.info("计算评估指标...")
+            acc = accuracy_score(all_labels, all_preds)
+            report = classification_report(all_labels, all_preds, output_dict=True)
+            
+            # 获取输出目录
+            output_dir = self.config.get_output_dir()
+            
+            # 绘制混淆矩阵
+            self.logger.info("绘制混淆矩阵...")
+            self.plot_confusion_matrix(all_labels, all_preds, output_dir)
+            
+            # 分析错误样本
+            self.logger.info("分析错误样本...")
+            errors = self.analyze_errors(texts, labels, all_preds, all_outputs, output_dir)
+            
+            # 保存评估结果
+            results = {
+                "accuracy": acc,
+                "report": report,
+                "error_count": len(errors),
+                "total_samples": len(texts),
+                "outputs": all_outputs,
+                "use_lora": self.config.model.use_lora,
+                "model_type": "LoRA" if self.config.model.use_lora else "Base Model",
+                "config": {
+                    "model": {
+                        "base_model_path": self.config.model.base_model_path,
+                        "adapter_path": self.config.model.adapter_path,
+                        "use_lora": self.config.model.use_lora
+                    },
+                    "data": {
+                        "data_path": self.config.data.data_path,
+                        "dataset_name": self.config.data.dataset_name
+                    },
+                    "generation": {
+                        "max_new_tokens": self.config.generation.max_new_tokens,
+                        "temperature": self.config.generation.temperature,
+                        "top_p": self.config.generation.top_p,
+                        "do_sample": self.config.generation.do_sample
+                    },
+                    "training": {
+                        "batch_size": self.config.training.batch_size,
+                        "vote_count": self.config.training.vote_count
+                    }
                 },
-                "data": {
-                    "data_path": self.config.data.data_path,
-                    "dataset_name": self.config.data.dataset_name
-                },
-                "generation": {
-                    "max_new_tokens": self.config.generation.max_new_tokens,
-                    "temperature": self.config.generation.temperature,
-                    "top_p": self.config.generation.top_p,
-                    "do_sample": self.config.generation.do_sample
-                },
-                "training": {
-                    "batch_size": self.config.training.batch_size,
-                    "vote_count": self.config.training.vote_count
-                }
-            },
-            "timestamp": datetime.now().isoformat()
-        }
-        
-        with open(os.path.join(output_dir, "eval_results.json"), "w", encoding="utf-8") as f:
-            json.dump(results, f, ensure_ascii=False, indent=2)
-        
-        # 打印主要结果
-        self.logger.info("\n评估结果：")
-        self.logger.info(f"模型类型: {'LoRA' if self.config.model.use_lora else 'Base Model'}")
-        self.logger.info(f"数据集: {self.config.data.dataset_name}")
-        self.logger.info(f"推理模式: {'投票推理' if self.config.training.vote_count > 1 else '单一推理'}")
-        if self.config.training.vote_count > 1:
-            self.logger.info(f"投票次数: {self.config.training.vote_count}")
-        self.logger.info(f"准确率：{acc:.4f}")
-        self.logger.info(f"错误样本数：{len(errors)}")
-        self.logger.info(f"总样本数：{len(texts)}")
-        self.logger.info(f"结果保存到: {output_dir}")
-        
-        return results
+                "timestamp": datetime.now().isoformat()
+            }
+            
+            with open(os.path.join(output_dir, "eval_results.json"), "w", encoding="utf-8") as f:
+                json.dump(results, f, ensure_ascii=False, indent=2)
+            
+            # 打印主要结果
+            self.logger.info("\n评估结果：")
+            self.logger.info(f"模型类型: {'LoRA' if self.config.model.use_lora else 'Base Model'}")
+            self.logger.info(f"数据集: {self.config.data.dataset_name}")
+            self.logger.info(f"推理模式: {'投票推理' if self.config.training.vote_count > 1 else '单一推理'}")
+            if self.config.training.vote_count > 1:
+                self.logger.info(f"投票次数: {self.config.training.vote_count}")
+            self.logger.info(f"准确率：{acc:.4f}")
+            self.logger.info(f"错误样本数：{len(errors)}")
+            self.logger.info(f"总样本数：{len(texts)}")
+            self.logger.info(f"结果保存到: {output_dir}")
+            return results
+        else:
+            return None
     
 
     
