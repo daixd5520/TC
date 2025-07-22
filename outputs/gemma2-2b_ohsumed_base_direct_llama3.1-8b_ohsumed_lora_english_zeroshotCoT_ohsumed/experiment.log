@@ -1,0 +1,130 @@
+2025-07-19 23:53:59,688 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 开始运行评估实验...
+2025-07-19 23:53:59,688 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 实验配置:
+2025-07-19 23:53:59,688 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 23:53:59,688 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 使用LoRA: False
+2025-07-19 23:53:59,688 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 数据集: ohsumed
+2025-07-19 23:53:59,688 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_test_Cxx.json
+2025-07-19 23:53:59,688 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-19 23:53:59,688 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-19 23:53:59,688 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 23:53:59,688 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 是否使用LoRA: False
+2025-07-19 23:53:59,688 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-19 23:53:59,689 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 23:54:01,691 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - Tokenizer加载完成
+2025-07-19 23:54:01,691 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - Chat template: {{ bos_token }}{% if messages[0]['role'] == 'system' %}{{ raise_exception('System role not supported') }}{% endif %}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if (message['role'] == 'assistant') %}{% set role = 'model' %}{% else %}{% set role = message['role'] %}{% endif %}{{ '<start_of_turn>' + role + '
+' + message['content'] | trim + '<end_of_turn>
+' }}{% endfor %}{% if add_generation_prompt %}{{'<start_of_turn>model
+'}}{% endif %}
+2025-07-19 23:54:01,692 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 检测到Gemma模型，使用直接提示词（避免重复输出）
+2025-07-19 23:54:01,692 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模板策略: direct_prompt
+2025-07-19 23:54:01,692 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 23:54:03,821 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 基础模型加载完成
+2025-07-19 23:54:03,821 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-19 23:54:03,823 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-19 23:54:03,823 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模型加载完成！
+2025-07-19 23:54:03,823 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 最终使用的模型: 基础模型
+2025-07-19 23:54:03,823 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 23:54:03,823 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模板策略: direct_prompt
+2025-07-19 23:54:03,823 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-19 23:54:03,823 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_test_Cxx.json
+2025-07-19 23:59:25,217 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 开始运行评估实验...
+2025-07-19 23:59:25,217 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 实验配置:
+2025-07-19 23:59:25,217 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 23:59:25,217 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 使用LoRA: False
+2025-07-19 23:59:25,217 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 数据集: ohsumed
+2025-07-19 23:59:25,217 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_test_Cxx.json
+2025-07-19 23:59:25,217 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-19 23:59:25,218 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-19 23:59:25,218 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 23:59:25,218 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 是否使用LoRA: False
+2025-07-19 23:59:25,218 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-19 23:59:25,218 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 23:59:26,484 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - Tokenizer加载完成
+2025-07-19 23:59:26,485 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - Chat template: {{ bos_token }}{% if messages[0]['role'] == 'system' %}{{ raise_exception('System role not supported') }}{% endif %}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if (message['role'] == 'assistant') %}{% set role = 'model' %}{% else %}{% set role = message['role'] %}{% endif %}{{ '<start_of_turn>' + role + '
+' + message['content'] | trim + '<end_of_turn>
+' }}{% endfor %}{% if add_generation_prompt %}{{'<start_of_turn>model
+'}}{% endif %}
+2025-07-19 23:59:26,485 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 检测到Gemma模型，使用直接提示词（避免重复输出）
+2025-07-19 23:59:26,485 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模板策略: direct_prompt
+2025-07-19 23:59:26,485 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 23:59:28,378 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 基础模型加载完成
+2025-07-19 23:59:28,378 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-19 23:59:28,379 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-19 23:59:28,379 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模型加载完成！
+2025-07-19 23:59:28,379 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 最终使用的模型: 基础模型
+2025-07-19 23:59:28,379 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-19 23:59:28,379 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模板策略: direct_prompt
+2025-07-19 23:59:28,379 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-19 23:59:28,379 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_test_Cxx.json
+2025-07-20 00:39:39,551 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 开始运行评估实验...
+2025-07-20 00:39:39,551 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 实验配置:
+2025-07-20 00:39:39,551 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-20 00:39:39,551 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 使用LoRA: False
+2025-07-20 00:39:39,551 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 数据集: ohsumed
+2025-07-20 00:39:39,551 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_test_Cxx.json
+2025-07-20 00:39:39,551 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-20 00:39:39,551 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-20 00:39:39,551 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-20 00:39:39,551 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 是否使用LoRA: False
+2025-07-20 00:39:39,551 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-20 00:39:39,551 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-20 00:39:40,850 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - Tokenizer加载完成
+2025-07-20 00:39:40,851 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - Chat template: {{ bos_token }}{% if messages[0]['role'] == 'system' %}{{ raise_exception('System role not supported') }}{% endif %}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if (message['role'] == 'assistant') %}{% set role = 'model' %}{% else %}{% set role = message['role'] %}{% endif %}{{ '<start_of_turn>' + role + '
+' + message['content'] | trim + '<end_of_turn>
+' }}{% endfor %}{% if add_generation_prompt %}{{'<start_of_turn>model
+'}}{% endif %}
+2025-07-20 00:39:40,851 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 检测到Gemma模型，使用直接提示词（避免重复输出）
+2025-07-20 00:39:40,851 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模板策略: direct_prompt
+2025-07-20 00:39:40,851 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-20 00:39:42,771 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 基础模型加载完成
+2025-07-20 00:39:42,772 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-20 00:39:42,773 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-20 00:39:42,773 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模型加载完成！
+2025-07-20 00:39:42,773 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 最终使用的模型: 基础模型
+2025-07-20 00:39:42,773 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-20 00:39:42,773 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模板策略: direct_prompt
+2025-07-20 00:39:42,773 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-20 00:39:42,773 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_test_Cxx.json
+2025-07-20 00:44:18,225 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 开始运行评估实验...
+2025-07-20 00:44:18,226 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 实验配置:
+2025-07-20 00:44:18,226 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-20 00:44:18,226 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 使用LoRA: False
+2025-07-20 00:44:18,226 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 数据集: ohsumed
+2025-07-20 00:44:18,226 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_test_Cxx.json
+2025-07-20 00:44:18,226 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-20 00:44:18,226 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-20 00:44:18,226 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-20 00:44:18,226 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 是否使用LoRA: False
+2025-07-20 00:44:18,226 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-20 00:44:18,226 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-20 00:44:19,496 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - Tokenizer加载完成
+2025-07-20 00:44:19,497 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - Chat template: {{ bos_token }}{% if messages[0]['role'] == 'system' %}{{ raise_exception('System role not supported') }}{% endif %}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if (message['role'] == 'assistant') %}{% set role = 'model' %}{% else %}{% set role = message['role'] %}{% endif %}{{ '<start_of_turn>' + role + '
+' + message['content'] | trim + '<end_of_turn>
+' }}{% endfor %}{% if add_generation_prompt %}{{'<start_of_turn>model
+'}}{% endif %}
+2025-07-20 00:44:19,497 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 检测到Gemma模型，使用直接提示词（避免重复输出）
+2025-07-20 00:44:19,497 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模板策略: direct_prompt
+2025-07-20 00:44:19,497 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-20 00:44:21,427 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 基础模型加载完成
+2025-07-20 00:44:21,427 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-20 00:44:21,428 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-20 00:44:21,428 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模型加载完成！
+2025-07-20 00:44:21,428 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 最终使用的模型: 基础模型
+2025-07-20 00:44:21,428 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模型路径: /mnt/data1/FT/inspire_data_prep/models/gemma2-2b
+2025-07-20 00:44:21,428 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模板策略: direct_prompt
+2025-07-20 00:44:21,428 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - ================================================================================
+2025-07-20 00:44:21,428 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_test_Cxx.json
+2025-07-20 00:44:21,449 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 使用单一推理模式
+2025-07-20 00:44:21,449 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 开始批量推理...
+2025-07-20 00:54:41,029 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 计算评估指标...
+2025-07-20 00:54:41,042 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 绘制混淆矩阵...
+2025-07-20 00:54:41,730 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 分析错误样本...
+2025-07-20 00:54:41,824 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 
+评估结果：
+2025-07-20 00:54:41,824 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 模型类型: Base Model
+2025-07-20 00:54:41,824 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 数据集: ohsumed
+2025-07-20 00:54:41,824 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 推理模式: 单一推理
+2025-07-20 00:54:41,825 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 准确率：0.3371
+2025-07-20 00:54:41,825 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 错误样本数：2680
+2025-07-20 00:54:41,825 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 总样本数：4043
+2025-07-20 00:54:41,825 - MedicalClassifier_gemma2-2b_ohsumed_base_direct - INFO - 结果保存到: ./outputs/gemma2-2b_ohsumed_base_direct_llama3.1-8b_ohsumed_lora_english_zeroshotCoT_ohsumed

@@ -8,6 +8,11 @@ echo "开始运行Direct实验配置..."
 # Direct评估配置
 echo "=== 运行Direct评估配置 ==="
 
+echo "运行 biomedical_base_direct.yaml..."
+python experiment_runner.py --config configs/direct/biomedical_base_direct.yaml --mode eval
+echo "biomedical_base_direct.yaml 评估完成，暂停5秒..."
+sleep 5
+
 echo "运行 trec_lora_direct.yaml..."
 python experiment_runner.py --config configs/direct/trec_lora_direct.yaml --mode eval
 echo "trec_lora_direct.yaml 评估完成，暂停5秒..."

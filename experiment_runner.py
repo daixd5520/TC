@@ -128,29 +128,35 @@ class MedicalTextClassifier:
     def _setup_template_strategy(self):
         """设置模板策略，根据模型类型选择合适的模板方式"""
         model_name = self.config.model.base_model_path.lower()
-        
         # 检测模型类型
-        if "llama" in model_name or "llama3" in model_name:
-            self.template_strategy = "chat_template"
-            self.logger.info("检测到Llama模型，使用chat_template")
+        if ("llama" in model_name or "llama3" in model_name):
+            if getattr(self.tokenizer, "chat_template", None):
+                self.template_strategy = "chat_template"
+                self.logger.info("检测到Llama模型，使用chat_template")
+            else:
+                self.template_strategy = "direct_prompt"
+                self.logger.info("检测到Llama模型但无chat_template，降级为直接提示词")
         elif "gemma" in model_name:
             self.template_strategy = "direct_prompt"
             self.logger.info("检测到Gemma模型，使用直接提示词（避免重复输出）")
         elif "qwen" in model_name:
-            self.template_strategy = "chat_template"
-            self.logger.info("检测到Qwen模型，使用chat_template")
+            if getattr(self.tokenizer, "chat_template", None):
+                self.template_strategy = "chat_template"
+                self.logger.info("检测到Qwen模型，使用chat_template")
+            else:
+                self.template_strategy = "direct_prompt"
+                self.logger.info("检测到Qwen模型但无chat_template，降级为直接提示词")
         elif "chatglm" in model_name:
             self.template_strategy = "direct_prompt"
             self.logger.info("检测到ChatGLM模型，使用直接提示词")
         else:
             # 默认策略：如果tokenizer有chat_template就使用，否则直接提示词
-            if self.tokenizer.chat_template is not None:
+            if getattr(self.tokenizer, "chat_template", None):
                 self.template_strategy = "chat_template"
                 self.logger.info("使用默认chat_template策略")
             else:
                 self.template_strategy = "direct_prompt"
                 self.logger.info("模型无chat_template，使用直接提示词")
-        
         self.logger.info(f"模板策略: {self.template_strategy}")
     
     def _format_prompt(self, prompt: str) -> str:
