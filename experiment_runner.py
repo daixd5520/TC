@@ -21,6 +21,7 @@ from typing import List, Tuple, Dict, Any
 import logging
 from datetime import datetime
 from accelerate import Accelerator
+import torch.distributed as dist
 
 from utils.config_manager import ConfigManager, ExperimentConfig, PromptManager
 
@@ -449,6 +450,16 @@ class MedicalTextClassifier:
         
         return errors
     
+    def gather_object_across_processes(self, obj):
+        """
+        用于多进程收集 Python 对象（如list），兼容单卡和多卡
+        """
+        if self.world_size == 1:
+            return [obj]
+        output_list = [None for _ in range(self.world_size)]
+        dist.all_gather_object(output_list, obj)
+        return output_list
+
     def run_evaluation(self):
         """运行完整评估"""
         self.logger.info("开始运行评估实验...")
@@ -489,10 +500,11 @@ class MedicalTextClassifier:
             my_preds, my_outputs = self.predict_batch(my_texts)
 
         # ====== 收集所有进程的推理结果 ======
-        all_preds = self.accelerator.gather_for_metrics(torch.tensor(my_preds)).cpu().tolist()
-        all_labels = self.accelerator.gather_for_metrics(torch.tensor(my_labels)).cpu().tolist()
-        # outputs 只能用 all_gather_object
-        all_outputs = self.accelerator.gather_object(my_outputs)
+        preds_tensor = torch.tensor(my_preds, device=self.accelerator.device)
+        labels_tensor = torch.tensor(my_labels, device=self.accelerator.device)
+        all_preds = self.accelerator.gather_for_metrics(preds_tensor).tolist()
+        all_labels = self.accelerator.gather_for_metrics(labels_tensor).tolist()
+        all_outputs = self.gather_object_across_processes(my_outputs)  # 新写法
 
         # 只在主进程保存和输出
         if self.rank == 0:
@@ -510,7 +522,12 @@ class MedicalTextClassifier:
             
             # 分析错误样本
             self.logger.info("分析错误样本...")
-            errors = self.analyze_errors(texts, labels, all_preds, all_outputs, output_dir)
+            # 合并所有进程的 outputs
+            flat_outputs = []
+            for part in all_outputs:
+                flat_outputs.extend(part)
+            # 后续用 flat_outputs 替换 all_outputs
+            errors = self.analyze_errors(texts, labels, all_preds, flat_outputs, output_dir)
             
             # 保存评估结果
             results = {
@@ -518,7 +535,7 @@ class MedicalTextClassifier:
                 "report": report,
                 "error_count": len(errors),
                 "total_samples": len(texts),
-                "outputs": all_outputs,
+                "outputs": flat_outputs,
                 "use_lora": self.config.model.use_lora,
                 "model_type": "LoRA" if self.config.model.use_lora else "Base Model",
                 "config": {
