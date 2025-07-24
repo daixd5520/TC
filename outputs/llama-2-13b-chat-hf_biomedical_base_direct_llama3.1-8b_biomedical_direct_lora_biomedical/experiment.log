@@ -1149,3 +1149,247 @@
 2025-07-22 21:04:53,361 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
 2025-07-22 21:04:53,361 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 非70B模型，当前为多进程，采用数据并行（device_map=None）
 2025-07-22 21:04:53,361 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:38,001 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始运行评估实验...
+2025-07-22 21:12:38,001 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 实验配置:
+2025-07-22 21:12:38,001 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:38,001 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 使用LoRA: False
+2025-07-22 21:12:38,001 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据集: biomedical
+2025-07-22 21:12:38,001 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:38,001 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:38,001 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-22 21:12:38,001 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:38,001 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 是否使用LoRA: False
+2025-07-22 21:12:38,001 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:38,001 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 非70B模型，当前为多进程，采用数据并行（device_map=None）
+2025-07-22 21:12:38,001 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:38,026 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始运行评估实验...
+2025-07-22 21:12:38,027 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 实验配置:
+2025-07-22 21:12:38,027 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:38,027 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 使用LoRA: False
+2025-07-22 21:12:38,027 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据集: biomedical
+2025-07-22 21:12:38,027 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:38,027 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:38,027 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-22 21:12:38,027 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:38,027 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 是否使用LoRA: False
+2025-07-22 21:12:38,027 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:38,027 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 非70B模型，当前为多进程，采用数据并行（device_map=None）
+2025-07-22 21:12:38,027 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:38,179 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Tokenizer加载完成
+2025-07-22 21:12:38,179 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Chat template: {% if messages[0]['role'] == 'system' %}{% set loop_messages = messages[1:] %}{% set system_message = messages[0]['content'] %}{% else %}{% set loop_messages = messages %}{% set system_message = false %}{% endif %}{% for message in loop_messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if loop.index0 == 0 and system_message != false %}{% set content = '<<SYS>>\n' + system_message + '\n<</SYS>>\n\n' + message['content'] %}{% else %}{% set content = message['content'] %}{% endif %}{% if message['role'] == 'user' %}{{ bos_token + '[INST] ' + content.strip() + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ ' '  + content.strip() + ' ' + eos_token }}{% endif %}{% endfor %}
+2025-07-22 21:12:38,180 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 检测到Llama模型，使用chat_template
+2025-07-22 21:12:38,180 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:38,180 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:38,304 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Tokenizer加载完成
+2025-07-22 21:12:38,304 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Chat template: {% if messages[0]['role'] == 'system' %}{% set loop_messages = messages[1:] %}{% set system_message = messages[0]['content'] %}{% else %}{% set loop_messages = messages %}{% set system_message = false %}{% endif %}{% for message in loop_messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if loop.index0 == 0 and system_message != false %}{% set content = '<<SYS>>\n' + system_message + '\n<</SYS>>\n\n' + message['content'] %}{% else %}{% set content = message['content'] %}{% endif %}{% if message['role'] == 'user' %}{{ bos_token + '[INST] ' + content.strip() + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ ' '  + content.strip() + ' ' + eos_token }}{% endif %}{% endfor %}
+2025-07-22 21:12:38,304 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 检测到Llama模型，使用chat_template
+2025-07-22 21:12:38,304 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:38,304 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:39,240 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始运行评估实验...
+2025-07-22 21:12:39,240 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 实验配置:
+2025-07-22 21:12:39,240 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:39,240 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 使用LoRA: False
+2025-07-22 21:12:39,240 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据集: biomedical
+2025-07-22 21:12:39,240 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:39,241 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:39,241 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-22 21:12:39,241 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:39,241 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 是否使用LoRA: False
+2025-07-22 21:12:39,241 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:39,241 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 非70B模型，当前为多进程，采用数据并行（device_map=None）
+2025-07-22 21:12:39,241 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:39,612 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Tokenizer加载完成
+2025-07-22 21:12:39,612 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Chat template: {% if messages[0]['role'] == 'system' %}{% set loop_messages = messages[1:] %}{% set system_message = messages[0]['content'] %}{% else %}{% set loop_messages = messages %}{% set system_message = false %}{% endif %}{% for message in loop_messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if loop.index0 == 0 and system_message != false %}{% set content = '<<SYS>>\n' + system_message + '\n<</SYS>>\n\n' + message['content'] %}{% else %}{% set content = message['content'] %}{% endif %}{% if message['role'] == 'user' %}{{ bos_token + '[INST] ' + content.strip() + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ ' '  + content.strip() + ' ' + eos_token }}{% endif %}{% endfor %}
+2025-07-22 21:12:39,612 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 检测到Llama模型，使用chat_template
+2025-07-22 21:12:39,612 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:39,612 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:39,949 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始运行评估实验...
+2025-07-22 21:12:39,950 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 实验配置:
+2025-07-22 21:12:39,950 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:39,950 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 使用LoRA: False
+2025-07-22 21:12:39,950 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据集: biomedical
+2025-07-22 21:12:39,950 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:39,950 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:39,950 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-22 21:12:39,950 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:39,950 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 是否使用LoRA: False
+2025-07-22 21:12:39,950 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:39,950 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 非70B模型，当前为多进程，采用数据并行（device_map=None）
+2025-07-22 21:12:39,950 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:40,107 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始运行评估实验...
+2025-07-22 21:12:40,107 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 实验配置:
+2025-07-22 21:12:40,107 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:40,107 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 使用LoRA: False
+2025-07-22 21:12:40,107 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据集: biomedical
+2025-07-22 21:12:40,107 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:40,107 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:40,107 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-22 21:12:40,107 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:40,107 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 是否使用LoRA: False
+2025-07-22 21:12:40,107 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:40,107 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 非70B模型，当前为多进程，采用数据并行（device_map=None）
+2025-07-22 21:12:40,107 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:40,424 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Tokenizer加载完成
+2025-07-22 21:12:40,424 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Chat template: {% if messages[0]['role'] == 'system' %}{% set loop_messages = messages[1:] %}{% set system_message = messages[0]['content'] %}{% else %}{% set loop_messages = messages %}{% set system_message = false %}{% endif %}{% for message in loop_messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if loop.index0 == 0 and system_message != false %}{% set content = '<<SYS>>\n' + system_message + '\n<</SYS>>\n\n' + message['content'] %}{% else %}{% set content = message['content'] %}{% endif %}{% if message['role'] == 'user' %}{{ bos_token + '[INST] ' + content.strip() + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ ' '  + content.strip() + ' ' + eos_token }}{% endif %}{% endfor %}
+2025-07-22 21:12:40,424 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 检测到Llama模型，使用chat_template
+2025-07-22 21:12:40,424 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:40,424 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:40,587 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Tokenizer加载完成
+2025-07-22 21:12:40,587 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Chat template: {% if messages[0]['role'] == 'system' %}{% set loop_messages = messages[1:] %}{% set system_message = messages[0]['content'] %}{% else %}{% set loop_messages = messages %}{% set system_message = false %}{% endif %}{% for message in loop_messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if loop.index0 == 0 and system_message != false %}{% set content = '<<SYS>>\n' + system_message + '\n<</SYS>>\n\n' + message['content'] %}{% else %}{% set content = message['content'] %}{% endif %}{% if message['role'] == 'user' %}{{ bos_token + '[INST] ' + content.strip() + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ ' '  + content.strip() + ' ' + eos_token }}{% endif %}{% endfor %}
+2025-07-22 21:12:40,587 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 检测到Llama模型，使用chat_template
+2025-07-22 21:12:40,587 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:40,587 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:45,502 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始运行评估实验...
+2025-07-22 21:12:45,502 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 实验配置:
+2025-07-22 21:12:45,503 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:45,503 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 使用LoRA: False
+2025-07-22 21:12:45,503 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据集: biomedical
+2025-07-22 21:12:45,503 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:45,503 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:45,503 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-22 21:12:45,503 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:45,503 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 是否使用LoRA: False
+2025-07-22 21:12:45,503 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:45,503 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 非70B模型，当前为多进程，采用数据并行（device_map=None）
+2025-07-22 21:12:45,503 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:45,666 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始运行评估实验...
+2025-07-22 21:12:45,667 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 实验配置:
+2025-07-22 21:12:45,667 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:45,667 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 使用LoRA: False
+2025-07-22 21:12:45,667 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据集: biomedical
+2025-07-22 21:12:45,667 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:45,667 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:45,667 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-22 21:12:45,667 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:45,667 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 是否使用LoRA: False
+2025-07-22 21:12:45,667 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:45,667 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 非70B模型，当前为多进程，采用数据并行（device_map=None）
+2025-07-22 21:12:45,667 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:45,676 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始运行评估实验...
+2025-07-22 21:12:45,676 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 实验配置:
+2025-07-22 21:12:45,676 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:45,676 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 使用LoRA: False
+2025-07-22 21:12:45,676 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据集: biomedical
+2025-07-22 21:12:45,676 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:45,676 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:45,677 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始加载模型和tokenizer...
+2025-07-22 21:12:45,677 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:45,677 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 是否使用LoRA: False
+2025-07-22 21:12:45,677 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:45,677 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 非70B模型，当前为多进程，采用数据并行（device_map=None）
+2025-07-22 21:12:45,677 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载tokenizer: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:45,680 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型加载完成
+2025-07-22 21:12:45,680 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-22 21:12:45,682 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:45,682 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型加载完成！
+2025-07-22 21:12:45,682 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 最终使用的模型: 基础模型
+2025-07-22 21:12:45,682 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:45,682 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:45,682 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:45,682 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:45,721 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用单一推理模式
+2025-07-22 21:12:45,721 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始批量推理...
+2025-07-22 21:12:46,022 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Tokenizer加载完成
+2025-07-22 21:12:46,022 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Chat template: {% if messages[0]['role'] == 'system' %}{% set loop_messages = messages[1:] %}{% set system_message = messages[0]['content'] %}{% else %}{% set loop_messages = messages %}{% set system_message = false %}{% endif %}{% for message in loop_messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if loop.index0 == 0 and system_message != false %}{% set content = '<<SYS>>\n' + system_message + '\n<</SYS>>\n\n' + message['content'] %}{% else %}{% set content = message['content'] %}{% endif %}{% if message['role'] == 'user' %}{{ bos_token + '[INST] ' + content.strip() + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ ' '  + content.strip() + ' ' + eos_token }}{% endif %}{% endfor %}
+2025-07-22 21:12:46,022 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 检测到Llama模型，使用chat_template
+2025-07-22 21:12:46,022 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:46,022 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:46,186 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Tokenizer加载完成
+2025-07-22 21:12:46,186 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Chat template: {% if messages[0]['role'] == 'system' %}{% set loop_messages = messages[1:] %}{% set system_message = messages[0]['content'] %}{% else %}{% set loop_messages = messages %}{% set system_message = false %}{% endif %}{% for message in loop_messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if loop.index0 == 0 and system_message != false %}{% set content = '<<SYS>>\n' + system_message + '\n<</SYS>>\n\n' + message['content'] %}{% else %}{% set content = message['content'] %}{% endif %}{% if message['role'] == 'user' %}{{ bos_token + '[INST] ' + content.strip() + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ ' '  + content.strip() + ' ' + eos_token }}{% endif %}{% endfor %}
+2025-07-22 21:12:46,186 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 检测到Llama模型，使用chat_template
+2025-07-22 21:12:46,186 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:46,186 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:46,191 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Tokenizer加载完成
+2025-07-22 21:12:46,191 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - Chat template: {% if messages[0]['role'] == 'system' %}{% set loop_messages = messages[1:] %}{% set system_message = messages[0]['content'] %}{% else %}{% set loop_messages = messages %}{% set system_message = false %}{% endif %}{% for message in loop_messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if loop.index0 == 0 and system_message != false %}{% set content = '<<SYS>>\n' + system_message + '\n<</SYS>>\n\n' + message['content'] %}{% else %}{% set content = message['content'] %}{% endif %}{% if message['role'] == 'user' %}{{ bos_token + '[INST] ' + content.strip() + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ ' '  + content.strip() + ' ' + eos_token }}{% endif %}{% endfor %}
+2025-07-22 21:12:46,191 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 检测到Llama模型，使用chat_template
+2025-07-22 21:12:46,191 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:46,191 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 正在加载基础模型: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:47,656 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型加载完成
+2025-07-22 21:12:47,656 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-22 21:12:47,659 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:47,659 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型加载完成！
+2025-07-22 21:12:47,659 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 最终使用的模型: 基础模型
+2025-07-22 21:12:47,659 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:47,659 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:47,659 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:47,659 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:47,704 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用单一推理模式
+2025-07-22 21:12:47,704 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始批量推理...
+2025-07-22 21:12:48,903 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型加载完成
+2025-07-22 21:12:48,903 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-22 21:12:48,906 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:48,907 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型加载完成！
+2025-07-22 21:12:48,907 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 最终使用的模型: 基础模型
+2025-07-22 21:12:48,907 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:48,907 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:48,907 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:48,907 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:48,970 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用单一推理模式
+2025-07-22 21:12:48,971 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始批量推理...
+2025-07-22 21:12:50,018 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型加载完成
+2025-07-22 21:12:50,018 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-22 21:12:50,021 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:50,021 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型加载完成！
+2025-07-22 21:12:50,021 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 最终使用的模型: 基础模型
+2025-07-22 21:12:50,021 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:50,021 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:50,021 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:50,021 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:50,069 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用单一推理模式
+2025-07-22 21:12:50,070 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始批量推理...
+2025-07-22 21:12:51,511 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型加载完成
+2025-07-22 21:12:51,511 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-22 21:12:51,513 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:51,513 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型加载完成！
+2025-07-22 21:12:51,514 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 最终使用的模型: 基础模型
+2025-07-22 21:12:51,514 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:51,514 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:51,514 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:51,514 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:51,560 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用单一推理模式
+2025-07-22 21:12:51,560 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始批量推理...
+2025-07-22 21:12:54,049 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型加载完成
+2025-07-22 21:12:54,050 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-22 21:12:54,052 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:54,052 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型加载完成！
+2025-07-22 21:12:54,053 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 最终使用的模型: 基础模型
+2025-07-22 21:12:54,053 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:54,053 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:54,053 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:54,053 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:54,100 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用单一推理模式
+2025-07-22 21:12:54,100 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始批量推理...
+2025-07-22 21:12:54,439 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型加载完成
+2025-07-22 21:12:54,439 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-22 21:12:54,442 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:54,442 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型加载完成！
+2025-07-22 21:12:54,442 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 最终使用的模型: 基础模型
+2025-07-22 21:12:54,442 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:54,442 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:54,442 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:54,442 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:54,488 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用单一推理模式
+2025-07-22 21:12:54,488 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始批量推理...
+2025-07-22 21:12:55,531 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 基础模型加载完成
+2025-07-22 21:12:55,532 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-22 21:12:55,534 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:55,534 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型加载完成！
+2025-07-22 21:12:55,534 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 最终使用的模型: 基础模型
+2025-07-22 21:12:55,534 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型路径: /mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf
+2025-07-22 21:12:55,534 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模板策略: chat_template
+2025-07-22 21:12:55,534 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - ================================================================================
+2025-07-22 21:12:55,534 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json
+2025-07-22 21:12:55,574 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 使用单一推理模式
+2025-07-22 21:12:55,574 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 开始批量推理...
+2025-07-22 21:23:40,181 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 计算评估指标...
+2025-07-22 21:23:40,217 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 绘制混淆矩阵...
+2025-07-22 21:23:41,285 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 分析错误样本...
+2025-07-22 21:23:41,449 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 
+评估结果：
+2025-07-22 21:23:41,449 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 模型类型: Base Model
+2025-07-22 21:23:41,449 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 数据集: biomedical
+2025-07-22 21:23:41,449 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 推理模式: 单一推理
+2025-07-22 21:23:41,449 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 准确率：0.1453
+2025-07-22 21:23:41,449 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 错误样本数：6280
+2025-07-22 21:23:41,449 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 总样本数：6600
+2025-07-22 21:23:41,449 - MedicalClassifier_llama-2-13b-chat-hf_biomedical_base_direct - INFO - 结果保存到: ./outputs/llama-2-13b-chat-hf_biomedical_base_direct_llama3.1-8b_biomedical_direct_lora_biomedical

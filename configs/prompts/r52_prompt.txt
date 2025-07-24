@@ -56,4 +56,4 @@ C52 - tea
 
 Text: {text}
 
-For example, if the text is related to cocoa trading, it belongs to C01. The output must be one of C01-C52 categories. If you output a non-existent category, you will be penalized.
+For example, if the text is related to cocoa trading, it belongs to C01. The output must be one of C01-C52 categories. If you output a non-existent category or other words, you will be penalized.

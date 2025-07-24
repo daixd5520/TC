@@ -121,14 +121,18 @@ class MedicalTextClassifier:
         
         # 加载基础模型
         self.logger.info(f"正在加载基础模型: {self.config.model.base_model_path}")
+
+        # 强制全部加载到cuda:0，避免device_map="auto"导致碎片化或部分权重在CPU
         self.model = AutoModelForCausalLM.from_pretrained(
             self.config.model.base_model_path,
-            device_map=None,
+            # device_map={"": "cuda:0"},
+            device_map="auto",
             trust_remote_code=True,
             torch_dtype=torch.float16,
             low_cpu_mem_usage=True
         )
-        self.model = self.model.to(self.accelerator.device)
+        # 不需要再 .to(self.accelerator.device)
+
         self.logger.info(f"基础模型加载完成")
         
         # 加载LoRA适配器（如果启用）
@@ -137,10 +141,10 @@ class MedicalTextClassifier:
             self.model = PeftModel.from_pretrained(
                 self.model,
                 self.config.model.adapter_path,
-                device_map=None,
+                device_map={"": "cuda:0"},
                 torch_dtype=torch.float16
             )
-            self.model = self.model.to(self.accelerator.device)
+            # 不需要再 .to(self.accelerator.device)
             self.logger.info("PEFT适配器加载完成")
         else:
             self.logger.info("使用基础模型，不加载LoRA适配器")
@@ -485,7 +489,7 @@ class MedicalTextClassifier:
         my_indices = indices[self.rank::self.world_size]
         my_texts = [texts[i] for i in my_indices]
         my_labels = [labels[i] for i in my_indices]
-
+        my_index_list = my_indices  # 新增
         # 推理
         if self.config.training.vote_count > 1:
             self.logger.info(f"使用投票推理模式，投票次数：{self.config.training.vote_count}")
@@ -499,12 +503,40 @@ class MedicalTextClassifier:
             self.logger.info("使用单一推理模式")
             my_preds, my_outputs = self.predict_batch(my_texts)
 
-        # ====== 收集所有进程的推理结果 ======
-        preds_tensor = torch.tensor(my_preds, device=self.accelerator.device)
-        labels_tensor = torch.tensor(my_labels, device=self.accelerator.device)
+        # ====== gather 前补齐到最大长度 ======
+        # 1. 先 gather 所有进程的长度
+        my_len = len(my_preds)
+        len_tensor = torch.tensor([my_len], device=self.accelerator.device)
+        all_lens = self.accelerator.gather_for_metrics(len_tensor).tolist()
+        max_len = max(all_lens)
+
+        pad_num = max_len - my_len
+        my_preds_pad = my_preds + [-1] * pad_num
+        my_labels_pad = my_labels + [-1] * pad_num
+        my_index_list_pad = my_index_list + [-1] * pad_num
+        my_outputs_pad = my_outputs + [None] * pad_num
+
+        # 3. gather
+        preds_tensor = torch.tensor(my_preds_pad, device=self.accelerator.device)
+        labels_tensor = torch.tensor(my_labels_pad, device=self.accelerator.device)
+        index_tensor = torch.tensor(my_index_list_pad, device=self.accelerator.device)
+
         all_preds = self.accelerator.gather_for_metrics(preds_tensor).tolist()
         all_labels = self.accelerator.gather_for_metrics(labels_tensor).tolist()
-        all_outputs = self.gather_object_across_processes(my_outputs)  # 新写法
+        all_indices = self.accelerator.gather_for_metrics(index_tensor).tolist()
+        all_outputs = self.gather_object_across_processes(my_outputs_pad)  # 还是用 all_gather_object
+
+        # 4. flatten
+        flat_outputs = []
+        for part in all_outputs:
+            flat_outputs.extend(part)
+
+        # 5. 只保留有效 index
+        valid = [(idx, pred, label, out) for idx, pred, label, out in zip(all_indices, all_preds, all_labels, flat_outputs) if idx != -1]
+        valid.sort(key=lambda x: x[0])  # 按原始顺序
+        all_preds = [v[1] for v in valid]
+        all_labels = [v[2] for v in valid]
+        flat_outputs = [v[3] for v in valid]
 
         # 只在主进程保存和输出
         if self.rank == 0:
@@ -523,10 +555,6 @@ class MedicalTextClassifier:
             # 分析错误样本
             self.logger.info("分析错误样本...")
             # 合并所有进程的 outputs
-            flat_outputs = []
-            for part in all_outputs:
-                flat_outputs.extend(part)
-            # 后续用 flat_outputs 替换 all_outputs
             errors = self.analyze_errors(texts, labels, all_preds, flat_outputs, output_dir)
             
             # 保存评估结果

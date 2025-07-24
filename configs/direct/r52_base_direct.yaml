@@ -1,6 +1,6 @@
 # 基础模型实验配置
 model:
-  base_model_path: "/mnt/data1/FT/inspire_data_prep/models/ydyajyA/Llama-2-13b-chat-hf"
+  base_model_path: "/mnt/data1/FT/inspire_data_prep/models/LLM-Research/Meta-Llama-3.1-70B-Instruct"
   adapter_path: "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed_lora_english_zeroshotCoT"
   use_lora: false
 
@@ -16,9 +16,9 @@ generation:
   do_sample: true
 
 training:
-  batch_size: 32
+  batch_size: 128
   vote_count: 1
 
 output:
   base_output_dir: "./outputs"
-  experiment_name: "llama-2-13b-chat-hf_r52_base_direct"
+  experiment_name: "llama-3.1-70b-instruct_r52_base_direct"
