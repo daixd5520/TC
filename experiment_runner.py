@@ -390,12 +390,19 @@ class MedicalTextClassifier:
             batch_texts = texts[i:i+self.config.training.batch_size]
             batch_prompts = [self.build_prompt(text) for text in batch_texts]
             
-            # 根据模板策略格式化提示词
-            batch_formatted_prompts = [self._format_prompt(prompt) for prompt in batch_prompts]
+            # 构建批处理的对话格式
+            batch_messages = [[{"role": "user", "content": prompt}] for prompt in batch_prompts]
+            batch_chat_inputs = [
+                self.tokenizer.apply_chat_template(
+                    messages,
+                    tokenize=False,
+                    add_generation_prompt=True
+                ) for messages in batch_messages
+            ]
             
             # 批处理tokenization
             batch_inputs = self.tokenizer(
-                batch_formatted_prompts, 
+                batch_chat_inputs, 
                 return_tensors="pt", 
                 max_length=512, 
                 truncation=True,

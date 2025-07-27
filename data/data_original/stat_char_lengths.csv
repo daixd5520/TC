@@ -1,0 +1,13 @@
+dataset,split,max_len,min_len,avg_len
+Biomedical,test,333,10,90.33
+Biomedical,train,331,10,90.0
+CR,test,496,7,87.55
+CR,train,533,5,94.28
+dblp,test,187,4,61.53
+dblp,train,269,4,61.77
+ohsumed,test,283,8,92.11
+ohsumed,train,285,5,91.03
+R52,test,3099,22,387.76
+R52,train,3747,19,428.68
+TREC,test,89,13,36.01
+TREC,train,196,13,50.79

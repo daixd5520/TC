@@ -1,8 +1,8 @@
 # DBLP LoRA直接评估配置
 model:
-  base_model_path: "/mnt/data1/FT/inspire_data_prep/models/LLM-Research/Meta-Llama-3.1-70B-Instruct"
-  adapter_path: "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_dblp_direct_lora"
-  use_lora: false
+  base_model_path: "/mnt/data1/FT/inspire_data_prep/models/gemma2-2b"
+  adapter_path: "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/gemma_multi"
+  use_lora: true
 
 data:
   data_path: "/mnt/data1/TC/TextClassDemo/data/dblp/dblp_Test_Cxx.json"
@@ -12,13 +12,13 @@ data:
 generation:
   max_new_tokens: 1024
   temperature: 0.4
-  top_p: 0.9
-  do_sample: false
+  top_p: 0.95
+  do_sample: true
 
 training:
-  batch_size: 128
+  batch_size: 64
   vote_count: 1
 
 output:
-  base_output_dir: "./outputs"
-  experiment_name: "llama-3.1-70b-instruct_dblp_base_direct" 
+  base_output_dir: "./outputs/multi"
+  experiment_name: "gemma2-2b_dblp_base_direct" 

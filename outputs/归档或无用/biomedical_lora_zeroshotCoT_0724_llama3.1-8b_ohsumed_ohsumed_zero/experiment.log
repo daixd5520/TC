@@ -1,0 +1,781 @@
+2025-07-24 21:07:03,564 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 开始运行测试样本展示...
+2025-07-24 21:07:03,564 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 测试配置:
+2025-07-24 21:07:03,564 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 基础模型: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-24 21:07:03,564 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 使用LoRA: True
+2025-07-24 21:07:03,564 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed
+2025-07-24 21:07:03,564 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 数据集: ohsumed_zero
+2025-07-24 21:07:03,564 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 测试样本数: 5
+2025-07-24 21:07:03,564 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-24 21:07:03,564 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 开始加载模型和tokenizer...
+2025-07-24 21:07:03,564 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 基础模型路径: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-24 21:07:03,564 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 是否使用LoRA: True
+2025-07-24 21:07:03,564 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - LoRA适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed
+2025-07-24 21:07:03,564 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-24 21:07:03,565 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 非70B模型，单进程，采用单卡推理（device_map=None）
+2025-07-24 21:07:03,565 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 正在加载tokenizer: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-24 21:07:04,467 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - Tokenizer加载完成
+2025-07-24 21:07:04,467 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - Chat template: {{- bos_token }}
+{%- if custom_tools is defined %}
+    {%- set tools = custom_tools %}
+{%- endif %}
+{%- if not tools_in_user_message is defined %}
+    {%- set tools_in_user_message = true %}
+{%- endif %}
+{%- if not date_string is defined %}
+    {%- set date_string = "26 Jul 2024" %}
+{%- endif %}
+{%- if not tools is defined %}
+    {%- set tools = none %}
+{%- endif %}
+
+{#- This block extracts the system message, so we can slot it into the right place. #}
+{%- if messages[0]['role'] == 'system' %}
+    {%- set system_message = messages[0]['content']|trim %}
+    {%- set messages = messages[1:] %}
+{%- else %}
+    {%- set system_message = "" %}
+{%- endif %}
+
+{#- System message + builtin tools #}
+{{- "<|start_header_id|>system<|end_header_id|>\n\n" }}
+{%- if builtin_tools is defined or tools is not none %}
+    {{- "Environment: ipython\n" }}
+{%- endif %}
+{%- if builtin_tools is defined %}
+    {{- "Tools: " + builtin_tools | reject('equalto', 'code_interpreter') | join(", ") + "\n\n"}}
+{%- endif %}
+{{- "Cutting Knowledge Date: December 2023\n" }}
+{{- "Today Date: " + date_string + "\n\n" }}
+{%- if tools is not none and not tools_in_user_message %}
+    {{- "You have access to the following functions. To call a function, please respond with JSON for a function call." }}
+    {{- 'Respond in the format {"name": function name, "parameters": dictionary of argument name and its value}.' }}
+    {{- "Do not use variables.\n\n" }}
+    {%- for t in tools %}
+        {{- t | tojson(indent=4) }}
+        {{- "\n\n" }}
+    {%- endfor %}
+{%- endif %}
+{{- system_message }}
+{{- "<|eot_id|>" }}
+
+{#- Custom tools are passed in a user message with some extra guidance #}
+{%- if tools_in_user_message and not tools is none %}
+    {#- Extract the first user message so we can plug it in here #}
+    {%- if messages | length != 0 %}
+        {%- set first_user_message = messages[0]['content']|trim %}
+        {%- set messages = messages[1:] %}
+    {%- else %}
+        {{- raise_exception("Cannot put tools in the first user message when there's no first user message!") }}
+{%- endif %}
+    {{- '<|start_header_id|>user<|end_header_id|>\n\n' -}}
+    {{- "Given the following functions, please respond with a JSON for a function call " }}
+    {{- "with its proper arguments that best answers the given prompt.\n\n" }}
+    {{- 'Respond in the format {"name": function name, "parameters": dictionary of argument name and its value}.' }}
+    {{- "Do not use variables.\n\n" }}
+    {%- for t in tools %}
+        {{- t | tojson(indent=4) }}
+        {{- "\n\n" }}
+    {%- endfor %}
+    {{- first_user_message + "<|eot_id|>"}}
+{%- endif %}
+
+{%- for message in messages %}
+    {%- if not (message.role == 'ipython' or message.role == 'tool' or 'tool_calls' in message) %}
+        {{- '<|start_header_id|>' + message['role'] + '<|end_header_id|>\n\n'+ message['content'] | trim + '<|eot_id|>' }}
+    {%- elif 'tool_calls' in message %}
+        {%- if not message.tool_calls|length == 1 %}
+            {{- raise_exception("This model only supports single tool-calls at once!") }}
+        {%- endif %}
+        {%- set tool_call = message.tool_calls[0].function %}
+        {%- if builtin_tools is defined and tool_call.name in builtin_tools %}
+            {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' -}}
+            {{- "<|python_tag|>" + tool_call.name + ".call(" }}
+            {%- for arg_name, arg_val in tool_call.arguments | items %}
+                {{- arg_name + '="' + arg_val + '"' }}
+                {%- if not loop.last %}
+                    {{- ", " }}
+                {%- endif %}
+                {%- endfor %}
+            {{- ")" }}
+        {%- else  %}
+            {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' -}}
+            {{- '{"name": "' + tool_call.name + '", ' }}
+            {{- '"parameters": ' }}
+            {{- tool_call.arguments | tojson }}
+            {{- "}" }}
+        {%- endif %}
+        {%- if builtin_tools is defined %}
+            {#- This means we're in ipython mode #}
+            {{- "<|eom_id|>" }}
+        {%- else %}
+            {{- "<|eot_id|>" }}
+        {%- endif %}
+    {%- elif message.role == "tool" or message.role == "ipython" %}
+        {{- "<|start_header_id|>ipython<|end_header_id|>\n\n" }}
+        {%- if message.content is mapping or message.content is iterable %}
+            {{- message.content | tojson }}
+        {%- else %}
+            {{- message.content }}
+        {%- endif %}
+        {{- "<|eot_id|>" }}
+    {%- endif %}
+{%- endfor %}
+{%- if add_generation_prompt %}
+    {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' }}
+{%- endif %}
+
+2025-07-24 21:07:04,467 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 检测到Llama模型，使用chat_template
+2025-07-24 21:07:04,467 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模板策略: chat_template
+2025-07-24 21:07:04,468 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 正在加载基础模型: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-24 21:07:15,092 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 基础模型加载完成
+2025-07-24 21:07:15,092 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 正在加载PEFT适配器: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed
+2025-07-24 21:07:16,312 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - PEFT适配器加载完成
+2025-07-24 21:07:16,321 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-24 21:07:16,321 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型加载完成！
+2025-07-24 21:07:16,321 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 最终使用的模型: LoRA适配模型
+2025-07-24 21:07:16,321 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型路径: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-24 21:07:16,321 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed
+2025-07-24 21:07:16,321 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模板策略: chat_template
+2025-07-24 21:07:16,321 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-24 21:07:16,321 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Test_alpaca_noCoT_updated.json
+2025-07-24 21:07:16,384 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 
+使用模型: LoRA
+2025-07-24 21:07:16,385 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 数据集: ohsumed_zero
+2025-07-24 21:07:16,385 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 推理模式: 单一推理
+2025-07-24 21:07:16,385 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 示例输出：
+2025-07-24 21:07:17,806 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 
+样本1：
+2025-07-24 21:07:17,806 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 文本: Immunization of owl monkeys with a combination of Plasmodium falciparum asexual blood-stage synthetic peptide antigens....
+2025-07-24 21:07:17,806 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 真实类别: C03
+2025-07-24 21:07:17,806 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 预测类别: C03
+2025-07-24 21:07:17,806 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型推理过程:
+C03
+2025-07-24 21:07:17,806 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - --------------------------------------------------------------------------------
+2025-07-24 21:07:18,055 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 
+样本2：
+2025-07-24 21:07:18,056 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 文本: Systems analysis of cerebrovascular pressure transmission: an observational study in head-injured patients....
+2025-07-24 21:07:18,056 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 真实类别: C10
+2025-07-24 21:07:18,056 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 预测类别: C10
+2025-07-24 21:07:18,056 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型推理过程:
+C10
+2025-07-24 21:07:18,056 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - --------------------------------------------------------------------------------
+2025-07-24 21:07:18,303 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 
+样本3：
+2025-07-24 21:07:18,304 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 文本: Combined alpha/beta-blockade versus beta 1-selective blockade in essential hypertension in black and white patients....
+2025-07-24 21:07:18,304 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 真实类别: C14
+2025-07-24 21:07:18,304 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 预测类别: C14
+2025-07-24 21:07:18,304 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型推理过程:
+C14
+2025-07-24 21:07:18,304 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - --------------------------------------------------------------------------------
+2025-07-24 21:07:18,550 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 
+样本4：
+2025-07-24 21:07:18,550 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 文本: Magnitude and time course of beta-adrenergic antagonism during oral amiodarone therapy....
+2025-07-24 21:07:18,550 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 真实类别: C14
+2025-07-24 21:07:18,550 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 预测类别: C14
+2025-07-24 21:07:18,550 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型推理过程:
+C14
+2025-07-24 21:07:18,550 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - --------------------------------------------------------------------------------
+2025-07-24 21:07:18,800 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 
+样本5：
+2025-07-24 21:07:18,801 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 文本: The value of pulmonary artery and central venous monitoring in patients undergoing abdominal aortic reconstructive surgery: a comparative study of two selected, randomized groups....
+2025-07-24 21:07:18,801 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 真实类别: C14
+2025-07-24 21:07:18,801 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 预测类别: C14
+2025-07-24 21:07:18,801 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型推理过程:
+C14
+2025-07-24 21:07:18,801 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - --------------------------------------------------------------------------------
+2025-07-24 21:07:37,177 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 开始运行评估实验...
+2025-07-24 21:07:37,178 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 实验配置:
+2025-07-24 21:07:37,178 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 基础模型: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-24 21:07:37,178 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 使用LoRA: True
+2025-07-24 21:07:37,178 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed
+2025-07-24 21:07:37,178 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 数据集: ohsumed_zero
+2025-07-24 21:07:37,178 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Test_alpaca_noCoT_updated.json
+2025-07-24 21:07:37,178 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-24 21:07:37,178 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 开始加载模型和tokenizer...
+2025-07-24 21:07:37,178 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 基础模型路径: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-24 21:07:37,178 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 是否使用LoRA: True
+2025-07-24 21:07:37,178 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - LoRA适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed
+2025-07-24 21:07:37,178 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-24 21:07:37,178 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 非70B模型，单进程，采用单卡推理（device_map=None）
+2025-07-24 21:07:37,178 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 正在加载tokenizer: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-24 21:07:38,077 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - Tokenizer加载完成
+2025-07-24 21:07:38,077 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - Chat template: {{- bos_token }}
+{%- if custom_tools is defined %}
+    {%- set tools = custom_tools %}
+{%- endif %}
+{%- if not tools_in_user_message is defined %}
+    {%- set tools_in_user_message = true %}
+{%- endif %}
+{%- if not date_string is defined %}
+    {%- set date_string = "26 Jul 2024" %}
+{%- endif %}
+{%- if not tools is defined %}
+    {%- set tools = none %}
+{%- endif %}
+
+{#- This block extracts the system message, so we can slot it into the right place. #}
+{%- if messages[0]['role'] == 'system' %}
+    {%- set system_message = messages[0]['content']|trim %}
+    {%- set messages = messages[1:] %}
+{%- else %}
+    {%- set system_message = "" %}
+{%- endif %}
+
+{#- System message + builtin tools #}
+{{- "<|start_header_id|>system<|end_header_id|>\n\n" }}
+{%- if builtin_tools is defined or tools is not none %}
+    {{- "Environment: ipython\n" }}
+{%- endif %}
+{%- if builtin_tools is defined %}
+    {{- "Tools: " + builtin_tools | reject('equalto', 'code_interpreter') | join(", ") + "\n\n"}}
+{%- endif %}
+{{- "Cutting Knowledge Date: December 2023\n" }}
+{{- "Today Date: " + date_string + "\n\n" }}
+{%- if tools is not none and not tools_in_user_message %}
+    {{- "You have access to the following functions. To call a function, please respond with JSON for a function call." }}
+    {{- 'Respond in the format {"name": function name, "parameters": dictionary of argument name and its value}.' }}
+    {{- "Do not use variables.\n\n" }}
+    {%- for t in tools %}
+        {{- t | tojson(indent=4) }}
+        {{- "\n\n" }}
+    {%- endfor %}
+{%- endif %}
+{{- system_message }}
+{{- "<|eot_id|>" }}
+
+{#- Custom tools are passed in a user message with some extra guidance #}
+{%- if tools_in_user_message and not tools is none %}
+    {#- Extract the first user message so we can plug it in here #}
+    {%- if messages | length != 0 %}
+        {%- set first_user_message = messages[0]['content']|trim %}
+        {%- set messages = messages[1:] %}
+    {%- else %}
+        {{- raise_exception("Cannot put tools in the first user message when there's no first user message!") }}
+{%- endif %}
+    {{- '<|start_header_id|>user<|end_header_id|>\n\n' -}}
+    {{- "Given the following functions, please respond with a JSON for a function call " }}
+    {{- "with its proper arguments that best answers the given prompt.\n\n" }}
+    {{- 'Respond in the format {"name": function name, "parameters": dictionary of argument name and its value}.' }}
+    {{- "Do not use variables.\n\n" }}
+    {%- for t in tools %}
+        {{- t | tojson(indent=4) }}
+        {{- "\n\n" }}
+    {%- endfor %}
+    {{- first_user_message + "<|eot_id|>"}}
+{%- endif %}
+
+{%- for message in messages %}
+    {%- if not (message.role == 'ipython' or message.role == 'tool' or 'tool_calls' in message) %}
+        {{- '<|start_header_id|>' + message['role'] + '<|end_header_id|>\n\n'+ message['content'] | trim + '<|eot_id|>' }}
+    {%- elif 'tool_calls' in message %}
+        {%- if not message.tool_calls|length == 1 %}
+            {{- raise_exception("This model only supports single tool-calls at once!") }}
+        {%- endif %}
+        {%- set tool_call = message.tool_calls[0].function %}
+        {%- if builtin_tools is defined and tool_call.name in builtin_tools %}
+            {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' -}}
+            {{- "<|python_tag|>" + tool_call.name + ".call(" }}
+            {%- for arg_name, arg_val in tool_call.arguments | items %}
+                {{- arg_name + '="' + arg_val + '"' }}
+                {%- if not loop.last %}
+                    {{- ", " }}
+                {%- endif %}
+                {%- endfor %}
+            {{- ")" }}
+        {%- else  %}
+            {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' -}}
+            {{- '{"name": "' + tool_call.name + '", ' }}
+            {{- '"parameters": ' }}
+            {{- tool_call.arguments | tojson }}
+            {{- "}" }}
+        {%- endif %}
+        {%- if builtin_tools is defined %}
+            {#- This means we're in ipython mode #}
+            {{- "<|eom_id|>" }}
+        {%- else %}
+            {{- "<|eot_id|>" }}
+        {%- endif %}
+    {%- elif message.role == "tool" or message.role == "ipython" %}
+        {{- "<|start_header_id|>ipython<|end_header_id|>\n\n" }}
+        {%- if message.content is mapping or message.content is iterable %}
+            {{- message.content | tojson }}
+        {%- else %}
+            {{- message.content }}
+        {%- endif %}
+        {{- "<|eot_id|>" }}
+    {%- endif %}
+{%- endfor %}
+{%- if add_generation_prompt %}
+    {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' }}
+{%- endif %}
+
+2025-07-24 21:07:38,078 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 检测到Llama模型，使用chat_template
+2025-07-24 21:07:38,078 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模板策略: chat_template
+2025-07-24 21:07:38,078 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 正在加载基础模型: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-24 21:07:49,160 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 基础模型加载完成
+2025-07-24 21:07:49,161 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 正在加载PEFT适配器: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed
+2025-07-24 21:07:50,278 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - PEFT适配器加载完成
+2025-07-24 21:07:50,286 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-24 21:07:50,286 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型加载完成！
+2025-07-24 21:07:50,286 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 最终使用的模型: LoRA适配模型
+2025-07-24 21:07:50,286 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型路径: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-24 21:07:50,286 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed
+2025-07-24 21:07:50,286 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模板策略: chat_template
+2025-07-24 21:07:50,286 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-24 21:07:50,286 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Test_alpaca_noCoT_updated.json
+2025-07-24 21:07:50,338 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 使用单一推理模式
+2025-07-24 21:07:50,338 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 开始批量推理...
+2025-07-24 21:11:21,963 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 计算评估指标...
+2025-07-24 21:11:21,975 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 绘制混淆矩阵...
+2025-07-24 21:11:22,690 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 分析错误样本...
+2025-07-24 21:11:22,718 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 
+评估结果：
+2025-07-24 21:11:22,718 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型类型: LoRA
+2025-07-24 21:11:22,718 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 数据集: ohsumed_zero
+2025-07-24 21:11:22,718 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 推理模式: 单一推理
+2025-07-24 21:11:22,718 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 准确率：0.1281
+2025-07-24 21:11:22,718 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 错误样本数：2928
+2025-07-24 21:11:22,718 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 总样本数：3358
+2025-07-24 21:11:22,718 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 结果保存到: ./outputs/biomedical_lora_zeroshotCoT_0724_llama3.1-8b_ohsumed_ohsumed_zero
+2025-07-25 00:03:21,677 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 开始运行评估实验...
+2025-07-25 00:03:21,677 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 实验配置:
+2025-07-25 00:03:21,677 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 基础模型: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-25 00:03:21,678 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 使用LoRA: True
+2025-07-25 00:03:21,678 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed
+2025-07-25 00:03:21,678 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 数据集: ohsumed_zero
+2025-07-25 00:03:21,678 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Test_alpaca_noCoT_updated.json
+2025-07-25 00:03:21,678 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-25 00:03:21,678 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 开始加载模型和tokenizer...
+2025-07-25 00:03:21,678 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 基础模型路径: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-25 00:03:21,678 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 是否使用LoRA: True
+2025-07-25 00:03:21,678 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - LoRA适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed
+2025-07-25 00:03:21,678 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-25 00:03:21,678 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 非70B模型，单进程，采用单卡推理（device_map=None）
+2025-07-25 00:03:21,678 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 正在加载tokenizer: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-25 00:03:22,576 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - Tokenizer加载完成
+2025-07-25 00:03:22,576 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - Chat template: {{- bos_token }}
+{%- if custom_tools is defined %}
+    {%- set tools = custom_tools %}
+{%- endif %}
+{%- if not tools_in_user_message is defined %}
+    {%- set tools_in_user_message = true %}
+{%- endif %}
+{%- if not date_string is defined %}
+    {%- set date_string = "26 Jul 2024" %}
+{%- endif %}
+{%- if not tools is defined %}
+    {%- set tools = none %}
+{%- endif %}
+
+{#- This block extracts the system message, so we can slot it into the right place. #}
+{%- if messages[0]['role'] == 'system' %}
+    {%- set system_message = messages[0]['content']|trim %}
+    {%- set messages = messages[1:] %}
+{%- else %}
+    {%- set system_message = "" %}
+{%- endif %}
+
+{#- System message + builtin tools #}
+{{- "<|start_header_id|>system<|end_header_id|>\n\n" }}
+{%- if builtin_tools is defined or tools is not none %}
+    {{- "Environment: ipython\n" }}
+{%- endif %}
+{%- if builtin_tools is defined %}
+    {{- "Tools: " + builtin_tools | reject('equalto', 'code_interpreter') | join(", ") + "\n\n"}}
+{%- endif %}
+{{- "Cutting Knowledge Date: December 2023\n" }}
+{{- "Today Date: " + date_string + "\n\n" }}
+{%- if tools is not none and not tools_in_user_message %}
+    {{- "You have access to the following functions. To call a function, please respond with JSON for a function call." }}
+    {{- 'Respond in the format {"name": function name, "parameters": dictionary of argument name and its value}.' }}
+    {{- "Do not use variables.\n\n" }}
+    {%- for t in tools %}
+        {{- t | tojson(indent=4) }}
+        {{- "\n\n" }}
+    {%- endfor %}
+{%- endif %}
+{{- system_message }}
+{{- "<|eot_id|>" }}
+
+{#- Custom tools are passed in a user message with some extra guidance #}
+{%- if tools_in_user_message and not tools is none %}
+    {#- Extract the first user message so we can plug it in here #}
+    {%- if messages | length != 0 %}
+        {%- set first_user_message = messages[0]['content']|trim %}
+        {%- set messages = messages[1:] %}
+    {%- else %}
+        {{- raise_exception("Cannot put tools in the first user message when there's no first user message!") }}
+{%- endif %}
+    {{- '<|start_header_id|>user<|end_header_id|>\n\n' -}}
+    {{- "Given the following functions, please respond with a JSON for a function call " }}
+    {{- "with its proper arguments that best answers the given prompt.\n\n" }}
+    {{- 'Respond in the format {"name": function name, "parameters": dictionary of argument name and its value}.' }}
+    {{- "Do not use variables.\n\n" }}
+    {%- for t in tools %}
+        {{- t | tojson(indent=4) }}
+        {{- "\n\n" }}
+    {%- endfor %}
+    {{- first_user_message + "<|eot_id|>"}}
+{%- endif %}
+
+{%- for message in messages %}
+    {%- if not (message.role == 'ipython' or message.role == 'tool' or 'tool_calls' in message) %}
+        {{- '<|start_header_id|>' + message['role'] + '<|end_header_id|>\n\n'+ message['content'] | trim + '<|eot_id|>' }}
+    {%- elif 'tool_calls' in message %}
+        {%- if not message.tool_calls|length == 1 %}
+            {{- raise_exception("This model only supports single tool-calls at once!") }}
+        {%- endif %}
+        {%- set tool_call = message.tool_calls[0].function %}
+        {%- if builtin_tools is defined and tool_call.name in builtin_tools %}
+            {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' -}}
+            {{- "<|python_tag|>" + tool_call.name + ".call(" }}
+            {%- for arg_name, arg_val in tool_call.arguments | items %}
+                {{- arg_name + '="' + arg_val + '"' }}
+                {%- if not loop.last %}
+                    {{- ", " }}
+                {%- endif %}
+                {%- endfor %}
+            {{- ")" }}
+        {%- else  %}
+            {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' -}}
+            {{- '{"name": "' + tool_call.name + '", ' }}
+            {{- '"parameters": ' }}
+            {{- tool_call.arguments | tojson }}
+            {{- "}" }}
+        {%- endif %}
+        {%- if builtin_tools is defined %}
+            {#- This means we're in ipython mode #}
+            {{- "<|eom_id|>" }}
+        {%- else %}
+            {{- "<|eot_id|>" }}
+        {%- endif %}
+    {%- elif message.role == "tool" or message.role == "ipython" %}
+        {{- "<|start_header_id|>ipython<|end_header_id|>\n\n" }}
+        {%- if message.content is mapping or message.content is iterable %}
+            {{- message.content | tojson }}
+        {%- else %}
+            {{- message.content }}
+        {%- endif %}
+        {{- "<|eot_id|>" }}
+    {%- endif %}
+{%- endfor %}
+{%- if add_generation_prompt %}
+    {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' }}
+{%- endif %}
+
+2025-07-25 00:03:22,576 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 检测到Llama模型，使用chat_template
+2025-07-25 00:03:22,576 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模板策略: chat_template
+2025-07-25 00:03:22,576 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 正在加载基础模型: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-25 00:03:33,200 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 基础模型加载完成
+2025-07-25 00:03:33,200 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 正在加载PEFT适配器: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed
+2025-07-25 00:03:34,349 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - PEFT适配器加载完成
+2025-07-25 00:03:34,357 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-25 00:03:34,357 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型加载完成！
+2025-07-25 00:03:34,357 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 最终使用的模型: LoRA适配模型
+2025-07-25 00:03:34,357 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型路径: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-25 00:03:34,357 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 适配器路径: /mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed
+2025-07-25 00:03:34,357 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模板策略: chat_template
+2025-07-25 00:03:34,357 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-25 00:03:34,357 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Test_alpaca_noCoT_updated.json
+2025-07-25 00:03:34,408 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 使用单一推理模式
+2025-07-25 00:03:34,408 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 开始批量推理...
+2025-07-25 00:07:06,839 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 计算评估指标...
+2025-07-25 00:07:06,851 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 绘制混淆矩阵...
+2025-07-25 00:07:07,544 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 分析错误样本...
+2025-07-25 00:07:07,575 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 
+评估结果：
+2025-07-25 00:07:07,575 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型类型: LoRA
+2025-07-25 00:07:07,575 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 数据集: ohsumed_zero
+2025-07-25 00:07:07,575 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 推理模式: 单一推理
+2025-07-25 00:07:07,575 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 准确率：0.0363
+2025-07-25 00:07:07,575 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 错误样本数：3236
+2025-07-25 00:07:07,575 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 总样本数：3358
+2025-07-25 00:07:07,575 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 结果保存到: ./outputs/biomedical_lora_zeroshotCoT_0724_llama3.1-8b_ohsumed_ohsumed_zero
+2025-07-25 00:10:50,073 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 开始运行评估实验...
+2025-07-25 00:10:50,074 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 实验配置:
+2025-07-25 00:10:50,074 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 基础模型: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-25 00:10:50,074 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 使用LoRA: False
+2025-07-25 00:10:50,074 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 数据集: ohsumed_zero
+2025-07-25 00:10:50,074 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Test_alpaca_noCoT_updated.json
+2025-07-25 00:10:50,074 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-25 00:10:50,074 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 开始加载模型和tokenizer...
+2025-07-25 00:10:50,074 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 基础模型路径: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-25 00:10:50,074 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 是否使用LoRA: False
+2025-07-25 00:10:50,074 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-25 00:10:50,074 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 非70B模型，单进程，采用单卡推理（device_map=None）
+2025-07-25 00:10:50,074 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 正在加载tokenizer: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-25 00:10:50,905 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - Tokenizer加载完成
+2025-07-25 00:10:50,906 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - Chat template: {{- bos_token }}
+{%- if custom_tools is defined %}
+    {%- set tools = custom_tools %}
+{%- endif %}
+{%- if not tools_in_user_message is defined %}
+    {%- set tools_in_user_message = true %}
+{%- endif %}
+{%- if not date_string is defined %}
+    {%- set date_string = "26 Jul 2024" %}
+{%- endif %}
+{%- if not tools is defined %}
+    {%- set tools = none %}
+{%- endif %}
+
+{#- This block extracts the system message, so we can slot it into the right place. #}
+{%- if messages[0]['role'] == 'system' %}
+    {%- set system_message = messages[0]['content']|trim %}
+    {%- set messages = messages[1:] %}
+{%- else %}
+    {%- set system_message = "" %}
+{%- endif %}
+
+{#- System message + builtin tools #}
+{{- "<|start_header_id|>system<|end_header_id|>\n\n" }}
+{%- if builtin_tools is defined or tools is not none %}
+    {{- "Environment: ipython\n" }}
+{%- endif %}
+{%- if builtin_tools is defined %}
+    {{- "Tools: " + builtin_tools | reject('equalto', 'code_interpreter') | join(", ") + "\n\n"}}
+{%- endif %}
+{{- "Cutting Knowledge Date: December 2023\n" }}
+{{- "Today Date: " + date_string + "\n\n" }}
+{%- if tools is not none and not tools_in_user_message %}
+    {{- "You have access to the following functions. To call a function, please respond with JSON for a function call." }}
+    {{- 'Respond in the format {"name": function name, "parameters": dictionary of argument name and its value}.' }}
+    {{- "Do not use variables.\n\n" }}
+    {%- for t in tools %}
+        {{- t | tojson(indent=4) }}
+        {{- "\n\n" }}
+    {%- endfor %}
+{%- endif %}
+{{- system_message }}
+{{- "<|eot_id|>" }}
+
+{#- Custom tools are passed in a user message with some extra guidance #}
+{%- if tools_in_user_message and not tools is none %}
+    {#- Extract the first user message so we can plug it in here #}
+    {%- if messages | length != 0 %}
+        {%- set first_user_message = messages[0]['content']|trim %}
+        {%- set messages = messages[1:] %}
+    {%- else %}
+        {{- raise_exception("Cannot put tools in the first user message when there's no first user message!") }}
+{%- endif %}
+    {{- '<|start_header_id|>user<|end_header_id|>\n\n' -}}
+    {{- "Given the following functions, please respond with a JSON for a function call " }}
+    {{- "with its proper arguments that best answers the given prompt.\n\n" }}
+    {{- 'Respond in the format {"name": function name, "parameters": dictionary of argument name and its value}.' }}
+    {{- "Do not use variables.\n\n" }}
+    {%- for t in tools %}
+        {{- t | tojson(indent=4) }}
+        {{- "\n\n" }}
+    {%- endfor %}
+    {{- first_user_message + "<|eot_id|>"}}
+{%- endif %}
+
+{%- for message in messages %}
+    {%- if not (message.role == 'ipython' or message.role == 'tool' or 'tool_calls' in message) %}
+        {{- '<|start_header_id|>' + message['role'] + '<|end_header_id|>\n\n'+ message['content'] | trim + '<|eot_id|>' }}
+    {%- elif 'tool_calls' in message %}
+        {%- if not message.tool_calls|length == 1 %}
+            {{- raise_exception("This model only supports single tool-calls at once!") }}
+        {%- endif %}
+        {%- set tool_call = message.tool_calls[0].function %}
+        {%- if builtin_tools is defined and tool_call.name in builtin_tools %}
+            {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' -}}
+            {{- "<|python_tag|>" + tool_call.name + ".call(" }}
+            {%- for arg_name, arg_val in tool_call.arguments | items %}
+                {{- arg_name + '="' + arg_val + '"' }}
+                {%- if not loop.last %}
+                    {{- ", " }}
+                {%- endif %}
+                {%- endfor %}
+            {{- ")" }}
+        {%- else  %}
+            {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' -}}
+            {{- '{"name": "' + tool_call.name + '", ' }}
+            {{- '"parameters": ' }}
+            {{- tool_call.arguments | tojson }}
+            {{- "}" }}
+        {%- endif %}
+        {%- if builtin_tools is defined %}
+            {#- This means we're in ipython mode #}
+            {{- "<|eom_id|>" }}
+        {%- else %}
+            {{- "<|eot_id|>" }}
+        {%- endif %}
+    {%- elif message.role == "tool" or message.role == "ipython" %}
+        {{- "<|start_header_id|>ipython<|end_header_id|>\n\n" }}
+        {%- if message.content is mapping or message.content is iterable %}
+            {{- message.content | tojson }}
+        {%- else %}
+            {{- message.content }}
+        {%- endif %}
+        {{- "<|eot_id|>" }}
+    {%- endif %}
+{%- endfor %}
+{%- if add_generation_prompt %}
+    {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' }}
+{%- endif %}
+
+2025-07-25 00:10:50,906 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 检测到Llama模型，使用chat_template
+2025-07-25 00:10:50,906 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模板策略: chat_template
+2025-07-25 00:10:50,906 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 正在加载基础模型: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-25 00:11:04,383 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 基础模型加载完成
+2025-07-25 00:11:04,383 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-25 00:11:04,385 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-25 00:11:04,385 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型加载完成！
+2025-07-25 00:11:04,385 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 最终使用的模型: 基础模型
+2025-07-25 00:11:04,385 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型路径: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-25 00:11:04,385 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模板策略: chat_template
+2025-07-25 00:11:04,385 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-25 00:11:04,385 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Test_alpaca_noCoT_updated.json
+2025-07-25 00:11:04,453 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 使用单一推理模式
+2025-07-25 00:11:04,453 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 开始批量推理...
+2025-07-25 00:30:42,662 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 开始运行评估实验...
+2025-07-25 00:30:42,662 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 实验配置:
+2025-07-25 00:30:42,662 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 基础模型: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-25 00:30:42,662 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 使用LoRA: False
+2025-07-25 00:30:42,662 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 数据集: ohsumed_zero
+2025-07-25 00:30:42,662 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO -   - 数据路径: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Test_alpaca_noCoT_updated.json
+2025-07-25 00:30:42,662 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-25 00:30:42,663 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 开始加载模型和tokenizer...
+2025-07-25 00:30:42,663 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 基础模型路径: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-25 00:30:42,663 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 是否使用LoRA: False
+2025-07-25 00:30:42,663 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-25 00:30:42,663 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 非70B模型，单进程，采用单卡推理（device_map=None）
+2025-07-25 00:30:42,663 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 正在加载tokenizer: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-25 00:30:43,422 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - Tokenizer加载完成
+2025-07-25 00:30:43,422 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - Chat template: {{- bos_token }}
+{%- if custom_tools is defined %}
+    {%- set tools = custom_tools %}
+{%- endif %}
+{%- if not tools_in_user_message is defined %}
+    {%- set tools_in_user_message = true %}
+{%- endif %}
+{%- if not date_string is defined %}
+    {%- set date_string = "26 Jul 2024" %}
+{%- endif %}
+{%- if not tools is defined %}
+    {%- set tools = none %}
+{%- endif %}
+
+{#- This block extracts the system message, so we can slot it into the right place. #}
+{%- if messages[0]['role'] == 'system' %}
+    {%- set system_message = messages[0]['content']|trim %}
+    {%- set messages = messages[1:] %}
+{%- else %}
+    {%- set system_message = "" %}
+{%- endif %}
+
+{#- System message + builtin tools #}
+{{- "<|start_header_id|>system<|end_header_id|>\n\n" }}
+{%- if builtin_tools is defined or tools is not none %}
+    {{- "Environment: ipython\n" }}
+{%- endif %}
+{%- if builtin_tools is defined %}
+    {{- "Tools: " + builtin_tools | reject('equalto', 'code_interpreter') | join(", ") + "\n\n"}}
+{%- endif %}
+{{- "Cutting Knowledge Date: December 2023\n" }}
+{{- "Today Date: " + date_string + "\n\n" }}
+{%- if tools is not none and not tools_in_user_message %}
+    {{- "You have access to the following functions. To call a function, please respond with JSON for a function call." }}
+    {{- 'Respond in the format {"name": function name, "parameters": dictionary of argument name and its value}.' }}
+    {{- "Do not use variables.\n\n" }}
+    {%- for t in tools %}
+        {{- t | tojson(indent=4) }}
+        {{- "\n\n" }}
+    {%- endfor %}
+{%- endif %}
+{{- system_message }}
+{{- "<|eot_id|>" }}
+
+{#- Custom tools are passed in a user message with some extra guidance #}
+{%- if tools_in_user_message and not tools is none %}
+    {#- Extract the first user message so we can plug it in here #}
+    {%- if messages | length != 0 %}
+        {%- set first_user_message = messages[0]['content']|trim %}
+        {%- set messages = messages[1:] %}
+    {%- else %}
+        {{- raise_exception("Cannot put tools in the first user message when there's no first user message!") }}
+{%- endif %}
+    {{- '<|start_header_id|>user<|end_header_id|>\n\n' -}}
+    {{- "Given the following functions, please respond with a JSON for a function call " }}
+    {{- "with its proper arguments that best answers the given prompt.\n\n" }}
+    {{- 'Respond in the format {"name": function name, "parameters": dictionary of argument name and its value}.' }}
+    {{- "Do not use variables.\n\n" }}
+    {%- for t in tools %}
+        {{- t | tojson(indent=4) }}
+        {{- "\n\n" }}
+    {%- endfor %}
+    {{- first_user_message + "<|eot_id|>"}}
+{%- endif %}
+
+{%- for message in messages %}
+    {%- if not (message.role == 'ipython' or message.role == 'tool' or 'tool_calls' in message) %}
+        {{- '<|start_header_id|>' + message['role'] + '<|end_header_id|>\n\n'+ message['content'] | trim + '<|eot_id|>' }}
+    {%- elif 'tool_calls' in message %}
+        {%- if not message.tool_calls|length == 1 %}
+            {{- raise_exception("This model only supports single tool-calls at once!") }}
+        {%- endif %}
+        {%- set tool_call = message.tool_calls[0].function %}
+        {%- if builtin_tools is defined and tool_call.name in builtin_tools %}
+            {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' -}}
+            {{- "<|python_tag|>" + tool_call.name + ".call(" }}
+            {%- for arg_name, arg_val in tool_call.arguments | items %}
+                {{- arg_name + '="' + arg_val + '"' }}
+                {%- if not loop.last %}
+                    {{- ", " }}
+                {%- endif %}
+                {%- endfor %}
+            {{- ")" }}
+        {%- else  %}
+            {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' -}}
+            {{- '{"name": "' + tool_call.name + '", ' }}
+            {{- '"parameters": ' }}
+            {{- tool_call.arguments | tojson }}
+            {{- "}" }}
+        {%- endif %}
+        {%- if builtin_tools is defined %}
+            {#- This means we're in ipython mode #}
+            {{- "<|eom_id|>" }}
+        {%- else %}
+            {{- "<|eot_id|>" }}
+        {%- endif %}
+    {%- elif message.role == "tool" or message.role == "ipython" %}
+        {{- "<|start_header_id|>ipython<|end_header_id|>\n\n" }}
+        {%- if message.content is mapping or message.content is iterable %}
+            {{- message.content | tojson }}
+        {%- else %}
+            {{- message.content }}
+        {%- endif %}
+        {{- "<|eot_id|>" }}
+    {%- endif %}
+{%- endfor %}
+{%- if add_generation_prompt %}
+    {{- '<|start_header_id|>assistant<|end_header_id|>\n\n' }}
+{%- endif %}
+
+2025-07-25 00:30:43,423 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 检测到Llama模型，使用chat_template
+2025-07-25 00:30:43,423 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模板策略: chat_template
+2025-07-25 00:30:43,423 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 正在加载基础模型: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-25 00:30:53,507 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 基础模型加载完成
+2025-07-25 00:30:53,509 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 使用基础模型，不加载LoRA适配器
+2025-07-25 00:30:53,511 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-25 00:30:53,511 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型加载完成！
+2025-07-25 00:30:53,511 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 最终使用的模型: 基础模型
+2025-07-25 00:30:53,511 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型路径: /mnt/data1/TC/TextClassDemo/llama3.1-8b
+2025-07-25 00:30:53,511 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模板策略: chat_template
+2025-07-25 00:30:53,511 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - ================================================================================
+2025-07-25 00:30:53,511 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 加载数据集: /mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Test_alpaca_noCoT_updated.json
+2025-07-25 00:30:53,578 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 使用单一推理模式
+2025-07-25 00:30:53,579 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 开始批量推理...
+2025-07-25 01:16:03,530 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 计算评估指标...
+2025-07-25 01:16:03,544 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 绘制混淆矩阵...
+2025-07-25 01:16:04,672 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 分析错误样本...
+2025-07-25 01:16:04,745 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 
+评估结果：
+2025-07-25 01:16:04,745 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 模型类型: Base Model
+2025-07-25 01:16:04,745 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 数据集: ohsumed_zero
+2025-07-25 01:16:04,745 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 推理模式: 单一推理
+2025-07-25 01:16:04,745 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 准确率：0.0575
+2025-07-25 01:16:04,745 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 错误样本数：3165
+2025-07-25 01:16:04,745 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 总样本数：3358
+2025-07-25 01:16:04,745 - MedicalClassifier_biomedical_lora_zeroshotCoT_0724 - INFO - 结果保存到: ./outputs/biomedical_lora_zeroshotCoT_0724_llama3.1-8b_ohsumed_ohsumed_zero

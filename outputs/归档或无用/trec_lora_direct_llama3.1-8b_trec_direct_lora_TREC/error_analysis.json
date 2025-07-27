@@ -1,22 +1,29 @@
 [
   {
-    "index": 7,
-    "text": "what is australia ' s national flower ?",
-    "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
-  },
-  {
-    "index": 16,
-    "text": "what metal has the highest melting point ?",
-    "true_label": "C01",
-    "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
+    "index": 12,
+    "text": "what is the average weight of a yellow labrador ?",
+    "true_label": "C04",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
   {
     "index": 22,
     "text": "what river in the us is known as the big muddy ?",
     "true_label": "C05",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 33,
+    "text": "what is the temperature at the center of the earth ?",
+    "true_label": "C04",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 41,
+    "text": "what is teflon ?",
+    "true_label": "C03",
     "predicted_label": "C01",
     "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
@@ -28,11 +35,11 @@
     "model_output": "C05 - Questions about places or locations"
   },
   {
-    "index": 55,
-    "text": "what does cc in engines mean ?",
+    "index": 54,
+    "text": "what is done with worn or outdated flags ?",
     "true_label": "C03",
-    "predicted_label": "C06",
-    "model_output": "C06 - Abbreviations or acronyms"
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
   {
     "index": 59,
@@ -42,18 +49,25 @@
     "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
   {
-    "index": 72,
-    "text": "what is the largest city in the world ?",
-    "true_label": "C05",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
-  },
-  {
     "index": 76,
     "text": "what type of currency is used in australia ?",
     "true_label": "C01",
-    "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
+    "predicted_label": "C05",
+    "model_output": "C05 - Questions about places or locations"
+  },
+  {
+    "index": 85,
+    "text": "why is a ladybug helpful ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 86,
+    "text": "what is amoxicillin ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
   {
     "index": 89,
@@ -70,6 +84,13 @@
     "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
   },
   {
+    "index": 92,
+    "text": "what is the temperature of the sun ' s surface ?",
+    "true_label": "C04",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
     "index": 94,
     "text": "what is the oldest university in the us ?",
     "true_label": "C02",
@@ -81,35 +102,42 @@
     "text": "what is the longest major league baseball winning streak ?",
     "true_label": "C01",
     "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
+    "model_output": "C04"
   },
   {
-    "index": 107,
-    "text": "what is the ohio state bird ?",
-    "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "index": 105,
+    "text": "what is a micron ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 106,
+    "text": "the sun ' s core , what is the temperature ?",
+    "true_label": "C04",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
   {
     "index": 109,
     "text": "what is the highest dam in the u s ?",
     "true_label": "C05",
-    "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
   {
-    "index": 114,
-    "text": "what is hawaii ' s state flower ?",
-    "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "index": 127,
+    "text": "during which season do most thunderstorms occur ?",
+    "true_label": "C04",
+    "predicted_label": "C05",
+    "model_output": "C05 - Questions about places or locations"
   },
   {
-    "index": 115,
-    "text": "who won ms american in 1989 ?",
-    "true_label": "C02",
-    "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
+    "index": 129,
+    "text": "what is the gestation period for a cat ?",
+    "true_label": "C04",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
   {
     "index": 135,
@@ -119,6 +147,20 @@
     "model_output": "C05 - Questions about places or locations"
   },
   {
+    "index": 139,
+    "text": "what are platelets ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 141,
+    "text": "what is the name of roy roger ' s dog ?",
+    "true_label": "C01",
+    "predicted_label": "C02",
+    "model_output": "C02 - Questions about people, professions or groups"
+  },
+  {
     "index": 150,
     "text": "what is another name for vitamin b1 ?",
     "true_label": "C01",
@@ -126,18 +168,18 @@
     "model_output": "C03 - Descriptive or definitional questions"
   },
   {
-    "index": 154,
-    "text": "what baseball team was the first to make numbers part of their uniform ?",
-    "true_label": "C02",
-    "predicted_label": "C01",
-    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
+    "index": 162,
+    "text": "when is hurricane season in the caribbean ?",
+    "true_label": "C04",
+    "predicted_label": "C05",
+    "model_output": "C05 - Questions about places or locations"
   },
   {
-    "index": 164,
-    "text": "what is another astronomic term for the northern lights ?",
-    "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "index": 166,
+    "text": "when was lyndon b johnson born ?",
+    "true_label": "C04",
+    "predicted_label": "C02",
+    "model_output": "C02 - Questions about people, professions or groups"
   },
   {
     "index": 168,
@@ -154,18 +196,11 @@
     "model_output": "C03 - Descriptive or definitional questions"
   },
   {
-    "index": 184,
-    "text": "what is natural gas composed of ?",
-    "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
-  },
-  {
     "index": 189,
     "text": "what is the birthstone for june ?",
     "true_label": "C01",
     "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "model_output": "C03 - Descriptive or definitional questions."
   },
   {
     "index": 190,
@@ -175,30 +210,9 @@
     "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
   },
   {
-    "index": 196,
-    "text": "what currency is used in algeria ?",
-    "true_label": "C01",
-    "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
-  },
-  {
     "index": 198,
     "text": "what was the most popular toy in 1957 ?",
     "true_label": "C01",
-    "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
-  },
-  {
-    "index": 199,
-    "text": "what is pastrami made of ?",
-    "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
-  },
-  {
-    "index": 206,
-    "text": "who was the 23rd president of the united states ?",
-    "true_label": "C02",
     "predicted_label": "C04",
     "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
   },
@@ -213,50 +227,71 @@
     "index": 215,
     "text": "what is the most frequently spoken language in the netherlands ?",
     "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "predicted_label": "C02",
+    "model_output": "C02 - Questions about people, professions or groups"
+  },
+  {
+    "index": 216,
+    "text": "what is sodium chloride ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
   {
     "index": 223,
     "text": "what is the electrical output in madrid , spain ?",
     "true_label": "C01",
-    "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
+    "predicted_label": "C05",
+    "model_output": "C05 - Questions about places or locations"
   },
   {
-    "index": 225,
-    "text": "what is plastic made of ?",
-    "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "index": 227,
+    "text": "what does your spleen do ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
   {
     "index": 234,
     "text": "what are the two houses of the legislative branch ?",
     "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "predicted_label": "C02",
+    "model_output": "C02 - Questions about people, professions or groups"
   },
   {
     "index": 239,
     "text": "how fast is sound ?",
     "true_label": "C04",
     "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "model_output": "C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 242,
+    "text": "what causes gray hair ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 248,
+    "text": "what do meteorologists do ?",
+    "true_label": "C03",
+    "predicted_label": "C02",
+    "model_output": "C02 - Questions about people, professions or groups"
   },
   {
     "index": 249,
     "text": "what is the criterion for being legally blind ?",
     "true_label": "C01",
     "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "model_output": "C03 - Descriptive or definitional questions."
   },
   {
     "index": 252,
     "text": "what did edward binney and howard smith invent in 1903 ?",
     "true_label": "C01",
-    "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
+    "predicted_label": "C02",
+    "model_output": "C02 - Questions about people, professions or groups"
   },
   {
     "index": 255,
@@ -264,13 +299,6 @@
     "true_label": "C05",
     "predicted_label": "C01",
     "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
-  },
-  {
-    "index": 257,
-    "text": "what is the colorful korean traditional dress called ?",
-    "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
   },
   {
     "index": 263,
@@ -290,8 +318,22 @@
     "index": 270,
     "text": "what is the primary language in iceland ?",
     "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "predicted_label": "C05",
+    "model_output": "C05 - Questions about places or locations"
+  },
+  {
+    "index": 274,
+    "text": "what is peyote ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 275,
+    "text": "what is the esophagus used for ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
   {
     "index": 280,
@@ -301,11 +343,25 @@
     "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
   {
+    "index": 283,
+    "text": "what is the chunnel ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 288,
+    "text": "what is naproxen ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
     "index": 291,
     "text": "what is foot and mouth disease ?",
     "true_label": "C01",
     "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "model_output": "C03 - Descriptive or definitional questions."
   },
   {
     "index": 293,
@@ -332,8 +388,8 @@
     "index": 314,
     "text": "what is the deepest lake in the us ?",
     "true_label": "C05",
-    "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
   {
     "index": 318,
@@ -353,50 +409,50 @@
     "index": 322,
     "text": "what is tmj ?",
     "true_label": "C06",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
   {
     "index": 325,
     "text": "what does the technical term isdn mean ?",
     "true_label": "C06",
     "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "model_output": "C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 329,
+    "text": "what is the milky way ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 333,
+    "text": "what is the name of william penn ' s ship ?",
+    "true_label": "C01",
+    "predicted_label": "C02",
+    "model_output": "C02 - Questions about people, professions or groups"
+  },
+  {
+    "index": 336,
+    "text": "what is semolina ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
+    "index": 338,
+    "text": "what is ursa major ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
   {
     "index": 341,
     "text": "what was president lyndon johnson ' s reform program called ?",
     "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
-  },
-  {
-    "index": 346,
-    "text": "name a stimulant",
-    "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
-  },
-  {
-    "index": 352,
-    "text": "what is the illinois state flower ?",
-    "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
-  },
-  {
-    "index": 353,
-    "text": "what is maryland ' s state bird ?",
-    "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
-  },
-  {
-    "index": 367,
-    "text": "what are the colors of the german flag ?",
-    "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "predicted_label": "C02",
+    "model_output": "C02 - Questions about people, professions or groups"
   },
   {
     "index": 371,
@@ -406,39 +462,39 @@
     "model_output": "C05 - Questions about places or locations"
   },
   {
+    "index": 376,
+    "text": "where do apple snails live ?",
+    "true_label": "C05",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
+  },
+  {
     "index": 399,
     "text": "what is the fourth highest mountain in the world ?",
     "true_label": "C05",
-    "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
-  },
-  {
-    "index": 400,
-    "text": "what is shakespeare ' s nickname ?",
-    "true_label": "C02",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
-  },
-  {
-    "index": 411,
-    "text": "what are cigarettes made of ?",
-    "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   },
   {
     "index": 414,
     "text": "what is the state flower of michigan ?",
     "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "predicted_label": "C05",
+    "model_output": "C05 - Questions about places or locations"
   },
   {
-    "index": 419,
-    "text": "who was president in 1913 ?",
-    "true_label": "C02",
-    "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
+    "index": 422,
+    "text": "what was the name of the plane lindbergh flew solo across the atlantic ?",
+    "true_label": "C01",
+    "predicted_label": "C02",
+    "model_output": "C02 - Questions about people, professions or groups."
+  },
+  {
+    "index": 425,
+    "text": "what monastery was raided by vikings in the late eighth century ?",
+    "true_label": "C01",
+    "predicted_label": "C05",
+    "model_output": "C05 - Questions about places or locations"
   },
   {
     "index": 431,
@@ -448,46 +504,53 @@
     "model_output": "C02 - Questions about people, professions or groups"
   },
   {
-    "index": 442,
-    "text": "which country has the most water pollution ?",
-    "true_label": "C05",
-    "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
-  },
-  {
     "index": 445,
     "text": "what breed of hunting dog did the beverly hillbillies own ?",
     "true_label": "C01",
     "predicted_label": "C02",
-    "model_output": "C02 - Questions about people, professions or groups."
+    "model_output": "C02 - Questions about people, professions or groups"
+  },
+  {
+    "index": 449,
+    "text": "what was fdr ' s dog ' s name ?",
+    "true_label": "C01",
+    "predicted_label": "C02",
+    "model_output": "C02 - Questions about people, professions or groups"
   },
   {
     "index": 451,
     "text": "what is the most popular sport in japan ?",
     "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "predicted_label": "C05",
+    "model_output": "C05 - Questions about places or locations"
   },
   {
-    "index": 452,
-    "text": "what is the active ingredient in baking soda ?",
-    "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "index": 453,
+    "text": "when was thomas jefferson born ?",
+    "true_label": "C04",
+    "predicted_label": "C02",
+    "model_output": "C02 - Questions about people, professions or groups"
   },
   {
     "index": 456,
     "text": "what is the most common eye color ?",
     "true_label": "C01",
     "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "model_output": "C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 463,
+    "text": "what is susan b anthony ' s birthday ?",
+    "true_label": "C04",
+    "predicted_label": "C02",
+    "model_output": "C02 - Questions about people, professions or groups"
   },
   {
     "index": 465,
     "text": "what do you call a word that is spelled the same backwards and forwards ?",
     "true_label": "C01",
     "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
+    "model_output": "C03 - Descriptive or definitional questions."
   },
   {
     "index": 467,
@@ -500,15 +563,8 @@
     "index": 472,
     "text": "what currency does luxembourg use ?",
     "true_label": "C01",
-    "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
-  },
-  {
-    "index": 475,
-    "text": "what currency does argentina use ?",
-    "true_label": "C01",
-    "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
+    "predicted_label": "C05",
+    "model_output": "C05 - Questions about places or locations"
   },
   {
     "index": 480,
@@ -518,45 +574,31 @@
     "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
   },
   {
-    "index": 488,
-    "text": "what is the source of natural gas ?",
-    "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
-  },
-  {
     "index": 489,
     "text": "in what spacecraft did u s astronaut alan shepard make his historic 1961 flight ?",
     "true_label": "C01",
     "predicted_label": "C02",
-    "model_output": "C02 - Questions about people, professions or groups."
+    "model_output": "C02 - Questions about people, professions or groups"
   },
   {
     "index": 492,
     "text": "what ' s the easiest way to remove wallpaper ?",
     "true_label": "C01",
-    "predicted_label": "C03",
-    "model_output": "C03 - Descriptive or definitional questions"
-  },
-  {
-    "index": 495,
-    "text": "who was the 22nd president of the us ?",
-    "true_label": "C02",
     "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
-  },
-  {
-    "index": 496,
-    "text": "what is the money they use in zambia ?",
-    "true_label": "C01",
-    "predicted_label": "C05",
-    "model_output": "C05 - Questions about places or locations"
+    "model_output": "C04"
   },
   {
     "index": 498,
     "text": "what is the birthstone of october ?",
     "true_label": "C01",
-    "predicted_label": "C04",
-    "model_output": "C04 - Questions asking for numbers, amounts, dates or other numeric information"
+    "predicted_label": "C03",
+    "model_output": "C03 - Descriptive or definitional questions."
+  },
+  {
+    "index": 499,
+    "text": "what is e coli ?",
+    "true_label": "C03",
+    "predicted_label": "C01",
+    "model_output": "C01 - Questions about entities (e.g., objects, animals, substances)"
   }
 ]
