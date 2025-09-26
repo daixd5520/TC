@@ -127,7 +127,8 @@ class DeepSeekCoTGenerator:
                         {'role': 'system', 'content': system_prompt},
                         {'role': 'user', 'content': user_prompt}
                     ],
-                    temperature=0.3,
+                    temperature=1.5,
+                    top_p=0.9,
                     max_tokens=1500,
                     timeout=45  # 增加超时时间
                 )
