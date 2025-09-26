@@ -12,7 +12,7 @@ data:
 generation:
   max_new_tokens: 512
   temperature: 1.0
-  top_p: 0.9
+  top_p: 0.95
   do_sample: true
 
 training:
