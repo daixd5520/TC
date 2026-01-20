@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from tqdm import tqdm
 
-# ---- 路由配置 ----
+
 TARGET_DATASET_NAME = "CR"
 NUM_SAMPLES = 100
 RANDOM_SEED = None
@@ -158,7 +158,7 @@ DATASET_CONFIGS: Dict[str, Dict[str, Dict[int, str]]] = {
     },
 }
 
-# ---- Prompt 模板 ----
+
 COT_TEMPLATE = """Classify the following question into one of these categories by their ID:
 {label_mapping_str}
 
@@ -169,14 +169,14 @@ At the very end, output the ID of the category in the format <LABEL:ID> (e.g. <L
 Do not output the category name, only the ID number.
 """
 
-# ---- 统一配置参数 ----
+
 MAX_NEW_TOKENS = 256
 TEMPERATURE = 0.4
 TOP_P = 0.9
 DO_SAMPLE = False
 BATCH_SIZE = 512
 
-# ---- 路径和模型配置 ----
+
 BASE_MODEL_PATH = "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
 ADAPTER_PATH = "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_ohsumed_lora_english_zeroshotCoT"
 USE_LORA = True

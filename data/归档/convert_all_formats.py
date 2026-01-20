@@ -17,7 +17,7 @@ def convert_biomedical_format():
         print(f"❌ Biomedical输入文件不存在: {input_file}")
         return 0
     
-    # 读取prompt文件
+
     if os.path.exists(prompt_file):
         with open(prompt_file, 'r', encoding='utf-8') as f:
             instruction = f.read().strip()
@@ -83,7 +83,7 @@ def convert_cr_format():
         print(f"❌ CR输入文件不存在: {input_file}")
         return 0
     
-    # 读取prompt文件
+
     if os.path.exists(prompt_file):
         with open(prompt_file, 'r', encoding='utf-8') as f:
             instruction = f.read().strip()
@@ -136,7 +136,7 @@ def convert_dblp_format():
         print(f"❌ DBLP输入文件不存在: {input_file}")
         return 0
     
-    # 读取prompt文件
+
     if os.path.exists(prompt_file):
         with open(prompt_file, 'r', encoding='utf-8') as f:
             instruction = f.read().strip()
@@ -188,7 +188,7 @@ def convert_trec_format():
         print(f"❌ TREC输入文件不存在: {input_file}")
         return 0
     
-    # 读取prompt文件
+
     if os.path.exists(prompt_file):
         with open(prompt_file, 'r', encoding='utf-8') as f:
             instruction = f.read().strip()
@@ -212,7 +212,7 @@ def convert_trec_format():
     with open(input_file, 'r', encoding='utf-8') as f:
         original_data = json.load(f)
     
-    # TREC类别映射（原始类别到Cxx格式）
+
     trec_mapping = {
         "abbreviation": "C01",
         "description": "C02", 
@@ -225,7 +225,7 @@ def convert_trec_format():
     converted_data = []
     for item in original_data:
         if 'text' in item and 'label' in item:
-            # TREC数据集使用原始类别名称，需要映射到Cxx格式
+
             label = item['label']
             if label in trec_mapping:
                 label_cxx = trec_mapping[label]
@@ -258,7 +258,7 @@ def main():
     
     total_samples = 0
     
-    # 转换所有数据集
+
     total_samples += convert_biomedical_format()
     total_samples += convert_cr_format()
     total_samples += convert_dblp_format()
@@ -274,7 +274,7 @@ def main():
     print("📁 DBLP: dblp_Train_Cxx.json")
     print("📁 TREC: TREC_Train_Cxx.json")
     
-    # 显示示例
+
     print("\n📝 转换格式示例:")
     print("-" * 50)
     example = {

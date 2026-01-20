@@ -8,7 +8,7 @@ import json
 def test_cr_format():
     """测试CR数据格式"""
     
-    # 模拟CR数据格式
+
     test_data = [
         {
             "text": "player works and looks great if you can get the dvd ' s to play",
@@ -41,7 +41,7 @@ def test_cr_format():
             label_cxx = "未知"
         print(f"样本 {i+1}: {label_text} -> {label_cxx}")
     
-    # 类别映射
+
     category_mapping = {
         "C01": "positive",
         "C02": "negative"

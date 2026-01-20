@@ -1,4 +1,4 @@
-# Biomedical LoRA投票评估配置
+# Biomedical LoRA voting evaluation config
 model:
   base_model_path: "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
   adapter_path: "/mnt/data1/TC/TextClassDemo/LLaMA-Factory/llama3.1-8b_biomedical_direct_lora"

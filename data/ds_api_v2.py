@@ -7,13 +7,13 @@ from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import logging
 
-# 配置日志
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 class DeepSeekCoTGenerator:
     def __init__(self):
-        # 5个API配置
+
         self.api_configs = [
             {
                 "name": "API_1",
@@ -47,7 +47,7 @@ class DeepSeekCoTGenerator:
             }
         ]
         
-        # 创建客户端
+
         self.clients = []
         for config in self.api_configs:
             try:
@@ -60,11 +60,11 @@ class DeepSeekCoTGenerator:
             except Exception as e:
                 logger.error(f"初始化 {config['name']} 失败: {e}")
         
-        # API轮换相关
+
         self.api_index = 0
         self.api_lock = threading.Lock()
         
-        # 类别映射
+
         self.category_mapping = {
             "C01": "Bacterial Infections and Mycoses",
             "C02": "Virus Diseases", 
@@ -104,7 +104,7 @@ class DeepSeekCoTGenerator:
     def generate_cot_response(self, text, true_label, sample_id=None, max_retries=3):
         """生成CoT推理过程，带有重试机制"""
         
-        # 数据验证
+
         if not text or not text.strip():
             logger.warning(f"样本 {sample_id} 的文本为空，跳过")
             return None
@@ -130,23 +130,23 @@ class DeepSeekCoTGenerator:
                     temperature=1.5,
                     top_p=0.9,
                     max_tokens=1500,
-                    timeout=45  # 增加超时时间
+                    timeout=45
                 )
                 
                 cot_response = response.choices[0].message.content
                 
-                # 验证响应质量
+
                 if self._validate_response(cot_response, true_label):
                     logger.debug(f"样本 {sample_id} 处理成功")
                     return cot_response
                 else:
-                    # 强制修正
+
                     corrected_response = cot_response.rstrip() + f"\n\nFinal classification: {true_label}"
                     logger.info(f"样本 {sample_id} 分类修正为: {true_label}")
                     return corrected_response
                 
             except Exception as e:
-                wait_time = min(2 ** attempt, 16)  # 指数退避，最大16秒
+                wait_time = min(2 ** attempt, 16)
                 logger.warning(f"样本 {sample_id} API调用失败 (尝试 {attempt + 1}/{max_retries}): {e}")
                 
                 if attempt < max_retries - 1:
@@ -195,7 +195,7 @@ class DeepSeekCoTGenerator:
         if not response:
             return False
         
-        # 检查是否包含正确的标签
+
         return true_label in response
     
     def process_batch_parallel(self, batch_data, batch_id):
@@ -203,10 +203,10 @@ class DeepSeekCoTGenerator:
         results = []
         failed_count = 0
         
-        # 过滤有效数据 - 原始数据使用text字段
+
         valid_batch_data = []
         for i, item in enumerate(batch_data):
-            # 原始数据中的text字段对应断点文件中的input字段
+
             if item.get('text') and item.get('text').strip() and item.get('output') and item.get('output').strip():
                 valid_batch_data.append((item, f"{batch_id}_{i}"))
             else:
@@ -217,32 +217,32 @@ class DeepSeekCoTGenerator:
             logger.warning(f"批次 {batch_id} 没有有效数据")
             return results
         
-        # 使用线程池并行处理
+
         with ThreadPoolExecutor(max_workers=min(5, len(valid_batch_data))) as executor:
-            # 提交所有任务
+
             future_to_item = {
                 executor.submit(
                     self.generate_cot_response, 
-                    item['text'],  # 使用text字段作为输入文本
+                    item['text'],
                     item['output'], 
                     sample_id
                 ): (item, sample_id) 
                 for item, sample_id in valid_batch_data
             }
             
-            # 收集结果
+
             with tqdm(total=len(future_to_item), desc=f"批次 {batch_id}", leave=False) as pbar:
                 for future in as_completed(future_to_item):
                     item, sample_id = future_to_item[future]
                     try:
-                        cot_response = future.result(timeout=60)  # 设置future超时
+                        cot_response = future.result(timeout=60)
                         if cot_response:
                             cot_item = {
                                 "instruction": (
                                     "You are a medical text classification expert. Carefully analyze the given medical text, "
                                     "provide a detailed step-by-step reasoning process, and then give the final classification result."
                                 ),
-                                "input": item['text'],  # 使用text字段作为input
+                                "input": item['text'],
                                 "output": cot_response
                             }
                             results.append(cot_item)
@@ -295,7 +295,7 @@ class DeepSeekCoTGenerator:
     def save_checkpoint(self, data, checkpoint_file):
         """保存断点数据"""
         try:
-            # 备份现有文件
+
             if os.path.exists(checkpoint_file):
                 backup_file = checkpoint_file + ".backup"
                 os.rename(checkpoint_file, backup_file)
@@ -303,7 +303,7 @@ class DeepSeekCoTGenerator:
             with open(checkpoint_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
             
-            # 删除备份文件
+
             backup_file = checkpoint_file + ".backup"
             if os.path.exists(backup_file):
                 os.remove(backup_file)
@@ -311,7 +311,7 @@ class DeepSeekCoTGenerator:
             logger.debug(f"保存断点: {len(data)} 个样本")
         except Exception as e:
             logger.error(f"保存断点失败: {e}")
-            # 恢复备份
+
             backup_file = checkpoint_file + ".backup"
             if os.path.exists(backup_file):
                 os.rename(backup_file, checkpoint_file)
@@ -321,13 +321,13 @@ class DeepSeekCoTGenerator:
         if not processed_data:
             return 0
         
-        # 创建已处理输入的集合，用于快速查找
-        # 断点文件的input字段对应原始数据的text字段
+
+
         processed_inputs = {item['input'] for item in processed_data if item.get('input')}
         
-        # 按顺序检查原始数据，找到第一个未处理的索引
+
         for i, item in enumerate(original_data):
-            # 原始数据中的text字段对应断点文件中的input字段
+
             if item.get('text') and item['text'] not in processed_inputs:
                 return i
         
@@ -342,7 +342,7 @@ class DeepSeekCoTGenerator:
         count = 0
         
         for item in original_data:
-            # 原始数据中的text字段对应断点文件中的input字段
+
             if item.get('text') and item['text'] in processed_inputs:
                 count += 1
         
@@ -351,12 +351,12 @@ class DeepSeekCoTGenerator:
     def process_dataset(self, input_file, output_file, checkpoint_file, batch_size=5, max_samples=None, original_data=None):
         """处理数据集 - 支持断点续传和定期保存"""
         
-        # 测试API连接
+
         if not self.test_all_apis():
             logger.error("没有可用的API，退出处理")
             return []
         
-        # 读取原始数据
+
         if original_data is None:
             logger.info(f"读取原始数据: {input_file}")
             try:
@@ -368,11 +368,11 @@ class DeepSeekCoTGenerator:
         else:
             logger.info(f"使用传入的原始数据: {len(original_data)} 个样本")
         
-        # 加载已处理数据
+
         processed_data = self.load_checkpoint(checkpoint_file)
         initial_processed_count = len(processed_data)
         
-        # 计算开始索引
+
         start_index = self.get_next_start_index(original_data, processed_data)
         processed_count = self.get_processed_count(original_data, processed_data)
         
@@ -381,11 +381,11 @@ class DeepSeekCoTGenerator:
         
         if start_index >= len(original_data):
             logger.info("所有数据已处理完成！")
-            # 保存最终结果
+
             self.save_final_result(processed_data, output_file)
             return processed_data
         
-        # 确定处理范围
+
         if max_samples:
             end_index = min(start_index + max_samples, len(original_data))
         else:
@@ -395,7 +395,7 @@ class DeepSeekCoTGenerator:
         logger.info(f"处理范围: {start_index} - {end_index} (共 {total_to_process} 个样本)")
         logger.info(f"批次大小: {batch_size}, 可用API: {len(self.clients)}")
         
-        # 分批处理
+
         try:
             with tqdm(total=total_to_process, desc="总体进度") as pbar:
                 for batch_start in range(start_index, end_index, batch_size):
@@ -405,25 +405,25 @@ class DeepSeekCoTGenerator:
                     
                     logger.info(f"处理 {batch_id}")
                     
-                    # 处理当前批次
+
                     batch_results = self.process_batch_parallel(batch_data, batch_id)
                     
-                    # 添加到已处理数据
+
                     processed_data.extend(batch_results)
                     
-                    # 保存断点
+
                     self.save_checkpoint(processed_data, checkpoint_file)
                     
-                    # 每10个请求保存到最终文件
+
                     new_processed_count = len(processed_data) - initial_processed_count
                     if new_processed_count % 10 == 0 and new_processed_count > 0:
                         logger.info(f"已新增处理 {new_processed_count} 个样本，保存到最终文件")
                         self.save_final_result(processed_data, output_file)
                     
-                    # 更新进度条
+
                     pbar.update(len(batch_data))
                     
-                    # 批次间短暂延迟
+
                     time.sleep(1)
                     
         except KeyboardInterrupt:
@@ -437,7 +437,7 @@ class DeepSeekCoTGenerator:
             self.save_final_result(processed_data, output_file)
             return processed_data
         
-        # 最终保存
+
         self.save_final_result(processed_data, output_file)
         final_processed_count = self.get_processed_count(original_data, processed_data)
         logger.info(f"处理完成！共生成 {len(processed_data)} 个CoT样本")
@@ -457,19 +457,19 @@ class DeepSeekCoTGenerator:
 
 def main():
     """主函数 - 处理数据集"""
-    # 配置
+
     input_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Train.json"
     output_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Train_cot.json"
     checkpoint_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Train_cot_checkpoint.json"
     
-    # 处理参数
+
     batch_size = 10
-    max_samples = 2000  # None表示处理全部
+    max_samples = 2000
     
-    # 创建生成器
+
     generator = DeepSeekCoTGenerator()
     
-    # 处理数据
+
     cot_data = generator.process_dataset(
         input_file=input_file,
         output_file=output_file,
@@ -478,7 +478,7 @@ def main():
         max_samples=max_samples
     )
     
-    # 显示示例
+
     if cot_data:
         logger.info("最新生成的CoT数据示例:")
         print(json.dumps(cot_data[-1], ensure_ascii=False, indent=2))
@@ -487,10 +487,10 @@ def test_cot_generation():
     """测试CoT生成功能"""
     logger.info("开始测试CoT生成功能...")
     
-    # 创建生成器
+
     generator = DeepSeekCoTGenerator()
     
-    # 测试数据
+
     test_cases = [
         {
             "text": "The patient presents with severe chest pain, shortness of breath, and elevated cardiac enzymes. ECG shows ST-segment elevation in leads II, III, and aVF.",
@@ -517,7 +517,7 @@ def test_cot_generation():
         logger.info(f"正确标签: {test_case['true_label']}")
         
         try:
-            # 生成CoT响应
+
             cot_response = generator.generate_cot_response(
                 text=test_case['text'],
                 true_label=test_case['true_label'],
@@ -525,7 +525,7 @@ def test_cot_generation():
             )
             
             if cot_response:
-                # 验证响应
+
                 validation_result = validate_cot_response(cot_response, test_case['true_label'])
                 
                 result = {
@@ -540,14 +540,14 @@ def test_cot_generation():
                 
                 results.append(result)
                 
-                # 打印结果
+
                 logger.info(f"✅ 测试案例 {i} 成功")
                 logger.info(f"响应长度: {len(cot_response)} 字符")
                 logger.info(f"包含正确标签: {validation_result['contains_correct_label']}")
                 logger.info(f"包含步骤分析: {validation_result['has_step_analysis']}")
                 logger.info(f"最终分类正确: {validation_result['final_classification_correct']}")
                 
-                # 打印CoT响应的前200个字符
+
                 logger.info(f"CoT响应预览: {cot_response[:200]}...")
                 
             else:
@@ -568,7 +568,7 @@ def test_cot_generation():
                 "error": str(e)
             })
     
-    # 统计结果
+
     successful_tests = sum(1 for r in results if r.get('success', False))
     total_tests = len(results)
     
@@ -576,7 +576,7 @@ def test_cot_generation():
     logger.info(f"测试完成！成功: {successful_tests}/{total_tests}")
     logger.info(f"成功率: {successful_tests/total_tests*100:.1f}%")
     
-    # 保存测试结果
+
     test_output_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/test_results.json"
     try:
         with open(test_output_file, 'w', encoding='utf-8') as f:
@@ -600,18 +600,18 @@ def validate_cot_response(response, true_label):
     
     issues = []
     
-    # 检查是否包含正确的标签
+
     contains_correct_label = true_label in response
     if not contains_correct_label:
         issues.append(f"未包含正确标签 {true_label}")
     
-    # 检查是否包含步骤分析
+
     step_keywords = ["Step 1:", "Step 2:", "Step 3:", "Step 4:", "Step 5:"]
     has_step_analysis = any(keyword in response for keyword in step_keywords)
     if not has_step_analysis:
         issues.append("缺少步骤分析格式")
     
-    # 检查最终分类是否正确
+
     final_classification_correct = False
     if "Final classification:" in response:
         final_line = [line for line in response.split('\n') if "Final classification:" in line]
@@ -621,11 +621,11 @@ def validate_cot_response(response, true_label):
             if not final_classification_correct:
                 issues.append(f"最终分类错误: 期望 {true_label}, 实际 {final_class}")
     
-    # 检查响应长度
+
     if len(response) < 100:
         issues.append("响应过短")
     
-    # 检查是否包含关键医学术语分析
+
     medical_keywords = ["medical", "disease", "symptom", "diagnosis", "treatment", "patient"]
     has_medical_analysis = any(keyword in response.lower() for keyword in medical_keywords)
     if not has_medical_analysis:
@@ -655,12 +655,12 @@ def test_single_api():
     
     generator = DeepSeekCoTGenerator()
     
-    # 测试API连接
+
     if not generator.test_all_apis():
         logger.error("API连接测试失败")
         return
     
-    # 简单测试
+
     test_text = "Patient with diabetes mellitus type 2, blood glucose 280 mg/dL, HbA1c 8.5%"
     test_label = "C18"  # Nutritional and Metabolic Diseases
     
@@ -678,7 +678,7 @@ def test_single_api():
             print(response)
             print("-" * 50)
             
-            # 验证响应
+
             validation = validate_cot_response(response, test_label)
             logger.info(f"验证结果: {validation}")
         else:
@@ -688,8 +688,8 @@ def test_single_api():
         logger.error(f"❌ 单个API测试异常: {e}")
 
 if __name__ == "__main__":
-    # 运行单个API测试
+
     test_single_api()
     
-    # 运行完整测试
+
     # test_cot_generation() 

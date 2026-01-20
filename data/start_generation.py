@@ -8,7 +8,7 @@ import os
 import logging
 from ds_api_v2 import DeepSeekCoTGenerator
 
-# 配置日志
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -18,14 +18,14 @@ def main():
     print("开始生成CoT数据")
     print("=" * 60)
     
-    # 文件路径配置
+
     input_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Train.json"
     output_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Train_cot.json"
     checkpoint_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Train_cot_checkpoint.json"
     
-    # 处理参数
-    batch_size = 5  # 批次大小
-    max_samples = None  # 处理全部数据
+
+    batch_size = 5
+    max_samples = None
     
     print(f"✅ 输入文件: {input_file}")
     print(f"✅ 输出文件: {output_file}")
@@ -33,12 +33,12 @@ def main():
     print(f"✅ 批次大小: {batch_size}")
     print(f"✅ 最大样本数: {max_samples if max_samples else '全部'}")
     
-    # 检查输入文件
+
     if not os.path.exists(input_file):
         logger.error(f"输入文件不存在: {input_file}")
         return
     
-    # 读取原始数据
+
     logger.info(f"读取原始数据: {input_file}")
     try:
         with open(input_file, 'r', encoding='utf-8') as f:
@@ -48,23 +48,23 @@ def main():
         logger.error(f"读取原始数据失败: {e}")
         return
     
-    # 检查数据格式并转换
+
     if original_data and isinstance(original_data[0], dict):
         sample_keys = list(original_data[0].keys())
         logger.info(f"数据格式: {sample_keys}")
         
-        # 确定文本字段和标签字段
+
         text_field = None
         label_field = None
         
-        # 常见的文本字段名
+
         text_candidates = ['text', 'input', 'content', 'sentence', 'abstract']
         for field in text_candidates:
             if field in sample_keys:
                 text_field = field
                 break
         
-        # 常见的标签字段名
+
         label_candidates = ['label', 'output', 'category', 'class', 'target']
         for field in label_candidates:
             if field in sample_keys:
@@ -82,7 +82,7 @@ def main():
         logger.info(f"使用文本字段: {text_field}")
         logger.info(f"使用标签字段: {label_field}")
         
-        # 转换数据格式为统一格式
+
         converted_data = []
         for item in original_data:
             converted_item = {
@@ -91,7 +91,7 @@ def main():
             }
             converted_data.append(converted_item)
         
-        # 保存转换后的数据到临时文件
+
         temp_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/temp_converted_data.json"
         with open(temp_file, 'w', encoding='utf-8') as f:
             json.dump(converted_data, f, ensure_ascii=False, indent=2)
@@ -99,11 +99,11 @@ def main():
         logger.info(f"数据转换完成，保存到临时文件: {temp_file}")
         input_file = temp_file
     
-    # 创建生成器
+
     logger.info("初始化生成器...")
     generator = DeepSeekCoTGenerator()
     
-    # 处理数据
+
     logger.info("开始处理数据...")
     try:
         cot_data = generator.process_dataset(
@@ -123,7 +123,7 @@ def main():
             print(f"✅ 结果保存到: {output_file}")
             print(f"✅ 断点保存到: {checkpoint_file}")
             
-            # 显示最新样本示例
+
             print("\n最新生成的CoT样本示例:")
             print("-" * 50)
             latest_sample = cot_data[-1]

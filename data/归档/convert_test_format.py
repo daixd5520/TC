@@ -17,7 +17,7 @@ def convert_cr_format(input_file, output_file):
         text = item['text']
         label = item['label']
         
-        # CR标签映射
+
         if label == 'positive':
             output = 'C01'
         elif label == 'negative':
@@ -47,7 +47,7 @@ def convert_numeric_format(input_file, output_file, dataset_name):
         text = item['text']
         label = item['label']
         
-        # 将数字转换为Cxx格式
+
         try:
             label_num = int(label)
             output = f"C{label_num:02d}"
@@ -75,7 +75,7 @@ def convert_trec_format(input_file, output_file):
     for item in data:
         text = item['text']
         label = item['label']
-        # 直接保留label为Cxx格式
+
         converted_item = {
             "input": text,
             "output": label
@@ -89,7 +89,7 @@ def convert_trec_format(input_file, output_file):
 def main():
     """主函数"""
     
-    # CR数据集转换
+
     cr_input = "/mnt/data1/TC/TextClassDemo/data/CR/CR_Test.json"
     cr_output = "/mnt/data1/TC/TextClassDemo/data/CR/CR_Test_Cxx.json"
     if os.path.exists(cr_input):
@@ -97,7 +97,7 @@ def main():
     else:
         print(f"CR测试文件不存在: {cr_input}")
     
-    # Biomedical数据集转换
+
     biomedical_input = "/mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test.json"
     biomedical_output = "/mnt/data1/TC/TextClassDemo/data/Biomedical/Biomedical_Test_Cxx.json"
     if os.path.exists(biomedical_input):
@@ -105,7 +105,7 @@ def main():
     else:
         print(f"Biomedical测试文件不存在: {biomedical_input}")
     
-    # DBLP数据集转换
+
     dblp_input = "/mnt/data1/TC/TextClassDemo/data/dblp/dblp_Test.json"
     dblp_output = "/mnt/data1/TC/TextClassDemo/data/dblp/dblp_Test_Cxx.json"
     if os.path.exists(dblp_input):
@@ -113,7 +113,7 @@ def main():
     else:
         print(f"DBLP测试文件不存在: {dblp_input}")
 
-    # TREC数据集转换
+
     trec_input = "/mnt/data1/TC/TextClassDemo/data/TREC/TREC_Test_Cxx.json"
     trec_output = "/mnt/data1/TC/TextClassDemo/data/TREC/TREC_Test_Cxx_new.json"
     if os.path.exists(trec_input):

@@ -6,10 +6,10 @@ from transformers import AutoTokenizer
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# 设置分词器路径（huggingface 或本地）
+
 TOKENIZER_PATH = "/mnt/data1/TC/TextClassDemo/llama3.1-8b"
 
-# 所有 JSON 文件路径
+
 JSON_FILES = [
     "/mnt/data1/TC/TextClassDemo/data/data_original/data/Biomedical_Test.json",
     "/mnt/data1/TC/TextClassDemo/data/data_original/data/Biomedical_Train.json",
@@ -25,15 +25,15 @@ JSON_FILES = [
     "/mnt/data1/TC/TextClassDemo/data/data_original/data/TREC_Train.json"
 ]
 
-# 输出路径
+
 OUTPUT_DIR = "/mnt/data1/TC/TextClassDemo/data/data_original/"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 CSV_PATH = os.path.join(OUTPUT_DIR, "stat_token_lengths_llama3.csv")
 
-# 加载分词器
+
 tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_PATH)
 
-# 存储统计信息和原始长度
+
 stats = []
 all_lengths = []
 
@@ -67,14 +67,14 @@ for file_path in JSON_FILES:
             "avg_len": round(mean(lengths), 2)
         })
 
-# 保存为 CSV
+
 df_stats = pd.DataFrame(stats)
 df_stats.to_csv(CSV_PATH, index=False)
 
-# ========== 绘图 ==========
+
 sns.set(style="whitegrid")
 
-# 图1：合并最大最小柱状图
+
 agg_df = df_stats.groupby("dataset").agg({"max_len": "max", "min_len": "min"}).reset_index()
 plt.figure(figsize=(10, 6))
 sns.barplot(x="dataset", y="max_len", data=agg_df, color='skyblue', label="Max")
@@ -87,7 +87,7 @@ plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, "plot_combined_max_min.png"))
 plt.close()
 
-# 图2：train/test 最大长度对比
+
 plt.figure(figsize=(10, 6))
 sns.barplot(x="dataset", y="max_len", hue="split", data=df_stats)
 plt.title("Max Token Length per Dataset and Split")
@@ -97,7 +97,7 @@ plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, "plot_split_max.png"))
 plt.close()
 
-# 图3：train/test 最小长度对比
+
 plt.figure(figsize=(10, 6))
 sns.barplot(x="dataset", y="min_len", hue="split", data=df_stats)
 plt.title("Min Token Length per Dataset and Split")
@@ -107,7 +107,7 @@ plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, "plot_split_min.png"))
 plt.close()
 
-# 图4：train/test 平均长度对比
+
 plt.figure(figsize=(10, 6))
 sns.barplot(x="dataset", y="avg_len", hue="split", data=df_stats)
 plt.title("Average Token Length per Dataset and Split")
@@ -117,7 +117,7 @@ plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, "plot_split_avg.png"))
 plt.close()
 
-# 图5：箱型图（token长度分布）
+
 df_lengths = pd.DataFrame(all_lengths)
 plt.figure(figsize=(12, 6))
 sns.boxplot(x="dataset", y="length", hue="split", data=df_lengths)

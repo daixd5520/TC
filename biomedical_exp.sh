@@ -4,14 +4,14 @@ echo "============================================================"
 echo "开始评估Biomedical数据集"
 echo "============================================================"
 
-# # 直接评估
+# # Direct evaluation
 python experiment_runner.py --config configs/direct/biomedical_lora_direct.yaml --mode eval
 
-# # 零样本评估
+# # Zero-shot evaluation
 # python experiment_runner.py --config configs/zeroshot/biomedical_lora_zeroshotCoT.yaml --mode eval
 python experiment_runner.py --config /mnt/data1/TC/TextClassDemo/configs/zeroshot/biomedical_lora_zeroshotCoT.yaml --mode eval
 
-# 投票评估
+# Voting evaluation
 python experiment_runner.py --config confgs/vote/biomedical_lora_zeroshotCoT_vote5.yaml --mode eval
 
 echo "============================================================"

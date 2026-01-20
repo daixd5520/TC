@@ -12,19 +12,19 @@ from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import logging
 
-# 配置日志
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 class CRCoTGenerator:
     def __init__(self):
-        # CR类别映射 - 转换为Cxx格式
+
         self.category_mapping = {
             "C01": "positive",
             "C02": "negative"
         }
         
-        # API配置
+
         self.api_configs = [
             {
                 "name": "API_1",
@@ -58,7 +58,7 @@ class CRCoTGenerator:
             }
         ]
         
-        # 创建客户端
+
         self.clients = []
         for config in self.api_configs:
             try:
@@ -71,7 +71,7 @@ class CRCoTGenerator:
             except Exception as e:
                 logger.error(f"初始化 {config['name']} 失败: {e}")
         
-        # API轮换相关
+
         self.api_index = 0
         self.api_lock = threading.Lock()
     
@@ -122,7 +122,7 @@ class CRCoTGenerator:
     def generate_cot_response(self, text, true_label, sample_id=None, max_retries=3):
         """生成CoT推理过程，带有重试机制"""
         
-        # 数据验证
+
         if not text or not text.strip():
             logger.warning(f"样本 {sample_id} 的文本为空，跳过")
             return None
@@ -152,18 +152,18 @@ class CRCoTGenerator:
                 
                 cot_response = response.choices[0].message.content
                 
-                # 验证响应质量
+
                 if self._validate_response(cot_response, true_label):
                     logger.debug(f"样本 {sample_id} 处理成功")
                     return cot_response
                 else:
-                    # 强制修正
+
                     corrected_response = cot_response.rstrip() + f"\n\nFinal classification: {true_label}"
                     logger.info(f"样本 {sample_id} 分类修正为: {true_label}")
                     return corrected_response
                 
             except Exception as e:
-                wait_time = min(2 ** attempt, 16)  # 指数退避，最大16秒
+                wait_time = min(2 ** attempt, 16)
                 logger.warning(f"样本 {sample_id} API调用失败 (尝试 {attempt + 1}/{max_retries}): {e}")
                 
                 if attempt < max_retries - 1:
@@ -178,7 +178,7 @@ class CRCoTGenerator:
         if not response:
             return False
         
-        # 检查是否包含正确的标签
+
         return true_label in response
     
     def process_batch_parallel(self, batch_data, batch_id):
@@ -186,12 +186,12 @@ class CRCoTGenerator:
         results = []
         failed_count = 0
         
-        # 过滤有效数据 - CR使用text和label字段
+
         valid_batch_data = []
         for i, item in enumerate(batch_data):
             if (item.get('text') and item.get('text').strip() and 
                 item.get('label') and item.get('label').strip()):
-                # 将情感标签转换为Cxx格式
+
                 label_text = item['label']
                 if label_text == "positive":
                     label_cxx = "C01"
@@ -210,9 +210,9 @@ class CRCoTGenerator:
             logger.warning(f"批次 {batch_id} 没有有效数据")
             return results, failed_count
         
-        # 使用线程池并行处理
+
         with ThreadPoolExecutor(max_workers=min(5, len(valid_batch_data))) as executor:
-            # 提交所有任务
+
             future_to_item = {
                 executor.submit(
                     self.generate_cot_response, 
@@ -223,7 +223,7 @@ class CRCoTGenerator:
                 for item, label_cxx, sample_id in valid_batch_data
             }
             
-            # 收集结果
+
             with tqdm(total=len(future_to_item), desc=f"批次 {batch_id}", leave=False) as pbar:
                 for future in as_completed(future_to_item):
                     item, label_cxx, sample_id = future_to_item[future]
@@ -288,7 +288,7 @@ class CRCoTGenerator:
     def save_checkpoint(self, data, checkpoint_file):
         """保存断点数据"""
         try:
-            # 备份现有文件
+
             if os.path.exists(checkpoint_file):
                 backup_file = checkpoint_file + ".backup"
                 os.rename(checkpoint_file, backup_file)
@@ -296,7 +296,7 @@ class CRCoTGenerator:
             with open(checkpoint_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
             
-            # 删除备份文件
+
             backup_file = checkpoint_file + ".backup"
             if os.path.exists(backup_file):
                 os.remove(backup_file)
@@ -304,7 +304,7 @@ class CRCoTGenerator:
             logger.debug(f"保存断点: {len(data)} 个样本")
         except Exception as e:
             logger.error(f"保存断点失败: {e}")
-            # 恢复备份
+
             backup_file = checkpoint_file + ".backup"
             if os.path.exists(backup_file):
                 os.rename(backup_file, checkpoint_file)
@@ -314,10 +314,10 @@ class CRCoTGenerator:
         if not processed_data:
             return 0
         
-        # 创建已处理输入的集合，用于快速查找
+
         processed_inputs = {item['input'] for item in processed_data if item.get('input')}
         
-        # 按顺序检查原始数据，找到第一个未处理的索引
+
         for i, item in enumerate(original_data):
             if item.get('text') and item['text'] not in processed_inputs:
                 return i
@@ -341,12 +341,12 @@ class CRCoTGenerator:
     def process_dataset(self, input_file, output_file, checkpoint_file, batch_size=5, max_samples=None):
         """处理数据集 - 支持断点续传和定期保存"""
         
-        # 测试API连接
+
         if not self.test_all_apis():
             logger.error("没有可用的API，退出处理")
             return []
         
-        # 读取原始数据
+
         logger.info(f"读取原始数据: {input_file}")
         try:
             with open(input_file, 'r', encoding='utf-8') as f:
@@ -355,11 +355,11 @@ class CRCoTGenerator:
             logger.error(f"读取原始数据失败: {e}")
             return []
         
-        # 加载已处理数据
+
         processed_data = self.load_checkpoint(checkpoint_file)
         initial_processed_count = len(processed_data)
         
-        # 计算开始索引
+
         start_index = self.get_next_start_index(original_data, processed_data)
         processed_count = self.get_processed_count(original_data, processed_data)
         
@@ -371,7 +371,7 @@ class CRCoTGenerator:
             self.save_final_result(processed_data, output_file)
             return processed_data
         
-        # 确定处理范围
+
         if max_samples:
             end_index = min(start_index + max_samples, len(original_data))
         else:
@@ -381,7 +381,7 @@ class CRCoTGenerator:
         logger.info(f"处理范围: {start_index} - {end_index} (共 {total_to_process} 个样本)")
         logger.info(f"批次大小: {batch_size}, 可用API: {len(self.clients)}")
         
-        # 分批处理
+
         try:
             with tqdm(total=total_to_process, desc="总体进度") as pbar:
                 for batch_start in range(start_index, end_index, batch_size):
@@ -391,25 +391,25 @@ class CRCoTGenerator:
                     
                     logger.info(f"处理 {batch_id}")
                     
-                    # 处理当前批次
+
                     batch_results, failed_count = self.process_batch_parallel(batch_data, batch_id)
                     
-                    # 添加到已处理数据
+
                     processed_data.extend(batch_results)
                     
-                    # 保存断点
+
                     self.save_checkpoint(processed_data, checkpoint_file)
                     
-                    # 每10个请求保存到最终文件
+
                     new_processed_count = len(processed_data) - initial_processed_count
                     if new_processed_count % 10 == 0 and new_processed_count > 0:
                         logger.info(f"已新增处理 {new_processed_count} 个样本，保存到最终文件")
                         self.save_final_result(processed_data, output_file)
                     
-                    # 更新进度条
+
                     pbar.update(len(batch_data))
                     
-                    # 批次间短暂延迟
+
                     time.sleep(1)
                     
         except KeyboardInterrupt:
@@ -423,7 +423,7 @@ class CRCoTGenerator:
             self.save_final_result(processed_data, output_file)
             return processed_data
         
-        # 最终保存
+
         self.save_final_result(processed_data, output_file)
         final_processed_count = self.get_processed_count(original_data, processed_data)
         logger.info(f"处理完成！共生成 {len(processed_data)} 个CoT样本")
@@ -447,14 +447,14 @@ def main():
     print("CR数据集CoT数据生成")
     print("=" * 60)
     
-    # 文件路径配置
+
     input_file = "/mnt/data1/TC/TextClassDemo/data/CR/CR_Train.json"
     output_file = "/mnt/data1/TC/TextClassDemo/data/CR/CR_Train_cot.json"
     checkpoint_file = "/mnt/data1/TC/TextClassDemo/data/CR/CR_Train_cot_checkpoint.json"
     
-    # 处理参数
+
     batch_size = 5
-    max_samples = None  # 处理全部数据
+    max_samples = None
     
     print(f"✅ 输入文件: {input_file}")
     print(f"✅ 输出文件: {output_file}")
@@ -462,16 +462,16 @@ def main():
     print(f"✅ 批次大小: {batch_size}")
     print(f"✅ 最大样本数: {max_samples if max_samples else '全部'}")
     
-    # 检查输入文件
+
     if not os.path.exists(input_file):
         logger.error(f"输入文件不存在: {input_file}")
         return
     
-    # 创建生成器
+
     logger.info("初始化生成器...")
     generator = CRCoTGenerator()
     
-    # 处理数据
+
     logger.info("开始处理数据...")
     try:
         cot_data = generator.process_dataset(
@@ -491,7 +491,7 @@ def main():
             print(f"✅ 结果保存到: {output_file}")
             print(f"✅ 断点保存到: {checkpoint_file}")
             
-            # 显示最新样本示例
+
             print("\n最新生成的CoT样本示例:")
             print("-" * 50)
             latest_sample = cot_data[-1]
