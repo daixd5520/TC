@@ -39,7 +39,7 @@ class GenerationConfig:
 class TrainingConfig:
     """训练配置"""
     batch_size: int
-    vote_count: int = 5  # 新增：投票条数，默认5
+    vote_count: int = 5
 
 
 @dataclass
@@ -50,7 +50,7 @@ class OutputConfig:
     
     def get_output_dir(self, adapter_path: str, dataset_name: str) -> str:
         """获取实验输出目录，基于adapter名称和数据集名称"""
-        # 从adapter路径中提取adapter名称
+
         adapter_name = os.path.basename(adapter_path.rstrip('/'))
         return os.path.join(self.base_output_dir, f"{self.experiment_name}_{adapter_name}_{dataset_name}")
 
@@ -85,14 +85,14 @@ class PromptManager:
             with open(prompt_file, 'r', encoding='utf-8') as f:
                 return f.read().strip()
         else:
-            # 如果找不到特定数据集的提示词，使用默认模板
+
             default_file = self.prompts_dir / "example_dataset_prompt.txt"
             if default_file.exists():
                 # print(f"Loading default prompt template from {default_file}")
                 with open(default_file, 'r', encoding='utf-8') as f:
                     return f.read().strip()
             else:
-                # 如果连默认模板都没有，返回一个简单的模板
+
                 print(f"No prompt template found for {dataset_name}, using default template")
                 return "Text: {text}\n\nPlease classify this text:"
     
@@ -121,7 +121,7 @@ class ConfigManager:
         model_config = ModelConfig(**config_dict['model'])
         data_config = DataConfig(**config_dict['data'])
         generation_config = GenerationConfig(**config_dict['generation'])
-        # 兼容老配置：vote_count可选
+
         training_dict = config_dict['training']
         if 'vote_count' not in training_dict:
             training_dict['vote_count'] = 5
@@ -169,8 +169,8 @@ class ConfigManager:
     
     def merge_configs(self, base_config: ExperimentConfig, override_config: Dict[str, Any]) -> ExperimentConfig:
         """合并配置，允许部分覆盖"""
-        # 这里可以实现配置合并逻辑
-        # 暂时返回基础配置
+
+
         return base_config
 
 
@@ -178,35 +178,35 @@ def create_argument_parser() -> argparse.ArgumentParser:
     """创建命令行参数解析器"""
     parser = argparse.ArgumentParser(description="医学文本分类实验")
     
-    # 配置文件参数
+
     parser.add_argument("--config", type=str, help="配置文件路径")
     
-    # 模型参数
+
     parser.add_argument("--base-model-path", type=str, help="基础模型路径")
     parser.add_argument("--adapter-path", type=str, help="LoRA适配器路径")
     parser.add_argument("--use-lora", action="store_true", help="是否使用LoRA")
     parser.add_argument("--no-lora", action="store_true", help="不使用LoRA")
     
-    # 数据参数
+
     parser.add_argument("--data-path", type=str, help="数据文件路径")
     parser.add_argument("--dataset-name", type=str, default="ohsumed", help="数据集名称")
     parser.add_argument("--num-classes", type=int, default=23, help="类别数")
     
-    # 生成参数
+
     parser.add_argument("--max-new-tokens", type=int, default=256, help="最大生成token数")
     parser.add_argument("--temperature", type=float, default=0.4, help="温度参数")
     parser.add_argument("--top-p", type=float, default=0.9, help="top_p参数")
     parser.add_argument("--do-sample", action="store_true", help="是否采样")
     
-    # 训练参数
+
     parser.add_argument("--batch-size", type=int, default=512, help="批处理大小")
     parser.add_argument("--vote-count", type=int, default=5, help="单样本投票条数（多次推理后投票）")
     
-    # 输出参数
+
     parser.add_argument("--output-dir", type=str, default="./outputs", help="输出目录")
     parser.add_argument("--experiment-name", type=str, default="experiment", help="实验名称")
     
-    # 运行模式
+
     parser.add_argument("--mode", choices=["eval", "test"], default="eval", help="运行模式")
     
     return parser

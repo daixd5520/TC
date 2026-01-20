@@ -1,29 +1,29 @@
 #!/bin/bash
 
-# 设置工作目录
+# Set working directory
 cd "$(dirname "$0")"
 
 echo "开始运行所有评估配置..."
 
-# # Direct评估配置
-# echo "=== 运行Direct评估配置 ==="
+# # Direct evaluation configs
+# echo "=== Running direct evaluation configs ==="
 # python experiment_runner.py --config configs/direct/biomedical_lora_direct.yaml --mode eval
-# echo "biomedical_lora_direct.yaml 评估完成，暂停5秒..."
+# echo "biomedical_lora_direct.yaml evaluation complete, pausing 5 seconds..."
 # sleep 5
 
 # python experiment_runner.py --config configs/direct/cr_lora_direct.yaml --mode eval
-# echo "cr_lora_direct.yaml 评估完成，暂停5秒..."
+# echo "cr_lora_direct.yaml evaluation complete, pausing 5 seconds..."
 # sleep 5
 
 # python experiment_runner.py --config configs/direct/dblp_lora_direct.yaml --mode eval
-# echo "dblp_lora_direct.yaml 评估完成，暂停5秒..."
+# echo "dblp_lora_direct.yaml evaluation complete, pausing 5 seconds..."
 # sleep 5
 
 # python experiment_runner.py --config configs/direct/trec_lora_direct.yaml --mode eval
-# echo "trec_lora_direct.yaml 评估完成，暂停5秒..."
+# echo "trec_lora_direct.yaml evaluation complete, pausing 5 seconds..."
 # sleep 5
 
-# Vote评估配置
+# Voting evaluation configs
 echo "=== 运行Vote评估配置 ==="
 python experiment_runner.py --config configs/vote/biomedical_lora_zeroshotCoT_vote5.yaml --mode eval
 echo "biomedical_lora_zeroshotCoT_vote5.yaml 评估完成，暂停5秒..."
@@ -41,7 +41,7 @@ python experiment_runner.py --config configs/vote/trec_lora_zeroshotCoT_vote5.ya
 echo "trec_lora_zeroshotCoT_vote5.yaml 评估完成，暂停5秒..."
 sleep 5
 
-# Zeroshot评估配置
+# Zero-shot evaluation configs
 echo "=== 运行Zeroshot评估配置 ==="
 python experiment_runner.py --config configs/zeroshot/biomedical_lora_zeroshotCoT.yaml --mode eval
 echo "biomedical_lora_zeroshotCoT.yaml 评估完成，暂停5秒..."

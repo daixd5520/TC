@@ -24,7 +24,7 @@ def process_data(data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     for item in data:
         if not validate_item(item):
             raise ValueError(f"数据项缺少'instruction'字段或类型错误: {item}")
-        # 拼接字符串
+
         new_item = item.copy()
         new_item["instruction"] = new_item["instruction"] + APPEND_TEXT
         result.append(new_item)
@@ -34,14 +34,14 @@ def main() -> None:
     """
     主函数，读取原始数据，处理后写入新文件
     """
-    # 读取原始数据
+
     with open(INPUT_PATH, "r", encoding="utf-8") as f:
         data: List[Dict[str, Any]] = json.load(f)
     
-    # 处理数据
+
     processed_data: List[Dict[str, Any]] = process_data(data)
     
-    # 写入新文件
+
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(processed_data, f, ensure_ascii=False, indent=2)
     

@@ -1,6 +1,5 @@
 """
-实验管理脚本
-支持批量运行多个实验配置
+Experiment management script for running multiple experiment configurations.
 """
 import os
 import subprocess
@@ -13,31 +12,34 @@ from datetime import datetime
 
 
 class ExperimentManager:
-    """实验管理器"""
+    """Experiment manager."""
     
     def __init__(self, config_dir: str = "configs"):
         self.config_dir = Path(config_dir)
         self.logger = self._setup_logger()
     
     def _setup_logger(self) -> logging.Logger:
-        """设置日志记录器"""
+        """Set up the experiment manager logger."""
         logger = logging.getLogger("ExperimentManager")
         logger.setLevel(logging.INFO)
+
+        if logger.handlers:
+            return logger
         
-        # 创建日志目录
+
         log_dir = Path("logs")
         log_dir.mkdir(exist_ok=True)
         
-        # 文件处理器
+
         log_file = log_dir / f"experiment_manager_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
         file_handler = logging.FileHandler(log_file, encoding='utf-8')
         file_handler.setLevel(logging.INFO)
         
-        # 控制台处理器
+
         console_handler = logging.StreamHandler()
         console_handler.setLevel(logging.INFO)
         
-        # 格式化器
+
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         file_handler.setFormatter(formatter)
         console_handler.setFormatter(formatter)
@@ -48,12 +50,12 @@ class ExperimentManager:
         return logger
     
     def list_configs(self) -> List[str]:
-        """列出所有配置文件"""
+        """List available configuration files."""
         config_files = list(self.config_dir.glob("*.yaml"))
         return [f.name for f in config_files]
     
     def run_single_experiment(self, config_file: str, mode: str = "eval") -> bool:
-        """运行单个实验"""
+        """Run a single experiment."""
         config_path = self.config_dir / config_file
         
         if not config_path.exists():
@@ -63,7 +65,7 @@ class ExperimentManager:
         self.logger.info(f"开始运行实验: {config_file}")
         
         try:
-            # 运行实验
+
             cmd = [
                 "python", "experiment_runner.py",
                 "--config", str(config_path),
@@ -85,7 +87,7 @@ class ExperimentManager:
             return False
     
     def run_batch_experiments(self, config_files: List[str], mode: str = "eval") -> Dict[str, bool]:
-        """批量运行实验"""
+        """Run multiple experiments in batch."""
         results = {}
         
         self.logger.info(f"开始批量运行 {len(config_files)} 个实验")
@@ -94,7 +96,7 @@ class ExperimentManager:
             success = self.run_single_experiment(config_file, mode)
             results[config_file] = success
         
-        # 统计结果
+
         successful = sum(results.values())
         total = len(results)
         
@@ -102,9 +104,9 @@ class ExperimentManager:
         
         return results
     
-    def create_experiment_config(self, name: str, base_model_path: str, adapter_path: str, 
+    def create_experiment_config(self, name: str, base_model_path: str, adapter_path: str,
                                 data_path: str, dataset_name: str = "ohsumed", use_lora: bool = True, **kwargs) -> str:
-        """创建新的实验配置"""
+        """Create a new experiment config file."""
         config = {
             "model": {
                 "base_model_path": base_model_path,
@@ -140,7 +142,7 @@ class ExperimentManager:
         return config_file
     
     def create_prompt_template(self, dataset_name: str, prompt_content: str) -> bool:
-        """创建提示词模板文件"""
+        """Create a prompt template file."""
         prompts_dir = Path("configs/prompts")
         prompts_dir.mkdir(exist_ok=True)
         
@@ -157,7 +159,7 @@ class ExperimentManager:
 
 
 def main():
-    """主函数"""
+    """CLI entrypoint."""
     parser = argparse.ArgumentParser(description="实验管理器")
     parser.add_argument("--list", action="store_true", help="列出所有配置文件")
     parser.add_argument("--config", type=str, help="运行指定配置文件")

@@ -15,7 +15,7 @@ def convert_trec_to_dblp_format(input_file, output_file):
         output_file: dblp格式的输出文件路径
     """
     
-    # 定义instruction模板
+
     instruction_template = """You are a question type classification expert. Your task is to classify the given question into one of 6 categories.
 
 Category mapping:
@@ -32,18 +32,18 @@ For example, if the question asks "What is caffeine?", it belongs to C03.
 The output must be one of: C01, C02, C03, C04, C05, C06.
 If you output anything else, you will be penalized."""
     
-    # 读取TREC数据
+
     with open(input_file, 'r', encoding='utf-8') as f:
         trec_data = json.load(f)
     
-    # 转换数据格式
+
     dblp_data = []
     
     for item in trec_data:
         text = item['text']
         label = item['label']
         
-        # 创建dblp格式的数据项
+
         dblp_item = {
             "instruction": instruction_template.format(text=text),
             "input": text,
@@ -52,7 +52,7 @@ If you output anything else, you will be penalized."""
         
         dblp_data.append(dblp_item)
     
-    # 写入输出文件
+
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(dblp_data, f, ensure_ascii=False, indent=2)
     
@@ -64,10 +64,10 @@ If you output anything else, you will be penalized."""
 def main():
     """主函数"""
     
-    # 定义文件路径
+
     trec_dir = "TREC"
     
-    # 转换训练集
+
     train_input = os.path.join(trec_dir, "TREC_Train_Cxx.json")
     train_output = os.path.join(trec_dir, "TREC_Train_Cxx_1.json")
     
@@ -76,7 +76,7 @@ def main():
     else:
         print(f"训练集文件不存在: {train_input}")
     
-    # 转换测试集
+
     test_input = os.path.join(trec_dir, "TREC_Test_Cxx.json")
     test_output = os.path.join(trec_dir, "TREC_Test_dblp_format.json")
     

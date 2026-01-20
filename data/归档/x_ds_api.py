@@ -8,7 +8,7 @@ import threading
 
 class DeepSeekCoTGenerator:
     def __init__(self):
-        # 5个API配置
+
         self.api_configs = [
             {
                 "api_key": "sk-jguwpodlneddocxgvqiimjjrbhbhvglodfyagypskvvcktie",
@@ -16,28 +16,28 @@ class DeepSeekCoTGenerator:
                 "model": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
             },
             {
-                "api_key": "sk-xrqkuqemtzbspyofxlybphoiqdmssrwrgtpvdeyvureaxcbq",  # 请替换为您的其他API key
+                "api_key": "sk-xrqkuqemtzbspyofxlybphoiqdmssrwrgtpvdeyvureaxcbq",
                 "base_url": "https://api.siliconflow.cn/v1",
                 "model": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
             },
             {
-                "api_key": "sk-ziyvhkysmskpeiywfrkmrhnapzxikqsongenuudigosompsb",  # 请替换为您的其他API key
+                "api_key": "sk-ziyvhkysmskpeiywfrkmrhnapzxikqsongenuudigosompsb",
                 "base_url": "https://api.siliconflow.cn/v1",
                 "model": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
             },
             {
-                "api_key": "sk-rgtyodzwijqqzjyuxtbxmmlhurqctnpuvagxcdjmoszfpfwm",  # 请替换为您的其他API key
+                "api_key": "sk-rgtyodzwijqqzjyuxtbxmmlhurqctnpuvagxcdjmoszfpfwm",
                 "base_url": "https://api.siliconflow.cn/v1",
                 "model": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
             },
             {
-                "api_key": "sk-wrpfhdjyrfxryxcsxsjdenwcdklehxswujqwnqoaykyogqrr",  # 请替换为您的其他API key
+                "api_key": "sk-wrpfhdjyrfxryxcsxsjdenwcdklehxswujqwnqoaykyogqrr",
                 "base_url": "https://api.siliconflow.cn/v1",
                 "model": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
             }
         ]
         
-        # 创建5个客户端
+
         self.clients = []
         for config in self.api_configs:
             client = OpenAI(
@@ -46,11 +46,11 @@ class DeepSeekCoTGenerator:
             )
             self.clients.append(client)
         
-        # API轮换索引
+
         self.api_index = 0
         self.api_lock = threading.Lock()
         
-        # 类别映射
+
         self.category_mapping = {
             "C01": "Bacterial Infections and Mycoses",
             "C02": "Virus Diseases", 
@@ -157,14 +157,14 @@ class DeepSeekCoTGenerator:
         """并行处理一批数据"""
         results = []
         
-        with ThreadPoolExecutor(max_workers=5) as executor:  # 使用5个线程
-            # 提交所有任务
+        with ThreadPoolExecutor(max_workers=5) as executor:
+
             future_to_item = {
                 executor.submit(self.generate_cot_response, item['input'], item['output']): item 
                 for item in batch_data if item.get('input')
             }
             
-            # 收集结果
+
             for future in tqdm(as_completed(future_to_item), total=len(batch_data), desc="并行处理"):
                 item = future_to_item[future]
                 try:
@@ -220,44 +220,44 @@ class DeepSeekCoTGenerator:
         if not processed_data:
             return 0
         
-        # 获取已处理的文本列表
+
         processed_texts = {item['input'] for item in processed_data}
         
-        # 找到第一个未处理的样本索引
+
         for i, item in enumerate(original_data):
             if item['input'] not in processed_texts:
                 return i
         
-        # 如果所有样本都已处理，返回总长度
+
         return len(original_data)
     
     def process_dataset(self, input_file, output_file, checkpoint_file, batch_size=10, max_samples=None):
         """处理数据集，支持并行处理"""
         
-        # 测试连接
+
         if not self.test_connection():
             print("API连接失败，请检查网络和API配置")
             return []
         
-        # 读取原始数据
+
         print(f"读取原始数据: {input_file}")
         with open(input_file, 'r', encoding='utf-8') as f:
             original_data = json.load(f)
         
-        # 加载已处理的数据
+
         processed_data = self.load_checkpoint(checkpoint_file)
         print(f"已加载断点数据: {len(processed_data)} 个样本")
         
-        # 自动计算开始索引
+
         start_index = self.get_next_start_index(original_data, processed_data)
         print(f"自动检测到断点位置: {start_index}")
         
-        # 检查是否已完成所有数据
+
         if start_index >= len(original_data):
             print("所有数据已处理完成！")
             return processed_data
         
-        # 确定处理范围
+
         if max_samples:
             end_index = min(start_index + max_samples, len(original_data))
         else:
@@ -268,27 +268,27 @@ class DeepSeekCoTGenerator:
         print(f"使用 {len(self.api_configs)} 个API并行处理，批次大小: {batch_size}")
         print("模式: 基于真实标签生成CoT推理过程")
         
-        # 分批处理
+
         for batch_start in range(start_index, end_index, batch_size):
             batch_end = min(batch_start + batch_size, end_index)
             batch_data = original_data[batch_start:batch_end]
             
             print(f"\n处理批次: {batch_start}-{batch_end}")
             
-            # 并行处理当前批次
+
             batch_results = self.process_batch_parallel(batch_data)
             
-            # 添加到已处理数据
+
             processed_data.extend(batch_results)
             
-            # 保存断点
+
             self.save_checkpoint(processed_data, checkpoint_file)
             print(f"已保存断点: {len(processed_data)} 个样本")
             
-            # 批次间延迟
+
             time.sleep(1)
         
-        # 最终保存
+
         self.save_checkpoint(processed_data, output_file)
         print(f"完成！共生成 {len(processed_data)} 个CoT样本")
         print(f"结果保存到: {output_file}")
@@ -297,19 +297,19 @@ class DeepSeekCoTGenerator:
         return processed_data
 
 def main():
-    # 配置
+
     input_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Train_alpaca_noCoT_updated.json"
     output_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Train_cot.json"
     checkpoint_file = "/mnt/data1/TC/TextClassDemo/data/ohsumed/ohsumed_Train_cot_checkpoint.json"
     
-    # 处理参数
-    batch_size = 5  # 每批处理5个样本
-    max_samples = 1000  # 每次处理50个样本，None表示处理全部剩余样本
+
+    batch_size = 5
+    max_samples = 1000
     
-    # 创建生成器
+
     generator = DeepSeekCoTGenerator()
     
-    # 生成CoT数据
+
     cot_data = generator.process_dataset(
         input_file=input_file,
         output_file=output_file,
@@ -318,7 +318,7 @@ def main():
         max_samples=max_samples
     )
     
-    # 显示示例
+
     if cot_data:
         print("\n最新生成的CoT数据示例:")
         print(json.dumps(cot_data[-1], ensure_ascii=False, indent=2))

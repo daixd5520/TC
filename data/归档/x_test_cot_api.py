@@ -16,7 +16,7 @@ def main():
     print("CoT生成功能测试")
     print("=" * 60)
     
-    # 选择测试模式
+
     print("\n请选择测试模式:")
     print("1. 单个API测试 (快速)")
     print("2. 完整功能测试 (3个案例)")
@@ -32,7 +32,7 @@ def main():
         print("\n运行完整功能测试...")
         results = test_cot_generation()
         
-        # 显示详细结果
+
         if results:
             print("\n" + "=" * 60)
             print("详细测试结果:")
@@ -82,7 +82,7 @@ def main():
                     print(response)
                     print("-" * 50)
                     
-                    # 验证
+
                     validation = validate_cot_response(response, label)
                     print(f"\n验证结果:")
                     print(f"  - 总体有效: {'✅' if validation['is_valid'] else '❌'}")

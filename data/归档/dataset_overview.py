@@ -18,18 +18,18 @@ def count_json_items_and_labels(filepath: str) -> (int, Set[str]):
         label = item.get("label")
         if label is None:
             raise ValueError(f"{filepath} 存在无label字段的数据: {item}")
-        # 如果label是数字，转为字符串
+
         labels.add(str(label))
     return len(data), labels
 
-# 构建表格数据
+
 table: List[List[str]] = [["数据集", "Train条数", "Test条数", "类别数", "类别名称"]]
 for name in datasets:
     train_file = os.path.join(base_path, f"{name}_Train.json")
     test_file = os.path.join(base_path, f"{name}_Test.json")
     train_count, train_labels = count_json_items_and_labels(train_file)
     test_count, test_labels = count_json_items_and_labels(test_file)
-    # 合并train和test的类别
+
     all_labels = sorted(train_labels.union(test_labels), key=lambda x: (len(x), x))
     table.append([
         name,
@@ -39,7 +39,7 @@ for name in datasets:
         ", ".join(all_labels)
     ])
 
-# 打印表格
+
 col_widths = [max(len(row[i]) for row in table) for i in range(len(table[0]))]
 for row in table:
     print(" | ".join(cell.ljust(col_widths[i]) for i, cell in enumerate(row)))

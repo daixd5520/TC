@@ -66,20 +66,20 @@ def build_prompt_trec(text):
         "For example, if the question asks 'What is caffeine?', it belongs to C03. The output must be one of C01-C06 categories."
     )
 
-# 读取原始文件
+
 file_path = "/mnt/data1/TC/TextClassDemo/data/TREC/TREC_Train_Cxx.json"
 with open(file_path, 'r', encoding='utf-8') as f:
     data = json.load(f)
 
-# 更新每个样本
+
 for item in data:
-    # 使用原始input构建新的instruction
+
     original_input = item["input"]
     item["instruction"] = build_prompt_trec(original_input)
-    # 清空input
+
     item["input"] = ""
 
-# 保存回原文件
+
 with open(file_path, 'w', encoding='utf-8') as f:
     json.dump(data, f, ensure_ascii=False, indent=2)
 

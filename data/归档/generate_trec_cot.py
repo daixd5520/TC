@@ -12,13 +12,13 @@ from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import logging
 
-# 配置日志
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 class TRECCoTGenerator:
     def __init__(self):
-        # TREC类别映射
+
         self.category_mapping = {
             "C01": "entity",
             "C02": "human", 
@@ -28,7 +28,7 @@ class TRECCoTGenerator:
             "C06": "abbreviation"
         }
         
-        # API配置
+
         self.api_configs = [
             {
                 "name": "API_1",
@@ -62,7 +62,7 @@ class TRECCoTGenerator:
             }
         ]
         
-        # 创建客户端
+
         self.clients = []
         for config in self.api_configs:
             try:
@@ -75,7 +75,7 @@ class TRECCoTGenerator:
             except Exception as e:
                 logger.error(f"初始化 {config['name']} 失败: {e}")
         
-        # API轮换相关
+
         self.api_index = 0
         self.api_lock = threading.Lock()
     
@@ -133,7 +133,7 @@ class TRECCoTGenerator:
     def generate_cot_response(self, text, true_label, sample_id=None, max_retries=3):
         """生成CoT推理过程，带有重试机制"""
         
-        # 数据验证
+
         if not text or not text.strip():
             logger.warning(f"样本 {sample_id} 的文本为空，跳过")
             return None
@@ -163,18 +163,18 @@ class TRECCoTGenerator:
                 
                 cot_response = response.choices[0].message.content
                 
-                # 验证响应质量
+
                 if self._validate_response(cot_response, true_label):
                     logger.debug(f"样本 {sample_id} 处理成功")
                     return cot_response
                 else:
-                    # 强制修正
+
                     corrected_response = cot_response.rstrip() + f"\n\nFinal classification: {true_label}"
                     logger.info(f"样本 {sample_id} 分类修正为: {true_label}")
                     return corrected_response
                 
             except Exception as e:
-                wait_time = min(2 ** attempt, 16)  # 指数退避，最大16秒
+                wait_time = min(2 ** attempt, 16)
                 logger.warning(f"样本 {sample_id} API调用失败 (尝试 {attempt + 1}/{max_retries}): {e}")
                 
                 if attempt < max_retries - 1:
@@ -189,7 +189,7 @@ class TRECCoTGenerator:
         if not response:
             return False
         
-        # 检查是否包含正确的标签
+
         return true_label in response
     
     def process_batch_parallel(self, batch_data, batch_id):
@@ -197,7 +197,7 @@ class TRECCoTGenerator:
         results = []
         failed_count = 0
         
-        # 过滤有效数据 - TREC使用text字段
+
         valid_batch_data = []
         for i, item in enumerate(batch_data):
             if isinstance(item, dict) and 'text' in item and 'label' in item:
@@ -210,7 +210,7 @@ class TRECCoTGenerator:
             logger.warning(f"批次 {batch_id} 没有有效数据")
             return results, failed_count
         
-        # 并行处理
+
         with ThreadPoolExecutor(max_workers=min(len(valid_batch_data), 5)) as executor:
             future_to_item = {}
             
@@ -224,7 +224,7 @@ class TRECCoTGenerator:
                 )
                 future_to_item[future] = (original_idx, item, sample_id)
             
-            # 收集结果
+
             for future in tqdm(as_completed(future_to_item), 
                              total=len(future_to_item), 
                              desc=f"处理批次 {batch_id}"):
@@ -233,7 +233,7 @@ class TRECCoTGenerator:
                 try:
                     cot_response = future.result()
                     if cot_response:
-                        # 构建结果数据
+
                         result_item = {
                             'text': item['text'],
                             'label': item['label'],
@@ -249,7 +249,7 @@ class TRECCoTGenerator:
                     logger.error(f"样本 {sample_id} 处理异常: {e}")
                     failed_count += 1
         
-        # 按原始索引排序
+
         results.sort(key=lambda x: x[0])
         return [item for _, item in results], failed_count
     
@@ -337,7 +337,7 @@ class TRECCoTGenerator:
         """处理整个数据集"""
         logger.info(f"开始处理数据集: {input_file}")
         
-        # 加载原始数据
+
         try:
             with open(input_file, 'r', encoding='utf-8') as f:
                 original_data = json.load(f)
@@ -346,15 +346,15 @@ class TRECCoTGenerator:
             logger.error(f"加载原始数据失败: {e}")
             return
         
-        # 限制样本数量
+
         if max_samples and max_samples < len(original_data):
             original_data = original_data[:max_samples]
             logger.info(f"限制样本数量为: {max_samples}")
         
-        # 加载检查点
+
         processed_data = self.load_checkpoint(checkpoint_file)
         
-        # 获取开始索引
+
         start_index = self.get_next_start_index(original_data, processed_data)
         logger.info(f"从索引 {start_index} 开始处理")
         
@@ -363,7 +363,7 @@ class TRECCoTGenerator:
             self.save_final_result(processed_data, output_file)
             return
         
-        # 分批处理
+
         total_batches = (len(original_data) - start_index + batch_size - 1) // batch_size
         current_batch = 0
         
@@ -377,26 +377,26 @@ class TRECCoTGenerator:
             try:
                 batch_results, failed_count = self.process_batch_parallel(batch_data, current_batch)
                 
-                # 添加到已处理数据
+
                 processed_data.extend(batch_results)
                 
-                # 保存检查点
+
                 self.save_checkpoint(processed_data, checkpoint_file)
                 
                 logger.info(f"批次 {current_batch} 完成: 成功 {len(batch_results)} 条, 失败 {failed_count} 条")
                 
-                # 进度统计
+
                 total_processed = self.get_processed_count(original_data, processed_data)
                 progress = (total_processed / len(original_data)) * 100
                 logger.info(f"总进度: {total_processed}/{len(original_data)} ({progress:.1f}%)")
                 
             except Exception as e:
                 logger.error(f"批次 {current_batch} 处理失败: {e}")
-                # 保存当前进度
+
                 self.save_checkpoint(processed_data, checkpoint_file)
                 continue
         
-        # 保存最终结果
+
         self.save_final_result(processed_data, output_file)
         logger.info("数据集处理完成")
     
@@ -411,24 +411,24 @@ class TRECCoTGenerator:
 
 def main():
     """主函数"""
-    # 配置路径
+
     input_file = "TREC/TREC_Train_Cxx.json"
     output_file = "TREC/TREC_Train_Cot.json"
     checkpoint_file = "TREC/TREC_Train_Cot_checkpoint.json"
     
-    # 创建生成器
+
     generator = TRECCoTGenerator()
     
-    # 测试API
+
     generator.test_all_apis()
     
-    # 处理数据集
+
     generator.process_dataset(
         input_file=input_file,
         output_file=output_file,
         checkpoint_file=checkpoint_file,
         batch_size=5,
-        max_samples=None  # 设置为具体数字以限制样本数量
+        max_samples=None
     )
 
 if __name__ == "__main__":
